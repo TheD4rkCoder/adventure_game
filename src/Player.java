@@ -22,7 +22,7 @@ public class Player extends Character {
         super(faction);
         this.image = new ImageIcon("player.png");
         this.radius = 20;
-        this.movement_speed = 10;
+        this.movement_speed = 3;
         this.comprehension_speed = 1;
         this.maxHP = 100;
         this.hp = 100;
