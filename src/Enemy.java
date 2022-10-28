@@ -11,7 +11,7 @@ public class Enemy extends Character{
         super(faction);
         this.hp = hp;
         this.baseDamage = baseDamage;
-        this.range = 100;
+        this.range = 50;
         //insert Image
         //insert radius
         this.radius = 25;

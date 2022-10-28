@@ -1,4 +1,3 @@
-import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -27,7 +26,9 @@ public class Projectile extends GameObject{
         this.x = Game.player.x + cos(angle) * this.radius/2;
         this.y = Game.player.y + sin(angle) * this.radius/2;
 
+        // when enemies cast a projectile, they should overwrite this list with "Game.player"
         enemiesToHit = new ArrayList<>(Game.enemies);
+
         this.damage = damage;
         this.durationLeft = durationLeft;
         this.piercing = piercing;
@@ -38,6 +39,10 @@ public class Projectile extends GameObject{
     public boolean move (){
         this.x = this.x + cos(angle) * movement_speed;
         this.y = this.y + sin(angle) * movement_speed;
+        --durationLeft;
+        if (enemiesToHit.size() < 1) {
+            return true; // true = yes, the projectile should still exist
+        }
         if(piercing != 0) {
             for (int i = 0; i < enemiesToHit.size(); ++i) {
                 if (Game.collisionCheck(this, enemiesToHit.get(i))) {
@@ -53,7 +58,6 @@ public class Projectile extends GameObject{
                 }
             }
         }
-        --durationLeft;
         return !(durationLeft < 1);
     }
 }

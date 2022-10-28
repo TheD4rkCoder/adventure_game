@@ -16,12 +16,15 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
         super(windowName);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(1280, 720);
-        this.setVisible(true);
 
         this.gamePanel = new GamePanel();
+
         this.gamePanel.addMouseListener(this);
         this.add(gamePanel);
         this.addKeyListener(this);
+
+        // "start" the window after adding all components
+        this.setVisible(true);
 
         this.isKeyPressed = new boolean[]{false, false, false, false};
 
@@ -35,64 +38,44 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == this.timer) {
+            // Main game loop
             if (Game.player.x_movement != 0 && Game.player.y_movement != 0) {
 
-                Game.player.x += Game.player.x_movement*0.71;
-                Game.player.y += Game.player.y_movement*0.71;
+                Game.player.x += Game.player.x_movement * 0.71;
+                Game.player.y += Game.player.y_movement * 0.71;
             } else {
                 Game.player.x += Game.player.x_movement;
                 Game.player.y += Game.player.y_movement;
             }
+            Game.collisions_and_movements();
 
             Random rand = new Random();
-            for (int i = 0; i < Game.enemies.size(); i++) {
-                for (int j = 0; j < Game.enemies.size(); j++) {
-                    if (i != j)
-                        Game.collisionCheck(Game.enemies.get(i), Game.enemies.get(j));
-                }
-            }
 
-            //EnemySpawning
+
+            //EnemySpawning | later let them spawn in random structures
             for (int i = 0; i < rand.nextInt(10); ++i) {
                 if (rand.nextInt(500) == 13) {
                     switch (rand.nextInt(4)) {
                         case 0 -> {//north
-                            Game.enemies.add(Game.enemies.size(), new Enemy("Test", rand.nextInt(this.getWidth() + 1), -5, rand.nextInt(20), 5, 100));
+                            Game.enemies.add(Game.enemies.size(), new Enemy("Test", rand.nextInt(this.getWidth() + 1) + Game.player.x, -5 + Game.player.y, rand.nextInt(20), 1, 100));
                         }
                         case 1 -> {//east
-                            Game.enemies.add(Game.enemies.size(), new Enemy("Test", this.getWidth() + 5, rand.nextInt(this.getHeight() + 1), rand.nextInt(20), 5, 100));
+                            Game.enemies.add(Game.enemies.size(), new Enemy("Test", this.getWidth() + 5 + Game.player.x, rand.nextInt(this.getHeight() + 1) + Game.player.y, rand.nextInt(20), 1, 100));
                         }
                         case 2 -> {//south
-                            Game.enemies.add(Game.enemies.size(), new Enemy("Test", rand.nextInt(this.getWidth() + 1), this.getHeight() + 5, rand.nextInt(20), 5, 100));
+                            Game.enemies.add(Game.enemies.size(), new Enemy("Test", rand.nextInt(this.getWidth() + 1) + Game.player.x, this.getHeight() + 5 + Game.player.y, rand.nextInt(20), 1, 100));
                         }
                         case 3 -> {//east
-                            Game.enemies.add(Game.enemies.size(), new Enemy("Test", -5, rand.nextInt(this.getHeight() + 1), rand.nextInt(20), 5, 100));
+                            Game.enemies.add(Game.enemies.size(), new Enemy("Test", -5 + Game.player.x, rand.nextInt(this.getHeight() + 1) + Game.player.y, rand.nextInt(20), 1, 100));
                         }
                     }
                 }
             }
 
-
-            //EnemyMovement
-            for(int i = 0; i < Game.enemies.size(); ++i){
-                if(Game.enemies.get(i).hp <= 0){
-                    Game.enemies.remove(i);
-                    --i;
-                }else{
-                    Game.enemies.get(i).moveTowardsPlayer();
-                }
-            }
-
-            //ProjectileMovement
-            for(int i = 0; i < Game.projectiles.size(); ++i){
-                if(!Game.projectiles.get(i).move()){
-                    Game.projectiles.remove(i);
-                    --i;
-                }
-            }
-
             gamePanel.repaint();
+
         } else if (e.getSource() == this.enemyCourseAdjust) {
+            // separate slower loop for some calculations
             for (Enemy en : Game.enemies) {
                 en.calculateDistanceToPlayer();
             }

@@ -1,4 +1,8 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import static java.lang.Math.pow;
@@ -6,13 +10,29 @@ import static java.lang.Math.sqrt;
 
 public class Game {
     static Player player = new Player("o7");
-    static ArrayList<Enemy> enemies = new ArrayList<Enemy>();
-    static ArrayList<GameObject> obstacles = new ArrayList<GameObject>();//chage this once we have obstacle spells
-    static ArrayList<Wall> walls = new ArrayList<Wall>();
+    static ArrayList<Enemy> enemies = new ArrayList<>();
+    static ArrayList<GameObject> obstacles = new ArrayList<>();//change this once we have obstacle spells
+    static ArrayList<Wall> walls = new ArrayList<>();
     static ArrayList<Projectile> projectiles = new ArrayList<>();
-    static Spell[] spells = new Spell[] {
-            new Spell(new ImageIcon("manaBolt.png"), "Mana Bolt", 10, 5, null, 100, 5, 50, 2, Spell.type_t.projectile)
+
+    // load sprite sheet:
+    final static private BufferedImage sprite_sheet;
+
+    static {
+        try {
+            sprite_sheet = ImageIO.read(new File("sprite_sheet.png"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    static Spell[] spells = new Spell[]{
+            new Spell(new ImageIcon(sprite_sheet.getSubimage(32, 0, 32, 32)), "Mana Bolt", 10, 5, null, 100, 5, 10, 2, Spell.type_t.projectile),
+            new Spell(new ImageIcon("lavapool.png"), "Lava Pool", 10, 5, null, 100, 5, 50, 2, Spell.type_t.projectile)
+
     };
+
 
     static final int FRAME_TIME = 5; //how long a Frame is in milliseconds
     static final int ENEMY_COURSE_ADJUST_TIME = 100; //how long between the adjustments of the enemies course
@@ -35,23 +55,14 @@ public class Game {
                     }
                 }
                 switch (smallest) {
-                    case 0:
-                        o1.x = wall.x - o1.radius;
-                        break;
-                    case 1:
-                        o1.x = wall.x + wall.width + o1.radius;
-                        break;
-                    case 2:
-                        o1.y = wall.y - o1.radius;
-                        break;
-                    case 3:
-                        o1.y = wall.y + wall.height + o1.radius;
-                        break;
+                    case 0 -> o1.x = wall.x - o1.radius;
+                    case 1 -> o1.x = wall.x + wall.width + o1.radius;
+                    case 2 -> o1.y = wall.y - o1.radius;
+                    case 3 -> o1.y = wall.y + wall.height + o1.radius;
                 }
                 return true;
             }
 
-            return false;
         } else {
             // every other object is round, so we don't need differentiation
             if (sqrt(pow(o1.x - o2.x, 2) + pow(o1.y - o2.y, 2)) <= o1.radius + o2.radius) {
@@ -69,7 +80,33 @@ public class Game {
                 }
                 return true;
             }
-            return false;
+        }
+        return false;
+    }
+
+    static public void collisions_and_movements() {
+        // EnemyMovement
+        for (int i = 0; i < Game.enemies.size(); ++i) {
+            if (Game.enemies.get(i).hp <= 0) {
+                Game.enemies.remove(i);
+                --i;
+            } else {
+                Game.enemies.get(i).moveTowardsPlayer();
+            }
+        }
+        // EnemyCollision
+        for (int i = 0; i < Game.enemies.size(); i++) {
+            for (int j = 0; j < Game.enemies.size(); j++) {
+                if (i != j)
+                    Game.collisionCheck(Game.enemies.get(i), Game.enemies.get(j));
+            }
+        }
+        // ProjectileMovement; ProjectileCollision is in their .move() method
+        for (int i = 0; i < Game.projectiles.size(); ++i) {
+            if (!Game.projectiles.get(i).move()) {
+                Game.projectiles.remove(i);
+                --i;
+            }
         }
     }
 }
