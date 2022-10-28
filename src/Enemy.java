@@ -3,7 +3,7 @@ import java.util.Random;
 
 public class Enemy extends Character{
 
-    private int range;
+    private int range; //gaegvfuzaewfvdutaedf
     protected double distanceToPlayer;
     protected double angleToPlayer;
 
