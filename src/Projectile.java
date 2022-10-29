@@ -12,45 +12,42 @@ public class Projectile extends GameObject {
     protected double durationLeft;
     protected int piercing;
 
-    protected ArrayList<Enemy> enemiesToHit;
+    protected ArrayList<Character> enemiesToHit;
 
     protected Spell spell;
     protected double angle;
 
-    Projectile(double mouseX, double mouseY, double movement_speed, double damage, double durationLeft, int piercing, double radius, Image image, Spell spell) {
-        double deltaX = Game.centerX - mouseX; // mouseX is relative to the window, not relative to the panel!!!
-        double deltaY = Game.centerY - mouseY;
-        this.radius = radius;
-
-        this.angle = Math.atan(deltaY / deltaX) + ((deltaX > 0) ? Math.PI : 0);
+    Projectile(double x, double y, double angle, double movement_speed, double damage, double durationLeft, int piercing, double radius, Image image, Spell spell, ArrayList toHit) {
+        this.x = x;
+        this.y = y;
+        this.angle = angle;
         this.movement_speed = movement_speed;
-        this.x = Game.player.x + cos(angle) * this.radius / 2;
-        this.y = Game.player.y + sin(angle) * this.radius / 2;
-
-        // when enemies cast a projectile, they should overwrite this list with "Game.player"
-        enemiesToHit = new ArrayList<>(Game.enemies);
-
         this.damage = damage;
         this.durationLeft = durationLeft;
         this.piercing = piercing;
+        this.radius = radius;
         this.image = image;
         this.spell = spell;
+
+        // when enemies cast a projectile, they should overwrite this list with "Game.player"
+        this.enemiesToHit = toHit;
+
     }
 
     public boolean move() {
         this.x = this.x + cos(angle) * movement_speed;
         this.y = this.y + sin(angle) * movement_speed;
         --durationLeft;
-        if (enemiesToHit.size() < 1) {
-            return true; // true = yes, the projectile should still exist
-        }
+
+        // true = yes, the projectile should still exist
+
         for (int i = 0; i < enemiesToHit.size(); ++i) {
             if (Game.collisionCheck(this, enemiesToHit.get(i))) {
                 enemiesToHit.get(i).hp -= (int) (damage);
                 enemiesToHit.remove(i);
                 piercing -= 1;
 
-                spell.summonSubProjectile(angle, x, y);
+                spell.summonSubProjectile(angle, x, y, enemiesToHit);
 
                 if (piercing < 1) {
                     return false;
@@ -59,7 +56,7 @@ public class Projectile extends GameObject {
             }
         }
         if (durationLeft < 1) {
-            spell.summonSubProjectile(angle, x, y);
+            spell.summonSubProjectile(angle, x, y, enemiesToHit);
             return false;
         }
         return true;

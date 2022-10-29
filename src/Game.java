@@ -9,6 +9,7 @@ import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
 
 public class Game {
+    // load sprite sheet:
     final static private BufferedImage sprite_sheet;
 
     static {
@@ -18,12 +19,12 @@ public class Game {
             throw new RuntimeException(e);
         }
     }
-
-
+    // list of all spells (skills) that exist
     static Spell[] spells = new Spell[]{
             new Spell(new ImageIcon(sprite_sheet.getSubimage(32, 0, 32, 32)), "Mana Bolt", 10, 5, 100, 5, 10, 2, Spell.type_t.projectile, null),
             new Spell(new ImageIcon("lavapool.png"), "Lava Pool", 10, 5, 200, 1, 1000, 5, Spell.type_t.projectile, null),
-            new Spell(new ImageIcon(sprite_sheet.getSubimage(0, 0, 32, 32)), "Fireball", 30, 20, 100, 4, 30, 3, Spell.type_t.projectile, new Spell(new ImageIcon(sprite_sheet.getSubimage(0, 0, 32, 32)), "Fireball", 20, 0, 10, 0, 100, 5, Spell.type_t.projectile, null))
+            new Spell(new ImageIcon(sprite_sheet.getSubimage(0, 0, 32, 32)), "Fireball", 30, 20, 100, 4, 30, 3, Spell.type_t.projectile, new Spell(new ImageIcon(sprite_sheet.getSubimage(0, 0, 32, 32)), "Fireball", 20, 0, 10, 0, 100, 5, Spell.type_t.projectile, null)),
+            new Spell(new ImageIcon(sprite_sheet.getSubimage(32, 0, 32, 32)), "Sword swing", 10, 5, 10, 0, 80, 4, Spell.type_t.projectile, null),
 
     };
     static Player player = new Player("o7");
@@ -32,14 +33,12 @@ public class Game {
     static ArrayList<Wall> walls = new ArrayList<>();
     static ArrayList<Projectile> projectiles = new ArrayList<>();
 
-    // load sprite sheet:
-
 
     static final int FRAME_TIME = 5; //how long a Frame is in milliseconds
     static final int ENEMY_COURSE_ADJUST_TIME = 100; //how long between the adjustments of the enemies course
     static final int COMBO_TIMER_BASE_VALUE = 1000;
     static final int BASE_CRITICAL_CHANCE = 1000000000;
-    static double centerX, centerY;
+    static int centerX, centerY;
 
     static public boolean collisionCheck(GameObject o1, GameObject o2 /*if you want to check collision with a wall, the wall always comes second*/) {
         if (o1 instanceof Wall) {
@@ -88,7 +87,7 @@ public class Game {
     }
 
     static public void collisions_and_movements() {
-        // EnemyMovement
+        // EnemyMovement; collision with player is in .move() method
         for (int i = 0; i < Game.enemies.size(); i++) {
             if (Game.enemies.get(i).hp <= 0) {
                 Game.enemies.remove(i);
@@ -107,7 +106,6 @@ public class Game {
         // ProjectileMovement; ProjectileCollision is in their .move() method
         for (int i = 0; i < Game.projectiles.size(); i++) {
             if (!Game.projectiles.get(i).move()) {
-
                 Game.projectiles.remove(i);
                 --i;
             }

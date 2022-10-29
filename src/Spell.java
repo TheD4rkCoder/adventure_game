@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
@@ -35,19 +36,46 @@ public class Spell {
     }
 
 
-    public void summonProjectile(int mouse_X, int mouse_Y) { //also make a method for removing, so also summon the SubSpell //currently only usable for player
-        if (Game.player.mana - mana_cost >= 0) {
-            Game.player.mana -= mana_cost;
-            Projectile proj = new Projectile(mouse_X, mouse_Y, this.movement_speed, this.damage_health, this.duration, this.piercing, this.radius, this.image.getImage().getScaledInstance((int)radius*2, (int)radius*2, Image.SCALE_FAST), this);
-            Game.projectiles.add(Game.projectiles.size(), proj);
+    public void summonProjectile(GameObject o, double delta_X, double delta_Y /*or mouse_x and mouse_y*/) { //also make a method for removing, so also summon the SubSpell //currently only usable for player
+        ArrayList<Character> toHit;
+        if (o instanceof Player) {
+            if (Game.player.mana - this.mana_cost >= 0) {
+                Game.player.mana -= mana_cost;
+                toHit = new ArrayList<>(Game.enemies);
+            } else {
+                return;
+            }
+        } else { // if instanceof Enemy
+            ((Enemy) o).mana_recovery_speed = this.mana_cost * 10;
+            toHit = new ArrayList<>();
+            toHit.add(Game.player);
         }
-
+        double angle;
+        if (delta_X == 0) {
+            if (delta_Y > 0) {
+                angle = 270;
+            } else {
+                angle = 90;
+            }
+        } else {
+            angle = Math.atan(delta_Y / delta_X) + ((delta_X > 0) ? Math.PI : 0);
+        }
+        double x = o.x + cos(angle) * o.radius;
+        double y = o.y + sin(angle) * o.radius;
+        Projectile proj = new Projectile(x, y, angle, this.movement_speed, this.damage_health, this.duration, this.piercing, this.radius, this.image.getImage().getScaledInstance((int) radius * 2, (int) radius * 2, Image.SCALE_FAST), this, toHit);
+        Game.projectiles.add(Game.projectiles.size(), proj);
     }
-    public void summonSubProjectile(double angle, double x, double y) {
+
+    public void summonSubProjectile(double angle, double x, double y, ArrayList oldToHit) {
         if (subSpell != null) {
-            Projectile proj = new Projectile(Game.centerX + cos(angle), Game.centerY + sin(angle), this.subSpell.movement_speed, this.subSpell.damage_health, this.subSpell.duration, this.subSpell.piercing, this.subSpell.radius, this.subSpell.image.getImage().getScaledInstance((int) this.subSpell.radius * 2, (int) this.subSpell.radius * 2, Image.SCALE_FAST), this.subSpell);
-            proj.x = x;
-            proj.y = y;
+            ArrayList<Character> toHit;
+            if (oldToHit.size() != 0 && oldToHit.get(0) instanceof Player) {
+                toHit = new ArrayList<>();
+                toHit.add(Game.player);
+            }else {
+                toHit = new ArrayList<>(Game.enemies);
+            }
+            Projectile proj = new Projectile(x, y, angle, this.subSpell.movement_speed, this.subSpell.damage_health, this.subSpell.duration, this.subSpell.piercing, this.subSpell.radius, this.subSpell.image.getImage().getScaledInstance((int) this.subSpell.radius * 2, (int) this.subSpell.radius * 2, Image.SCALE_FAST), this.subSpell, toHit);
             Game.projectiles.add(Game.projectiles.size(), proj);
         }
 

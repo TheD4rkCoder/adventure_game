@@ -1,5 +1,6 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import javax.swing.*;
 
 import static java.lang.Math.log;
@@ -8,10 +9,11 @@ import static java.lang.Math.pow;
 public class Character extends GameObject implements ActionListener {
     private String faction;
 
-    protected int stage, intelligence, strength, endurance, def, stamina, dexterity, wisdom, maxStamina;
+    protected int stage, intelligence, strength, dexterity, wisdom, endurance, def, stamina, maxStamina;
 
     protected double baseDamage, spell_effectiveness, mana_recovery_speed/*in Enemy, cooldown between casts*/, melee_dmg_multiplier, movement_speed, combo_dmg_multiplier, crit_dmg_multiplier, hp, maxHP;
 
+    protected ArrayList<Spell> spells;
     protected Timer comboTimer;
     protected int combo;
 
@@ -21,12 +23,12 @@ public class Character extends GameObject implements ActionListener {
 
         this.stage = 0;
 
-        this.intelligence = 0;
+        this.intelligence = 1;
         this.spell_effectiveness = 1; //P
         this.mana_recovery_speed = 1; //P
 
-        this.endurance = 0;
-        this.strength = 0;
+        this.endurance = 1;
+        this.strength = 1;
         this.maxHP = 100; //P
         this.hp = 100; //P
         this.def = 0; //P
@@ -34,33 +36,41 @@ public class Character extends GameObject implements ActionListener {
         this.stamina = 100; //P
         this.melee_dmg_multiplier = 1; //E
 
-        this.dexterity = 0;
+        this.dexterity = 1;
         this.movement_speed = 1; //I
         this.combo_dmg_multiplier = 1; //I
         this.crit_dmg_multiplier = 1; //E
 
-        this.wisdom = 0;
+        this.wisdom = 1;
+
+        this.spells = new ArrayList<>();
 
         this.comboTimer = new Timer(Game.COMBO_TIMER_BASE_VALUE, this);
         this.combo = 0;
 
     }
+    public void levelUp(int amount) {
+        this.stage += amount;
+            this.increaseStat("Intelligence", amount);
+            this.increaseStat("Strength", amount);
+            this.increaseStat("Endurance", amount);
+            this.increaseStat("Dexterity", amount);
 
+    }
 
-    public void levelUp (String stat, int levels){
-        stage += levels;
+    public void increaseStat (String stat, int amount){
         switch (stat) {
             case "Intelligence" -> {
-                intelligence += levels;
-                for (int i = 0; i < levels * 3; ++i) {
+                intelligence += amount;
+                for (int i = 0; i < amount; ++i) {
                     spell_effectiveness = spell_effectiveness + spell_effectiveness * 0.005;
                     mana_recovery_speed = (((pow(1.03, intelligence) - log(stage)) < 1) ? 1 : pow(1.03, intelligence) - log(stage));
                 }
             }
             case "Strength" -> {
-                strength += levels;
+                strength += amount;
                 baseDamage = 10 + strength * 2.7;
-                for (int i = 0; i < levels * 3; ++i) {
+                for (int i = 0; i < amount; ++i) {
                     maxHP = maxHP + 2.5;
                     hp += 2.5;
                     if (hp > maxHP) {
@@ -72,8 +82,8 @@ public class Character extends GameObject implements ActionListener {
                 }
             }
             case "Endurance" -> {
-                endurance += levels;
-                for (int i = 0; i < levels * 3; ++i) {
+                endurance += amount;
+                for (int i = 0; i < amount; ++i) {
                     maxHP = maxHP + 5;
                     hp += 5;
                     if (hp > maxHP) {
@@ -85,13 +95,13 @@ public class Character extends GameObject implements ActionListener {
                 }
             }
             case "Dexterity" -> {
-                dexterity += levels;
-                for (int i = 0; i < levels * 3; ++i) {
+                dexterity += amount;
+                for (int i = 0; i < amount; ++i) {
                     combo_dmg_multiplier = combo_dmg_multiplier + combo_dmg_multiplier * dexterity / 25 * 0.001;
                     movement_speed = movement_speed + 0.0001;
                 }
             }
-            default -> wisdom += levels;
+            default -> wisdom += amount;
         }
 
     }

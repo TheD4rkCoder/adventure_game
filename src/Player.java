@@ -6,12 +6,11 @@ import static java.lang.Math.log;
 import static java.lang.Math.pow;
 
 public class Player extends Character {
-    private double comprehension_speed; //Intelligence
+    private double comprehension_speed; // now Wisdom
     //affects advancing/leveling speed
     protected double x_movement;
     protected double y_movement;
     protected double mana, maxMana;
-    protected ArrayList<Spell> spells;
 
     protected boolean[] critical_stage = new boolean[8]; //Dexterity
     //different requirements to trigger critical hit
@@ -32,11 +31,10 @@ public class Player extends Character {
         this.hp = 100;
         this.mana = 100;
         this.maxMana = 100;
-        this.spells = new ArrayList<>();
+
         this.spells.add(this.spells.size(), Game.spells[0]);
         this.spells.add(this.spells.size(), Game.spells[1]);
         this.spells.add(this.spells.size(), Game.spells[2]);
-
 
         for (int i = 0; i < 8; ++i) {
             this.critical_stage[i] = false;
@@ -49,12 +47,11 @@ public class Player extends Character {
     }
 
     @Override
-    public void levelUp(String stat, int levels) {
-        super.levelUp(stat, levels);
+    public void increaseStat(String stat, int amount) {
+        super.increaseStat(stat, amount);
         switch(stat){
             case "Intelligence" -> {
-                for(int i = 0; i < levels*3; ++i){
-                    comprehension_speed = log(intelligence);
+                for(int i = 0; i < amount; ++i){
                     maxMana = maxMana + 1;
                     mana = mana + 1;
                 }
@@ -71,9 +68,10 @@ public class Player extends Character {
                 }
             }
             case "Wisdom" -> {
-                for (int i = 0; i < levels * 3; ++i) {
-                    item_stat_multiplier = item_stat_multiplier + item_stat_multiplier * 0.005;
+                for (int i = 0; i < amount; ++i) {
+                    item_stat_multiplier = pow(0.005, wisdom);
                     mastery_multiplier = wisdom/50 + 1;
+                    comprehension_speed = pow(1.02, wisdom);
                 }
             }
 
@@ -88,7 +86,7 @@ public class Player extends Character {
 
     public void attack(int mouse_X, int mouse_Y) {
         this.addToCombo();
-        this.spells.get(2).summonProjectile(mouse_X, mouse_Y);
+        this.spells.get(2).summonProjectile(this, Game.centerX - mouse_X, Game.centerY - mouse_Y);
     }
     public void refresh() {
         this.mana += this.mana_recovery_speed;
