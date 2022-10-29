@@ -61,13 +61,13 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
                 if (rand.nextInt(500) == 13) {
                     switch (rand.nextInt(4)) {
                         case 0 -> //north
-                                Game.enemies.add(Game.enemies.size(), new Enemy("Test", rand.nextInt(this.getWidth()) + Game.player.x - this.getWidth() / 2, Game.player.y - this.getHeight() / 2, rand.nextInt(20), 1, 100));
+                                Game.enemies.add(Game.enemies.size(), new Enemy("Test", rand.nextInt(this.getWidth()) + Game.player.x - this.getWidth() / 2, Game.player.y - this.getHeight() / 2, rand.nextInt(20)));
                         case 1 -> //east
-                                Game.enemies.add(Game.enemies.size(), new Enemy("Test", this.getWidth() / 2 + Game.player.x, rand.nextInt(this.getHeight() + 1) + Game.player.y - this.getHeight() / 2, rand.nextInt(20), 1, 100));
+                                Game.enemies.add(Game.enemies.size(), new Enemy("Test", this.getWidth() / 2 + Game.player.x, rand.nextInt(this.getHeight() + 1) + Game.player.y - this.getHeight() / 2, rand.nextInt(20)));
                         case 2 -> //south
-                                Game.enemies.add(Game.enemies.size(), new Enemy("Test", rand.nextInt(this.getWidth()) + Game.player.x - this.getWidth() / 2, this.getHeight() / 2 + Game.player.y, rand.nextInt(20), 1, 100));
+                                Game.enemies.add(Game.enemies.size(), new Enemy("Test", rand.nextInt(this.getWidth()) + Game.player.x - this.getWidth() / 2, this.getHeight() / 2 + Game.player.y, rand.nextInt(20)));
                         case 3 -> //west
-                                Game.enemies.add(Game.enemies.size(), new Enemy("Test", Game.player.x - this.getWidth() / 2, rand.nextInt(this.getHeight() + 1) + Game.player.y - this.getHeight() / 2, rand.nextInt(20), 1, 100));
+                                Game.enemies.add(Game.enemies.size(), new Enemy("Test", Game.player.x - this.getWidth() / 2, rand.nextInt(this.getHeight() + 1) + Game.player.y - this.getHeight() / 2, rand.nextInt(20)));
                     }
                 }
             }

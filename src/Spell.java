@@ -55,10 +55,10 @@ public class Spell {
             if (Game.player.mana - this.mana_cost >= 0) {
                 Game.player.mana -= mana_cost;
                 toHit = new ArrayList<>(Game.enemies);
-                int critDiv = 0;
+                int critDiv = 1;
                 for(int i = 0; i < 8; ++i){
                     if(Game.player.critical_stage[i]){
-                        ++critDiv;
+                        critDiv *= 2;
                     }
                 }
                 damage = Game.player.spell_effectiveness * ((new Random().nextInt(Game.BASE_CRITICAL_CHANCE/critDiv) == 13) ? Game.player.crit_dmg_multiplier : 1);

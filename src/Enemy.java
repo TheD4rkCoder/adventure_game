@@ -7,13 +7,10 @@ public class Enemy extends Character {
     protected double distanceToPlayer;
     protected double angleToPlayer;
 
-    public Enemy(String faction, double x, double y, int stage, double baseDamage, int hp) {
+    public Enemy(String faction, double x, double y, int stage) {
         super(faction);
-        this.hp = hp;
-        this.baseDamage = baseDamage;
         this.range = 150;
         //insert Image
-        //insert radius
         this.radius = 25;
         this.x = x;
         this.y = y;
@@ -21,17 +18,7 @@ public class Enemy extends Character {
 
         this.spells.add(this.spells.size(), Game.spells[3]);
 
-        Random rand = new Random();
-
-        intelligence = rand.nextInt(1 + (int) (stage * 0.4));
-        endurance = rand.nextInt(1 + (int) (stage * 0.4));
-        strength = rand.nextInt(1 + (int) (stage * 0.4));
-        dexterity = rand.nextInt(1 + (int) (stage * 0.4));
-        wisdom = rand.nextInt(1 + (int) (stage * 0.4));
-
-
-        levelUp(3);
-
+        levelUp(stage);
     }
 
     public void calculateDistanceToPlayer() {

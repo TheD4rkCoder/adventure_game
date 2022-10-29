@@ -21,27 +21,14 @@ public class Character extends GameObject implements ActionListener {
     public Character(String faction) {
         this.faction = faction;
 
-        this.stage = 0;
+        this.stage = 1;
 
         this.intelligence = 1;
-        this.spell_effectiveness = 1; //P
-        this.mana_recovery_speed = 1; //P
-
         this.endurance = 1;
         this.strength = 1;
-        this.maxHP = 100; //P
-        this.hp = 100; //P
-        this.def = 0; //P
-        this.maxStamina = 100; //P
-        this.stamina = 100; //P
-        this.melee_dmg_multiplier = 1; //E
-
         this.dexterity = 1;
-        this.movement_speed = 1; //I
-        this.combo_dmg_multiplier = 1; //I
-        this.crit_dmg_multiplier = 1; //E
-
         this.wisdom = 1;
+        this.levelUp(0);
 
         this.spells = new ArrayList<>();
 
@@ -68,7 +55,7 @@ public class Character extends GameObject implements ActionListener {
             }
             case "Strength" -> {
                 strength += amount;
-                baseDamage = 10 + strength * 2.7;
+                baseDamage = 5 + strength * 2;
                 maxHP = 100 + 2.5 * strength + pow(1.01, endurance);
                 hp += 2.5 * amount;
                 if (hp > maxHP) {
@@ -80,7 +67,7 @@ public class Character extends GameObject implements ActionListener {
             }
             case "Endurance" -> {
                 endurance += amount;
-                maxHP = 2.5 * strength + pow(1.01, endurance);
+                maxHP = 100 + 2.5 * strength + pow(1.01, endurance);
                 hp += pow(1.01, endurance);
                 if (hp > maxHP) {
                     hp = maxHP;
@@ -93,7 +80,7 @@ public class Character extends GameObject implements ActionListener {
             case "Dexterity" -> {
                 dexterity += amount;
                 combo_dmg_multiplier = pow(1.00004, dexterity);
-                movement_speed = 2 + pow(0.0001, dexterity);
+                movement_speed = 1 + pow(1.001, dexterity);
             }
             default -> wisdom += amount;
         }
@@ -103,22 +90,22 @@ public class Character extends GameObject implements ActionListener {
     public void printStats() {
         System.out.println("Stage:" + stage);
 
-        //System.out.println("Intelligence: " + intelligence);
-        //System.out.println("mana_rec_speed" + mana_recovery_speed);
-        //System.out.println("spell effectiveness" + spell_effectiveness);
+        System.out.println("Intelligence: " + intelligence);
+        System.out.println("mana_rec_speed" + mana_recovery_speed);
+        System.out.println("spell effectiveness" + spell_effectiveness);
 
-        //System.out.println("strength" + strength);
-        //System.out.println("Endurance" + endurance);
-        //System.out.println("BaseDamage" + baseDamage);
-        //System.out.println("maxHP" + maxHP);
-        //System.out.println("HP" + hp);
-        //System.out.println("Defence" + def);
-        //System.out.println("melee mult" + melee_dmg_multiplier);
-        //System.out.println("crit mult" + crit_dmg_multiplier);
+        System.out.println("strength" + strength);
+        System.out.println("Endurance" + endurance);
+        System.out.println("BaseDamage" + baseDamage);
+        System.out.println("maxHP" + maxHP);
+        System.out.println("HP" + hp);
+        System.out.println("Defence" + def);
+        System.out.println("melee mult" + melee_dmg_multiplier);
+        System.out.println("crit mult" + crit_dmg_multiplier);
 
-        //System.out.println("dexterity" + dexterity);
-        //System.out.println("Combo damage" + combo_dmg_multiplier);
-        //System.out.println("move spd" + movement_speed);
+        System.out.println("dexterity" + dexterity);
+        System.out.println("Combo damage" + combo_dmg_multiplier);
+        System.out.println("move spd" + movement_speed);
     }
 
     @Override

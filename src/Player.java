@@ -1,9 +1,9 @@
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 
-import static java.lang.Math.log;
-import static java.lang.Math.pow;
+import static java.lang.Math.*;
 
 public class Player extends Character {
     private double comprehension_speed; // now Wisdom
@@ -23,14 +23,9 @@ public class Player extends Character {
 
     public Player(String faction) {
         super(faction);
+        this.hp = maxHP;
         this.image = new ImageIcon("player.png");
         this.radius = 20;
-        this.movement_speed = 3;
-        this.comprehension_speed = 1;
-        this.maxHP = 100;
-        this.hp = 100;
-        this.mana = 100;
-        this.maxMana = 100;
 
         this.spells.add(this.spells.size(), Game.spells[0]);
         this.spells.add(this.spells.size(), Game.spells[1]);
@@ -39,11 +34,8 @@ public class Player extends Character {
         for (int i = 0; i < 8; ++i) {
             this.critical_stage[i] = false;
         }
-
-        this.item_stat_multiplier = 1;
-
-        this.mastery_multiplier = 1;
-        this.mana_recovery_speed = 0.1;
+        this.levelUp(10);
+        this.printStats();
     }
 
     @Override
@@ -74,10 +66,19 @@ public class Player extends Character {
 
     @Override
     public void printStats() {
-        System.out.println("Stage" + stage);
-        System.out.println("mastery" + mastery_multiplier);
-        System.out.println("stats" + item_stat_multiplier);
+        super.printStats();
+        System.out.println( "Player{" +
+                "comprehension_speed=" + comprehension_speed +
+                ", x_movement=" + x_movement +
+                ", y_movement=" + y_movement +
+                ", mana=" + mana +
+                ", maxMana=" + maxMana +
+                ", critical_stage=" + Arrays.toString(critical_stage) +
+                ", item_stat_multiplier=" + item_stat_multiplier +
+                ", mastery_multiplier=" + mastery_multiplier +
+                '}');
     }
+
 
     public void attack(int mouse_X, int mouse_Y) {
         this.addToCombo();
