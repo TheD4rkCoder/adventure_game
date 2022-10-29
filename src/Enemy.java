@@ -60,8 +60,7 @@ public class Enemy extends Character{
         Game.collisionCheck(this, Game.player);
     }
     public void attack() {
-        //if (Game.player.def < 2 * strength){
-            Game.player.hp -= (baseDamage*melee_dmg_multiplier*(new Random().nextInt(1, 10) < 2 ? crit_dmg_multiplier : 1))/Game.player.def;
-        //}
+        this.addToCombo();
+        Game.player.hp -= (baseDamage * melee_dmg_multiplier * (new Random().nextInt(1, 10) < 2 ? crit_dmg_multiplier : 1)) * ((combo > 0) ? combo * combo_dmg_multiplier : 1) / Game.player.def;
     }
 }

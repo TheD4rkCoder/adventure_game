@@ -57,9 +57,14 @@ public class GamePanel extends JPanel {
         //g2D.drawRect((int) (Game.player.x-Game.player.radius), (int) (Game.player.y-Game.player.radius), (int)Game.player.radius*2, (int)Game.player.radius*2);
         g2D.fillOval((int) (this.getWidth() / 2 - Game.player.radius), (int) (this.getHeight() / 2 - Game.player.radius), (int) Game.player.radius * 2, (int) Game.player.radius * 2);
         // healthbar
-        g2D.drawRect(this.getWidth() - 340, this.getHeight() - 100, (int) (250 * Game.player.hp / Game.player.maxHP), 20);
+        g2D.drawRect(this.getWidth() - 340, this.getHeight() - 80, (int) (250 * Game.player.hp / Game.player.maxHP), 20);
         g2D.setPaint(Color.white);
-        g2D.drawRect(this.getWidth() - 350, this.getHeight() - 110, 270, 40);
+        g2D.drawRect(this.getWidth() - 350, this.getHeight() - 90, 270, 40);
+        //staminabar
+        g2D.setPaint(Color.orange);
+        g2D.drawRect(this.getWidth() - 340, this.getHeight() - 140, (int) (250 * Game.player.stamina / Game.player.maxStamina), 20);
+        g2D.setPaint(Color.white);
+        g2D.drawRect(this.getWidth() - 350, this.getHeight() - 150, 270, 40);
         // manabar
         if (manabarAnimationOffset * Game.player.maxMana > Game.player.mana) {
             g2D.setPaint(Color.cyan);

@@ -9,13 +9,11 @@ public class Spell {
     protected String name;
     protected double damage_health;
     protected double mana_cost;
+    protected Spell subSpell; // spell that spawns after the projectile of this spell gets removed
     protected double duration;
     protected double movement_speed;
     protected double radius;
     protected int piercing;
-    // protected int spellamount
-    // protected doulbe spray // inaccuracy or angle difference if there are more spells
-    protected Spell subSpell; // spell that spawns after the projectile of this spell gets removed
 
     protected enum type_t {
         projectile, obstacle, regeneration
@@ -23,7 +21,7 @@ public class Spell {
 
     protected type_t type;
 
-    public Spell(ImageIcon image, String name, double damage_health, double mana_cost, double duration, double movement_speed, double radius, int piercing, type_t type, Spell subSpell) {
+    public Spell(ImageIcon image, String name, double damage_health, double mana_cost, Spell subSpell, double duration, double movement_speed, double radius, int piercing, type_t type) {
         this.image = image;
         this.name = name;
         this.damage_health = damage_health;
@@ -37,6 +35,7 @@ public class Spell {
     }
 
     public void summonProjectile(int mouse_X, int mouse_Y) { //also make a method for removing, so also sumon the subspell
+    public void summonProjectile(int mouse_X, int mouse_Y) { //also make a method for removing, so also summon the SubSpell //currently only usable for player
         if (Game.player.mana - mana_cost >= 0) {
             Game.player.mana -= mana_cost;
             Projectile proj = new Projectile(mouse_X, mouse_Y, this.movement_speed, this.damage_health, this.duration, this.piercing, this.radius, this.image.getImage().getScaledInstance((int)radius*2, (int)radius*2, Image.SCALE_FAST), this);
