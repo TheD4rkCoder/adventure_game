@@ -9,13 +9,6 @@ import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
 
 public class Game {
-    static Player player = new Player("o7");
-    static ArrayList<Enemy> enemies = new ArrayList<>();
-    static ArrayList<GameObject> obstacles = new ArrayList<>();//change this once we have obstacle spells
-    static ArrayList<Wall> walls = new ArrayList<>();
-    static ArrayList<Projectile> projectiles = new ArrayList<>();
-
-    // load sprite sheet:
     final static private BufferedImage sprite_sheet;
 
     static {
@@ -29,9 +22,18 @@ public class Game {
 
     static Spell[] spells = new Spell[]{
             new Spell(new ImageIcon(sprite_sheet.getSubimage(32, 0, 32, 32)), "Mana Bolt", 10, 5, null, 100, 5, 10, 2, Spell.type_t.projectile),
-            new Spell(new ImageIcon("lavapool.png"), "Lava Pool", 10, 5, null, 100, 5, 50, 2, Spell.type_t.projectile)
+            new Spell(new ImageIcon("lavapool.png"), "Lava Pool", 10, 5, null, 200, 1, 1000, 5, Spell.type_t.projectile),
+            new Spell(new ImageIcon(sprite_sheet.getSubimage(0, 0, 32, 32)), "Fireball", 30, 20, new Spell(new ImageIcon(sprite_sheet.getSubimage(0, 0, 32, 32)), "Fireball", 20, 0, null, 10, 0, 100, 3, Spell.type_t.projectile), 100, 4, 30, 3, Spell.type_t.projectile)
 
     };
+    static Player player = new Player("o7");
+    static ArrayList<Enemy> enemies = new ArrayList<>();
+    static ArrayList<GameObject> obstacles = new ArrayList<>();//change this once we have obstacle spells
+    static ArrayList<Wall> walls = new ArrayList<>();
+    static ArrayList<Projectile> projectiles = new ArrayList<>();
+
+    // load sprite sheet:
+
 
 
     static final int FRAME_TIME = 5; //how long a Frame is in milliseconds

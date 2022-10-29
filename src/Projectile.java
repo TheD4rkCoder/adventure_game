@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 
-public class Projectile extends GameObject{
+public class Projectile extends GameObject {
 
     protected double movement_speed;
     protected Image image;
@@ -16,15 +16,16 @@ public class Projectile extends GameObject{
 
     protected Spell spell;
     protected double angle;
-    Projectile (double mouseX, double mouseY, double movement_speed, double damage, double durationLeft, int piercing, double radius, Image image, Spell spell){
+
+    Projectile(double mouseX, double mouseY, double movement_speed, double damage, double durationLeft, int piercing, double radius, Image image, Spell spell) {
         double deltaX = Game.centerX - mouseX; // mouseX is relative to the window, not relative to the panel!!!
         double deltaY = Game.centerY - mouseY;
         this.radius = radius;
 
-        this.angle = Math.atan(deltaY/deltaX) + ((deltaX > 0) ? Math.PI : 0);
+        this.angle = Math.atan(deltaY / deltaX) + ((deltaX > 0) ? Math.PI : 0);
         this.movement_speed = movement_speed;
-        this.x = Game.player.x + cos(angle) * this.radius/2;
-        this.y = Game.player.y + sin(angle) * this.radius/2;
+        this.x = Game.player.x + cos(angle) * this.radius / 2;
+        this.y = Game.player.y + sin(angle) * this.radius / 2;
 
         // when enemies cast a projectile, they should overwrite this list with "Game.player"
         enemiesToHit = new ArrayList<>(Game.enemies);
@@ -36,28 +37,31 @@ public class Projectile extends GameObject{
         this.spell = spell;
     }
 
-    public boolean move (){
+    public boolean move() {
         this.x = this.x + cos(angle) * movement_speed;
         this.y = this.y + sin(angle) * movement_speed;
         --durationLeft;
         if (enemiesToHit.size() < 1) {
             return true; // true = yes, the projectile should still exist
         }
-        if(piercing != 0) {
-            for (int i = 0; i < enemiesToHit.size(); ++i) {
-                if (Game.collisionCheck(this, enemiesToHit.get(i))) {
-                    enemiesToHit.get(i).hp -= (int) (damage);
-                    enemiesToHit.remove(i);
-                    piercing -= 1;
-                    spell.summonSubProjectile(angle);
+        for (int i = 0; i < enemiesToHit.size(); ++i) {
+            if (Game.collisionCheck(this, enemiesToHit.get(i))) {
+                enemiesToHit.get(i).hp -= (int) (damage);
+                enemiesToHit.remove(i);
+                piercing -= 1;
 
-                    if(piercing < 1){
-                        return false;
-                    }
-                    --i;
+                spell.summonSubProjectile(angle, x, y);
+
+                if (piercing < 1) {
+                    return false;
                 }
+                --i;
             }
         }
-        return !(durationLeft < 1);
+        if (durationLeft < 1) {
+            spell.summonSubProjectile(angle, x, y);
+            return false;
+        }
+        return true;
     }
 }
