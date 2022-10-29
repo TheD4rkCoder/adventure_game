@@ -36,18 +36,6 @@ public class Spell {
         this.type = type;
     }
 
-
-    /*
-            int critDiv = 0;
-            for(int i = 0; i < 8; ++i){
-                if(Game.player.critical_stage[i]){
-                    ++critDiv;
-                }
-            }
-            double damage = this.damage_health * Game.player.spell_effectiveness * ((Game.player.combo > 0)? Game.player.combo * Game.player.combo_dmg_multiplier: 1) * ((new Random().nextInt(Game.BASE_CRITICAL_CHANCE/critDiv) == 13) ? Game.player.crit_dmg_multiplier : 1);
-
-     */
-
     public void summonProjectile(GameObject o, double delta_X, double delta_Y /*or mouse_x and mouse_y*/) { //also make a method for removing, so also summon the SubSpell //currently only usable for player
         ArrayList<Character> toHit;
         double damage = 1;

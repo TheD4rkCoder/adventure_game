@@ -9,10 +9,16 @@ public class GamePanel extends JPanel {
     protected ImageIcon background;
     public static double manabarAnimationOffset;
 
+    //protected Inventory inv;
+
     GamePanel() {
         super();
         this.setPreferredSize(new Dimension(1280, 720));
         background = new ImageIcon("background.png");
+        /*
+        inv = new Inventory();
+        this.add(inv);
+        */
     }
 
 
@@ -40,14 +46,20 @@ public class GamePanel extends JPanel {
         for (int i = 0; i < Game.projectiles.size(); i++) {
             GameObject p = Game.projectiles.get(i);
             g2D.drawImage(Game.projectiles.get(i).image, (int) (p.x - p.radius - deltaX), (int) (p.y - p.radius - deltaY), null);
+
         }
 
+        float alpha = 8 * 0.1f;
+        AlphaComposite alcom = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha);
+        g2D.setComposite(alcom);
         // draw all enemies | textures still need to be replaced with images
         g2D.setPaint(Color.green);
         for (int i = 0; i < Game.enemies.size(); i++) {
             GameObject p = Game.enemies.get(i);
             g2D.fillOval((int) (p.x - p.radius - deltaX), (int) (p.y - p.radius - deltaY), (int) p.radius * 2, (int) p.radius * 2);
         }
+        alcom = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1);
+        g2D.setComposite(alcom);
 
         g2D.setPaint(Color.red);
         // draw player and other gui like health bar
