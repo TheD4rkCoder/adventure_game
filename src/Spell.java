@@ -34,7 +34,7 @@ public class Spell {
         this.type = type;
     }
 
-    public void summonProjectile(int mouse_X, int mouse_Y) { //also make a method for removing, so also sumon the subspell
+
     public void summonProjectile(int mouse_X, int mouse_Y) { //also make a method for removing, so also summon the SubSpell //currently only usable for player
         if (Game.player.mana - mana_cost >= 0) {
             Game.player.mana -= mana_cost;
