@@ -61,10 +61,12 @@ public class GamePanel extends JPanel {
         g2D.setPaint(Color.white);
         g2D.drawRect(this.getWidth() - 350, this.getHeight() - 110, 270, 40);
         // manabar
-        if (manabarAnimationOffset > 0) {
+        if (manabarAnimationOffset * Game.player.maxMana > Game.player.mana) {
             g2D.setPaint(Color.cyan);
-            g2D.drawRect(this.getWidth() - 340, this.getHeight() - 200, (int) (250 * (Math.min(Game.player.mana + manabarAnimationOffset, Game.player.maxMana)) / Game.player.maxMana), 20);
-            manabarAnimationOffset -= Game.player.maxMana / 1000;
+            g2D.drawRect(this.getWidth() - 340, this.getHeight() - 200, (int) (250 * manabarAnimationOffset), 20);
+            manabarAnimationOffset -= 0.001;
+        } else {
+            manabarAnimationOffset = Game.player.mana / Game.player.maxMana;
         }
         g2D.setPaint(Color.blue);
         g2D.drawRect(this.getWidth() - 340, this.getHeight() - 200, (int) (250 * Game.player.mana / Game.player.maxMana), 20);

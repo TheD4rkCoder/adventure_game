@@ -45,7 +45,7 @@ public class Player extends Character {
         this.item_stat_multiplier = 1;
 
         this.mastery_multiplier = 1;
-        this.mana_recovery_speed = 1;
+        this.mana_recovery_speed = 0.1;
     }
 
     @Override

@@ -21,9 +21,9 @@ public class Game {
 
 
     static Spell[] spells = new Spell[]{
-            new Spell(new ImageIcon(sprite_sheet.getSubimage(32, 0, 32, 32)), "Mana Bolt", 10, 5, null, 100, 5, 10, 2, Spell.type_t.projectile),
-            new Spell(new ImageIcon("lavapool.png"), "Lava Pool", 10, 5, null, 200, 1, 1000, 5, Spell.type_t.projectile),
-            new Spell(new ImageIcon(sprite_sheet.getSubimage(0, 0, 32, 32)), "Fireball", 30, 20, new Spell(new ImageIcon(sprite_sheet.getSubimage(0, 0, 32, 32)), "Fireball", 20, 0, null, 10, 0, 100, 3, Spell.type_t.projectile), 100, 4, 30, 3, Spell.type_t.projectile)
+            new Spell(new ImageIcon(sprite_sheet.getSubimage(32, 0, 32, 32)), "Mana Bolt", 10, 5, 100, 5, 10, 2, Spell.type_t.projectile, null),
+            new Spell(new ImageIcon("lavapool.png"), "Lava Pool", 10, 5, 200, 1, 1000, 5, Spell.type_t.projectile, null),
+            new Spell(new ImageIcon(sprite_sheet.getSubimage(0, 0, 32, 32)), "Fireball", 30, 20, 100, 4, 30, 3, Spell.type_t.projectile, new Spell(new ImageIcon(sprite_sheet.getSubimage(0, 0, 32, 32)), "Fireball", 20, 0, 10, 0, 100, 5, Spell.type_t.projectile, null))
 
     };
     static Player player = new Player("o7");
@@ -33,7 +33,6 @@ public class Game {
     static ArrayList<Projectile> projectiles = new ArrayList<>();
 
     // load sprite sheet:
-
 
 
     static final int FRAME_TIME = 5; //how long a Frame is in milliseconds
@@ -88,7 +87,7 @@ public class Game {
 
     static public void collisions_and_movements() {
         // EnemyMovement
-        for (int i = 0; i < Game.enemies.size(); ++i) {
+        for (int i = 0; i < Game.enemies.size(); i++) {
             if (Game.enemies.get(i).hp <= 0) {
                 Game.enemies.remove(i);
                 --i;
@@ -104,8 +103,9 @@ public class Game {
             }
         }
         // ProjectileMovement; ProjectileCollision is in their .move() method
-        for (int i = 0; i < Game.projectiles.size(); ++i) {
+        for (int i = 0; i < Game.projectiles.size(); i++) {
             if (!Game.projectiles.get(i).move()) {
+
                 Game.projectiles.remove(i);
                 --i;
             }
