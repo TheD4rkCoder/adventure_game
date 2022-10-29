@@ -49,35 +49,31 @@ public class Player extends Character {
     @Override
     public void increaseStat(String stat, int amount) {
         super.increaseStat(stat, amount);
-        switch(stat){
+        switch (stat) {
             case "Intelligence" -> {
-                for(int i = 0; i < amount; ++i){
-                    maxMana = maxMana + 1;
-                    mana = mana + 1;
-                }
+                maxMana = pow(1.01, intelligence) + intelligence + 10;
             }
             case "Dexterity" -> {
-                if(dexterity > 50) {
+                if (dexterity > 50) {
                     critical_stage[8] = true;
-                    if(dexterity > 100){
+                    if (dexterity > 100) {
                         critical_stage[7] = true;
-                        if(dexterity > 300){
+                        if (dexterity > 300) {
                             critical_stage[6] = true;
                         }
                     }
                 }
             }
             case "Wisdom" -> {
-                for (int i = 0; i < amount; ++i) {
-                    item_stat_multiplier = pow(0.005, wisdom);
-                    mastery_multiplier = wisdom/50 + 1;
-                    comprehension_speed = pow(1.02, wisdom);
-                }
+                item_stat_multiplier = pow(0.005, wisdom);
+                mastery_multiplier = wisdom / 50 + 1;
+                comprehension_speed = pow(1.02, wisdom);
             }
         }
     }
+
     @Override
-    public void printStats(){
+    public void printStats() {
         System.out.println("Stage" + stage);
         System.out.println("mastery" + mastery_multiplier);
         System.out.println("stats" + item_stat_multiplier);
@@ -87,13 +83,14 @@ public class Player extends Character {
         this.addToCombo();
         this.spells.get(2).summonProjectile(this, Game.centerX - mouse_X, Game.centerY - mouse_Y);
     }
+
     public void refresh() {
         this.mana += this.mana_recovery_speed;
         if (this.mana > this.maxMana) {
             this.mana = this.maxMana;
         }
-        this.stamina += maxStamina/100;
-        if(this.stamina > this.maxStamina){
+        this.stamina += maxStamina / 100;
+        if (this.stamina > this.maxStamina) {
             this.stamina = this.maxStamina;
         }
         //System.out.println(this.stamina);
