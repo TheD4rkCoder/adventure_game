@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Random;
 
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
@@ -36,12 +37,31 @@ public class Spell {
     }
 
 
+    /*
+            int critDiv = 0;
+            for(int i = 0; i < 8; ++i){
+                if(Game.player.critical_stage[i]){
+                    ++critDiv;
+                }
+            }
+            double damage = this.damage_health * Game.player.spell_effectiveness * ((Game.player.combo > 0)? Game.player.combo * Game.player.combo_dmg_multiplier: 1) * ((new Random().nextInt(Game.BASE_CRITICAL_CHANCE/critDiv) == 13) ? Game.player.crit_dmg_multiplier : 1);
+
+     */
+
     public void summonProjectile(GameObject o, double delta_X, double delta_Y /*or mouse_x and mouse_y*/) { //also make a method for removing, so also summon the SubSpell //currently only usable for player
         ArrayList<Character> toHit;
+        double damage = 1;
         if (o instanceof Player) {
             if (Game.player.mana - this.mana_cost >= 0) {
                 Game.player.mana -= mana_cost;
                 toHit = new ArrayList<>(Game.enemies);
+                int critDiv = 0;
+                for(int i = 0; i < 8; ++i){
+                    if(Game.player.critical_stage[i]){
+                        ++critDiv;
+                    }
+                }
+                damage = Game.player.spell_effectiveness * ((new Random().nextInt(Game.BASE_CRITICAL_CHANCE/critDiv) == 13) ? Game.player.crit_dmg_multiplier : 1);
             } else {
                 return;
             }
@@ -62,7 +82,7 @@ public class Spell {
         }
         double x = o.x + cos(angle) * o.radius;
         double y = o.y + sin(angle) * o.radius;
-        Projectile proj = new Projectile(x, y, angle, this.movement_speed, this.damage_health, this.duration, this.piercing, this.radius, this.image.getImage().getScaledInstance((int) radius * 2, (int) radius * 2, Image.SCALE_FAST), this, toHit);
+        Projectile proj = new Projectile(x, y, angle, this.movement_speed * ((Character) o).spell_effectiveness, this.damage_health * damage, this.duration * ((Character) o).spell_effectiveness, this.piercing, this.radius, this.image.getImage().getScaledInstance((int) radius * 2, (int) radius * 2, Image.SCALE_FAST), this, toHit);
         Game.projectiles.add(Game.projectiles.size(), proj);
     }
 
