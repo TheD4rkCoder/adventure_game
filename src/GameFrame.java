@@ -47,6 +47,7 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
                 Game.player.x += Game.player.x_movement;
                 Game.player.y += Game.player.y_movement;
             }
+            Game.player.refresh();
             Game.collisions_and_movements();
 
             Random rand = new Random();
@@ -57,16 +58,16 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
                 if (rand.nextInt(500) == 13) {
                     switch (rand.nextInt(4)) {
                         case 0 -> {//north
-                            Game.enemies.add(Game.enemies.size(), new Enemy("Test", rand.nextInt(this.getWidth() + 1) + Game.player.x, -5 + Game.player.y, rand.nextInt(20), 1, 100));
+                            Game.enemies.add(Game.enemies.size(), new Enemy("Test", rand.nextInt(this.getWidth()) + Game.player.x - this.getWidth() / 2, Game.player.y - this.getHeight() / 2, rand.nextInt(20), 1, 100));
                         }
                         case 1 -> {//east
-                            Game.enemies.add(Game.enemies.size(), new Enemy("Test", this.getWidth() + 5 + Game.player.x, rand.nextInt(this.getHeight() + 1) + Game.player.y, rand.nextInt(20), 1, 100));
+                            Game.enemies.add(Game.enemies.size(), new Enemy("Test", this.getWidth() / 2 + Game.player.x, rand.nextInt(this.getHeight() + 1) + Game.player.y - this.getHeight() / 2, rand.nextInt(20), 1, 100));
                         }
                         case 2 -> {//south
-                            Game.enemies.add(Game.enemies.size(), new Enemy("Test", rand.nextInt(this.getWidth() + 1) + Game.player.x, this.getHeight() + 5 + Game.player.y, rand.nextInt(20), 1, 100));
+                            Game.enemies.add(Game.enemies.size(), new Enemy("Test", rand.nextInt(this.getWidth()) + Game.player.x - this.getWidth() / 2, this.getHeight() / 2 + Game.player.y, rand.nextInt(20), 1, 100));
                         }
                         case 3 -> {//east
-                            Game.enemies.add(Game.enemies.size(), new Enemy("Test", -5 + Game.player.x, rand.nextInt(this.getHeight() + 1) + Game.player.y, rand.nextInt(20), 1, 100));
+                            Game.enemies.add(Game.enemies.size(), new Enemy("Test", this.getWidth() / 2 + Game.player.x, rand.nextInt(this.getHeight() + 1) + Game.player.y - this.getHeight() / 2, rand.nextInt(20), 1, 100));
                         }
                     }
                 }

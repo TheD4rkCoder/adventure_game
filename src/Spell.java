@@ -43,9 +43,11 @@ public class Spell {
         }
 
     }
-    public void summonSubProjectile(double angle) {
+    public void summonSubProjectile(double angle, double x, double y) {
         if (subSpell != null) {
-            Projectile proj = new Projectile(Game.centerX + cos(angle), Game.centerY + sin(angle), this.subSpell.movement_speed, this.subSpell.damage_health, this.subSpell.duration, this.piercing, this.radius, this.subSpell.image.getImage().getScaledInstance((int) radius * 2, (int) radius * 2, Image.SCALE_FAST), this.subSpell);
+            Projectile proj = new Projectile(Game.centerX + cos(angle), Game.centerY + sin(angle), this.subSpell.movement_speed, this.subSpell.damage_health, this.subSpell.duration, this.subSpell.piercing, this.subSpell.radius, this.subSpell.image.getImage().getScaledInstance((int) this.subSpell.radius * 2, (int) this.subSpell.radius * 2, Image.SCALE_FAST), this.subSpell);
+            proj.x = x;
+            proj.y = y;
             Game.projectiles.add(Game.projectiles.size(), proj);
         }
 

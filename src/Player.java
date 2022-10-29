@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class Player extends Character {
     private double comprehension_speed; //Intelligence
@@ -7,7 +8,7 @@ public class Player extends Character {
     protected double x_movement;
     protected double y_movement;
     protected double mana, maxMana;
-
+    protected ArrayList<Spell> spells;
 
     private boolean[] critical_stage = new boolean[8]; //Dexterity
     //different requirements to trigger critical hit
@@ -28,6 +29,11 @@ public class Player extends Character {
         this.hp = 100;
         this.mana = 100;
         this.maxMana = 100;
+        this.spells = new ArrayList<>();
+        this.spells.add(this.spells.size(), Game.spells[0]);
+        this.spells.add(this.spells.size(), Game.spells[1]);
+        this.spells.add(this.spells.size(), Game.spells[2]);
+
 
         for (int i = 0; i < 8; ++i) {
             this.critical_stage[i] = false;
@@ -36,6 +42,7 @@ public class Player extends Character {
         this.item_stat_multiplier = 1;
 
         this.mastery_multiplier = 1;
+        this.mana_recovery_speed = 1;
     }
 
     @Override
@@ -44,6 +51,12 @@ public class Player extends Character {
     }
 
     public void attack(int mouse_X, int mouse_Y) {
-        Game.spells[0].summonProjectile(mouse_X, mouse_Y);
+        this.spells.get(2).summonProjectile(mouse_X, mouse_Y);
+    }
+    public void refresh() {
+        this.mana += this.mana_recovery_speed;
+        if (this.mana > this.maxMana) {
+            this.mana = this.maxMana;
+        }
     }
 }
