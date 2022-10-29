@@ -34,7 +34,7 @@ public class Game {
     static ArrayList<Projectile> projectiles = new ArrayList<>();
 
 
-    static final int FRAME_TIME = 5; //how long a Frame is in milliseconds
+    static final int FRAME_TIME = 10; //how long a Frame is in milliseconds
     static final int ENEMY_COURSE_ADJUST_TIME = 100; //how long between the adjustments of the enemies course
     static final int COMBO_TIMER_BASE_VALUE = 1000;
     static final int BASE_CRITICAL_CHANCE = 80;

@@ -8,7 +8,8 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
     private GamePanel gamePanel;
     private Timer timer;
     private boolean[] isKeyPressed;
-
+    private boolean isMousePressed;
+    public static int mousePressedTime;
     private Timer enemyCourseAdjust;
 
     GameFrame(String windowName) {
@@ -70,7 +71,9 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
                     }
                 }
             }
-
+            if (isMousePressed) {
+                mousePressedTime++;
+            }
 
             gamePanel.repaint();
 
@@ -142,7 +145,6 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
 
     @Override
     public void mouseClicked(MouseEvent e) {
-
     }
 
     @Override
@@ -150,11 +152,11 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
 
         switch (e.getButton()) {
             case 1: // lmb
-                Game.player.attack(e.getX(), e.getY());
                 break;
             case 2: // mouse_wheel
                 break;
             case 3: // rmb
+                isMousePressed = true;
                 break;
             case 4: // undo (browser)
                 break;
@@ -165,7 +167,25 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
 
     @Override
     public void mouseReleased(MouseEvent e) {
-
+        switch (e.getButton()) {
+            case 1: // lmb
+                break;
+            case 2: // mouse_wheel
+                break;
+            case 3: // rmb
+                isMousePressed = false;
+                if (mousePressedTime < 100) {
+                    Game.player.attack(e.getX(), e.getY());
+                } else {
+                    // select spell
+                }
+                mousePressedTime = 0;
+                break;
+            case 4: // undo (browser)
+                break;
+            case 5: // redo (browser)
+                break;
+        }
     }
 
     @Override
