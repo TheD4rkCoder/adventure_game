@@ -1,8 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.Random;
 
-import static java.lang.Math.cos;
-import static java.lang.Math.sin;
+import static java.lang.Math.*;
 
 public class Spell {
     protected ImageIcon image;
@@ -34,14 +34,21 @@ public class Spell {
         this.type = type;
     }
 
-    public void summonProjectile(int mouse_X, int mouse_Y) { //also make a method for removing, so also summon the SubSpell
+    public void summonProjectile(int mouse_X, int mouse_Y) { //also make a method for removing, so also summon the SubSpell //currently only usable for player
         if (Game.player.mana - mana_cost >= 0) {
+            int critDiv = 0;
+            for(int i = 0; i < 8; ++i){
+                if(Game.player.critical_stage[i]){
+                    ++critDiv;
+                }
+            }
+            double damage = this.damage_health * Game.player.spell_effectiveness * ((Game.player.combo > 0)? Game.player.combo * Game.player.combo_dmg_multiplier: 1) * ((new Random().nextInt(Game.BASE_CRITICAL_CHANCE/critDiv) == 13) ? Game.player.crit_dmg_multiplier : 1);
             Game.player.mana -= mana_cost;
             GamePanel.manabarAnimationOffset += mana_cost;
             if(GamePanel.manabarAnimationOffset > Game.player.maxMana){
                 GamePanel.manabarAnimationOffset = Game.player.maxMana;
             }
-            Projectile proj = new Projectile(mouse_X, mouse_Y, this.movement_speed * Game.player.spell_effectiveness, this.damage_health * Game.player.spell_effectiveness, this.duration * Game.player.spell_effectiveness, this.piercing, this.radius, this.image.getImage().getScaledInstance((int)radius*2, (int)radius*2, Image.SCALE_FAST), this);
+            Projectile proj = new Projectile(mouse_X, mouse_Y, this.movement_speed * Game.player.spell_effectiveness, damage, this.duration * Game.player.spell_effectiveness, this.piercing, this.radius, this.image.getImage().getScaledInstance((int)radius*2, (int)radius*2, Image.SCALE_FAST), this);
             Game.projectiles.add(Game.projectiles.size(), proj);
         }
 

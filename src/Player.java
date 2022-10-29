@@ -13,7 +13,7 @@ public class Player extends Character {
     protected double mana, maxMana;
     protected ArrayList<Spell> spells;
 
-    private boolean[] critical_stage = new boolean[8]; //Dexterity
+    protected boolean[] critical_stage = new boolean[8]; //Dexterity
     //different requirements to trigger critical hit
 
 
@@ -87,6 +87,7 @@ public class Player extends Character {
     }
 
     public void attack(int mouse_X, int mouse_Y) {
+        this.addToCombo();
         this.spells.get(2).summonProjectile(mouse_X, mouse_Y);
     }
     public void refresh() {
@@ -98,5 +99,6 @@ public class Player extends Character {
         if(this.stamina > this.maxStamina){
             this.stamina = this.maxStamina;
         }
+        //System.out.println(this.stamina);
     }
 }

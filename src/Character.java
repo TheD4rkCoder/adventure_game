@@ -1,12 +1,19 @@
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.*;
+
 import static java.lang.Math.log;
 import static java.lang.Math.pow;
 
-public class Character extends GameObject{
+public class Character extends GameObject implements ActionListener {
     private String faction;
 
     protected int stage, intelligence, strength, endurance, def, stamina, dexterity, wisdom, maxStamina;
 
     protected double baseDamage, spell_effectiveness, mana_recovery_speed/*in Enemy, cooldown between casts*/, melee_dmg_multiplier, movement_speed, combo_dmg_multiplier, crit_dmg_multiplier, hp, maxHP;
+
+    protected Timer comboTimer;
+    protected int combo;
 
 
     public Character(String faction) {
@@ -15,24 +22,27 @@ public class Character extends GameObject{
         this.stage = 0;
 
         this.intelligence = 0;
-        this.spell_effectiveness = 1; //I
-        this.mana_recovery_speed = 1; //I
+        this.spell_effectiveness = 1; //P
+        this.mana_recovery_speed = 1; //P
 
         this.endurance = 0;
         this.strength = 0;
-        this.maxHP = 100; //I
-        this.hp = 100; //I
-        this.def = 0; //I
-        this.maxStamina = 100;
-        this.stamina = 100;
-        this.melee_dmg_multiplier = 1;
+        this.maxHP = 100; //P
+        this.hp = 100; //P
+        this.def = 0; //P
+        this.maxStamina = 100; //P
+        this.stamina = 100; //P
+        this.melee_dmg_multiplier = 1; //E
 
         this.dexterity = 0;
-        this.movement_speed = 1;
-        this.combo_dmg_multiplier = 1;
-        this.crit_dmg_multiplier = 1;
+        this.movement_speed = 1; //I
+        this.combo_dmg_multiplier = 1; //I
+        this.crit_dmg_multiplier = 1; //E
 
         this.wisdom = 0;
+
+        this.comboTimer = new Timer(Game.COMBO_TIMER_BASE_VALUE, this);
+        this.combo = 0;
 
     }
 
@@ -104,5 +114,22 @@ public class Character extends GameObject{
         //System.out.println("dexterity" + dexterity);
         //System.out.println("Combo damage" + combo_dmg_multiplier);
         //System.out.println("move spd" + movement_speed);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if(e.getSource() == this.comboTimer){
+            combo = 0;
+        }
+    }
+
+    public void addToCombo (){
+        if(combo == 0){
+            this.comboTimer.start();
+        }else{
+            this.comboTimer.setDelay(Game.COMBO_TIMER_BASE_VALUE/(2*combo));
+            this.comboTimer.restart();
+        }
+        combo += 1;
     }
 }

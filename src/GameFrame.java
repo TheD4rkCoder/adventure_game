@@ -41,12 +41,13 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
             // Main game loop
             if(Game.player.stamina > 0) {
                 if (Game.player.x_movement != 0 && Game.player.y_movement != 0) {
-
                     Game.player.x += Game.player.x_movement * 0.71;
                     Game.player.y += Game.player.y_movement * 0.71;
-                } else {
+                    Game.player.stamina -= 2;
+                } else if(Game.player.x_movement != 0 || Game.player.y_movement != 0){
                     Game.player.x += Game.player.x_movement;
                     Game.player.y += Game.player.y_movement;
+                    Game.player.stamina -= 2;
                 }
             }
             Game.player.refresh();
