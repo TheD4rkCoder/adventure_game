@@ -2,6 +2,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
+import static java.lang.Math.log;
+import static java.lang.Math.pow;
+
 public class Player extends Character {
     private double comprehension_speed; //Intelligence
     //affects advancing/leveling speed
@@ -48,6 +51,39 @@ public class Player extends Character {
     @Override
     public void levelUp(String stat, int levels) {
         super.levelUp(stat, levels);
+        switch(stat){
+            case "Intelligence" -> {
+                for(int i = 0; i < levels*3; ++i){
+                    comprehension_speed = log(intelligence);
+                    maxMana = maxMana + 1;
+                    mana = mana + 1;
+                }
+            }
+            case "Dexterity" -> {
+                if(dexterity > 50) {
+                    critical_stage[8] = true;
+                    if(dexterity > 100){
+                        critical_stage[7] = true;
+                        if(dexterity > 300){
+                            critical_stage[6] = true;
+                        }
+                    }
+                }
+            }
+            case "Wisdom" -> {
+                for (int i = 0; i < levels * 3; ++i) {
+                    item_stat_multiplier = item_stat_multiplier + item_stat_multiplier * 0.005;
+                    mastery_multiplier = wisdom/50 + 1;
+                }
+            }
+
+        }
+    }
+    @Override
+    public void printStats(){
+        System.out.println("Stage" + stage);
+        System.out.println("mastery" + mastery_multiplier);
+        System.out.println("stats" + item_stat_multiplier);
     }
 
     public void attack(int mouse_X, int mouse_Y) {
@@ -57,6 +93,10 @@ public class Player extends Character {
         this.mana += this.mana_recovery_speed;
         if (this.mana > this.maxMana) {
             this.mana = this.maxMana;
+        }
+        this.stamina += maxStamina/100;
+        if(this.stamina > this.maxStamina){
+            this.stamina = this.maxStamina;
         }
     }
 }

@@ -61,7 +61,7 @@ public class Enemy extends Character{
     }
     public void attack() {
         //if (Game.player.def < 2 * strength){
-            Game.player.hp -= (int)(baseDamage*melee_dmg_multiplier*(new Random().nextInt(1, 10) < 2 ? crit_dmg_multiplier : 1));
+            Game.player.hp -= (baseDamage*melee_dmg_multiplier*(new Random().nextInt(1, 10) < 2 ? crit_dmg_multiplier : 1))/Game.player.def;
         //}
     }
 }

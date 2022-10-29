@@ -34,11 +34,14 @@ public class Spell {
         this.type = type;
     }
 
-    public void summonProjectile(int mouse_X, int mouse_Y) { //also make a method for removing, so also sumon the subspell
+    public void summonProjectile(int mouse_X, int mouse_Y) { //also make a method for removing, so also summon the SubSpell
         if (Game.player.mana - mana_cost >= 0) {
             Game.player.mana -= mana_cost;
             GamePanel.manabarAnimationOffset += mana_cost;
-            Projectile proj = new Projectile(mouse_X, mouse_Y, this.movement_speed, this.damage_health, this.duration, this.piercing, this.radius, this.image.getImage().getScaledInstance((int)radius*2, (int)radius*2, Image.SCALE_FAST), this);
+            if(GamePanel.manabarAnimationOffset > Game.player.maxMana){
+                GamePanel.manabarAnimationOffset = Game.player.maxMana;
+            }
+            Projectile proj = new Projectile(mouse_X, mouse_Y, this.movement_speed * Game.player.spell_effectiveness, this.damage_health * Game.player.spell_effectiveness, this.duration * Game.player.spell_effectiveness, this.piercing, this.radius, this.image.getImage().getScaledInstance((int)radius*2, (int)radius*2, Image.SCALE_FAST), this);
             Game.projectiles.add(Game.projectiles.size(), proj);
         }
 

@@ -39,13 +39,15 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == this.timer) {
             // Main game loop
-            if (Game.player.x_movement != 0 && Game.player.y_movement != 0) {
+            if(Game.player.stamina > 0) {
+                if (Game.player.x_movement != 0 && Game.player.y_movement != 0) {
 
-                Game.player.x += Game.player.x_movement * 0.71;
-                Game.player.y += Game.player.y_movement * 0.71;
-            } else {
-                Game.player.x += Game.player.x_movement;
-                Game.player.y += Game.player.y_movement;
+                    Game.player.x += Game.player.x_movement * 0.71;
+                    Game.player.y += Game.player.y_movement * 0.71;
+                } else {
+                    Game.player.x += Game.player.x_movement;
+                    Game.player.y += Game.player.y_movement;
+                }
             }
             Game.player.refresh();
             Game.collisions_and_movements();
@@ -57,21 +59,19 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
             for (int i = 0; i < rand.nextInt(10); ++i) {
                 if (rand.nextInt(500) == 13) {
                     switch (rand.nextInt(4)) {
-                        case 0 -> {//north
-                            Game.enemies.add(Game.enemies.size(), new Enemy("Test", rand.nextInt(this.getWidth()) + Game.player.x - this.getWidth() / 2, Game.player.y - this.getHeight() / 2, rand.nextInt(20), 1, 100));
-                        }
-                        case 1 -> {//east
-                            Game.enemies.add(Game.enemies.size(), new Enemy("Test", this.getWidth() / 2 + Game.player.x, rand.nextInt(this.getHeight() + 1) + Game.player.y - this.getHeight() / 2, rand.nextInt(20), 1, 100));
-                        }
-                        case 2 -> {//south
-                            Game.enemies.add(Game.enemies.size(), new Enemy("Test", rand.nextInt(this.getWidth()) + Game.player.x - this.getWidth() / 2, this.getHeight() / 2 + Game.player.y, rand.nextInt(20), 1, 100));
-                        }
-                        case 3 -> {//east
-                            Game.enemies.add(Game.enemies.size(), new Enemy("Test", this.getWidth() / 2 + Game.player.x, rand.nextInt(this.getHeight() + 1) + Game.player.y - this.getHeight() / 2, rand.nextInt(20), 1, 100));
-                        }
+                        case 0 -> //north
+                                Game.enemies.add(Game.enemies.size(), new Enemy("Test", rand.nextInt(this.getWidth()) + Game.player.x - this.getWidth() / 2, Game.player.y - this.getHeight() / 2, rand.nextInt(20), 1, 100));
+                        case 1 -> //east
+                                Game.enemies.add(Game.enemies.size(), new Enemy("Test", this.getWidth() / 2 + Game.player.x, rand.nextInt(this.getHeight() + 1) + Game.player.y - this.getHeight() / 2, rand.nextInt(20), 1, 100));
+                        case 2 -> //south
+                                Game.enemies.add(Game.enemies.size(), new Enemy("Test", rand.nextInt(this.getWidth()) + Game.player.x - this.getWidth() / 2, this.getHeight() / 2 + Game.player.y, rand.nextInt(20), 1, 100));
+                        case 3 -> //west
+                                Game.enemies.add(Game.enemies.size(), new Enemy("Test", Game.player.x - this.getWidth() / 2, rand.nextInt(this.getHeight() + 1) + Game.player.y - this.getHeight() / 2, rand.nextInt(20), 1, 100));
                     }
                 }
             }
+
+
 
             gamePanel.repaint();
 
