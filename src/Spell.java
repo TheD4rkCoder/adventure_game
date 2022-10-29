@@ -21,7 +21,7 @@ public class Spell {
 
     protected type_t type;
 
-    public Spell(ImageIcon image, String name, double damage_health, double mana_cost, Spell subSpell, double duration, double movement_speed, double radius, int piercing, type_t type) {
+    public Spell(ImageIcon image, String name, double damage_health, double mana_cost, double duration, double movement_speed, double radius, int piercing, type_t type, Spell subSpell) {
         this.image = image;
         this.name = name;
         this.damage_health = damage_health;
