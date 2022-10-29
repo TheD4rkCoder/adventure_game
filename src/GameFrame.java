@@ -2,7 +2,6 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.util.Random;
 
-import static java.lang.Math.sqrt;
 
 public class GameFrame extends JFrame implements ActionListener, KeyListener, MouseListener {
 
@@ -71,7 +70,6 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
                     }
                 }
             }
-
 
 
             gamePanel.repaint();

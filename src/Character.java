@@ -51,7 +51,7 @@ public class Character extends GameObject implements ActionListener {
             case "Intelligence" -> {
                 intelligence += amount;
                 spell_effectiveness = pow(1.005, intelligence);
-                mana_recovery_speed = (((pow(1.03, intelligence) - log(stage)) < 1) ? 1 : pow(1.03, intelligence) - log(stage));
+                mana_recovery_speed = (((pow(1.03, intelligence) - log(stage)) < 0.1) ? 0.1 : pow(1.03, intelligence) - log(stage));
             }
             case "Strength" -> {
                 strength += amount;

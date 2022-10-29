@@ -19,6 +19,7 @@ public class Enemy extends Character {
         this.spells.add(this.spells.size(), Game.spells[3]);
 
         levelUp(stage);
+        this.hp = maxHP;
     }
 
     public void calculateDistanceToPlayer() {
@@ -27,6 +28,41 @@ public class Enemy extends Character {
         this.distanceToPlayer = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
         this.angleToPlayer = Math.atan(deltaY / deltaX) + ((deltaX > 0) ? 0 : Math.PI);
     }
+
+    @Override
+    public String toString() {
+        return "Enemy{" +
+                "\nrange=" + range +
+                "\n, distanceToPlayer=" + distanceToPlayer +
+                "\n, angleToPlayer=" + angleToPlayer +
+                "\n, stage=" + stage +
+                "\n, intelligence=" + intelligence +
+                "\n, strength=" + strength +
+                "\n, dexterity=" + dexterity +
+                "\n, wisdom=" + wisdom +
+                "\n, endurance=" + endurance +
+                "\n, def=" + def +
+                "\n, stamina=" + stamina +
+                "\n, maxStamina=" + maxStamina +
+                "\n, baseDamage=" + baseDamage +
+                "\n, spell_effectiveness=" + spell_effectiveness +
+                "\n, mana_recovery_speed=" + mana_recovery_speed +
+                "\n, melee_dmg_multiplier=" + melee_dmg_multiplier +
+                "\n, movement_speed=" + movement_speed +
+                "\n, combo_dmg_multiplier=" + combo_dmg_multiplier +
+                "\n, crit_dmg_multiplier=" + crit_dmg_multiplier +
+                "\n, hp=" + hp +
+                "\n, maxHP=" + maxHP +
+                "\n, spells=" + spells +
+                "\n, comboTimer=" + comboTimer +
+                "\n, combo=" + combo +
+                "\n, image=" + image +
+                "\n, x=" + x +
+                "\n, y=" + y +
+                "\n, radius=" + radius +
+                "}\n\n\n";
+    }
+
 
     public void moveTowardsPlayer() {
         if (distanceToPlayer > 739) {

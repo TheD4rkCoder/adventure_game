@@ -35,7 +35,6 @@ public class Player extends Character {
             this.critical_stage[i] = false;
         }
         this.levelUp(10);
-        this.printStats();
     }
 
     @Override
