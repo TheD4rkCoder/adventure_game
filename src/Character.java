@@ -63,7 +63,7 @@ public class Character extends GameObject implements ActionListener {
             case "Intelligence" -> {
                 intelligence += amount;
                 for (int i = 0; i < amount; ++i) {
-                    spell_effectiveness = spell_effectiveness + spell_effectiveness * 0.005;
+                    spell_effectiveness += spell_effectiveness * 0.005;
                     mana_recovery_speed = (((pow(1.03, intelligence) - log(stage)) < 1) ? 1 : pow(1.03, intelligence) - log(stage));
                 }
             }
