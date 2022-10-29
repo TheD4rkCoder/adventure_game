@@ -1,9 +1,9 @@
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 
-import static java.lang.Math.log;
-import static java.lang.Math.pow;
+import static java.lang.Math.*;
 
 public class Player extends Character {
     private double comprehension_speed; // now Wisdom
@@ -23,14 +23,9 @@ public class Player extends Character {
 
     public Player(String faction) {
         super(faction);
+        this.hp = maxHP;
         this.image = new ImageIcon("player.png");
         this.radius = 20;
-        this.movement_speed = 3;
-        this.comprehension_speed = 1;
-        this.maxHP = 100;
-        this.hp = 100;
-        this.mana = 100;
-        this.maxMana = 100;
 
         this.spells.add(this.spells.size(), Game.spells[0]);
         this.spells.add(this.spells.size(), Game.spells[1]);
@@ -39,61 +34,63 @@ public class Player extends Character {
         for (int i = 0; i < 8; ++i) {
             this.critical_stage[i] = false;
         }
-
-        this.item_stat_multiplier = 1;
-
-        this.mastery_multiplier = 1;
-        this.mana_recovery_speed = 0.1;
+        this.levelUp(10);
     }
 
     @Override
     public void increaseStat(String stat, int amount) {
         super.increaseStat(stat, amount);
-        switch(stat){
+        switch (stat) {
             case "Intelligence" -> {
-                for(int i = 0; i < amount; ++i){
-                    maxMana = maxMana + 1;
-                    mana = mana + 1;
-                }
+                maxMana = pow(1.01, intelligence) + intelligence + 10;
             }
             case "Dexterity" -> {
-                if(dexterity > 50) {
+                if (dexterity > 50) {
                     critical_stage[8] = true;
-                    if(dexterity > 100){
+                    if (dexterity > 100) {
                         critical_stage[7] = true;
-                        if(dexterity > 300){
+                        if (dexterity > 300) {
                             critical_stage[6] = true;
                         }
                     }
                 }
             }
             case "Wisdom" -> {
-                for (int i = 0; i < amount; ++i) {
-                    item_stat_multiplier = pow(0.005, wisdom);
-                    mastery_multiplier = wisdom/50 + 1;
-                    comprehension_speed = pow(1.02, wisdom);
-                }
+                item_stat_multiplier = pow(0.005, wisdom);
+                mastery_multiplier = wisdom / 50 + 1;
+                comprehension_speed = pow(1.02, wisdom);
             }
         }
     }
+
     @Override
-    public void printStats(){
-        System.out.println("Stage" + stage);
-        System.out.println("mastery" + mastery_multiplier);
-        System.out.println("stats" + item_stat_multiplier);
+    public void printStats() {
+        super.printStats();
+        System.out.println( "Player{" +
+                "comprehension_speed=" + comprehension_speed +
+                ", x_movement=" + x_movement +
+                ", y_movement=" + y_movement +
+                ", mana=" + mana +
+                ", maxMana=" + maxMana +
+                ", critical_stage=" + Arrays.toString(critical_stage) +
+                ", item_stat_multiplier=" + item_stat_multiplier +
+                ", mastery_multiplier=" + mastery_multiplier +
+                '}');
     }
+
 
     public void attack(int mouse_X, int mouse_Y) {
         this.addToCombo();
         this.spells.get(2).summonProjectile(this, Game.centerX - mouse_X, Game.centerY - mouse_Y);
     }
+
     public void refresh() {
         this.mana += this.mana_recovery_speed;
         if (this.mana > this.maxMana) {
             this.mana = this.maxMana;
         }
-        this.stamina += maxStamina/100;
-        if(this.stamina > this.maxStamina){
+        this.stamina += maxStamina / 100;
+        if (this.stamina > this.maxStamina) {
             this.stamina = this.maxStamina;
         }
         //System.out.println(this.stamina);

@@ -2,14 +2,14 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.util.Random;
 
-import static java.lang.Math.sqrt;
 
 public class GameFrame extends JFrame implements ActionListener, KeyListener, MouseListener {
 
     private GamePanel gamePanel;
     private Timer timer;
     private boolean[] isKeyPressed;
-
+    private boolean isMousePressed;
+    public static int mousePressedTime;
     private Timer enemyCourseAdjust;
 
     GameFrame(String windowName) {
@@ -61,18 +61,19 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
                 if (rand.nextInt(500) == 13) {
                     switch (rand.nextInt(4)) {
                         case 0 -> //north
-                                Game.enemies.add(Game.enemies.size(), new Enemy("Test", rand.nextInt(this.getWidth()) + Game.player.x - this.getWidth() / 2, Game.player.y - this.getHeight() / 2, rand.nextInt(20), 1, 100));
+                                Game.enemies.add(Game.enemies.size(), new Enemy("Test", rand.nextInt(this.getWidth()) + Game.player.x - this.getWidth() / 2, Game.player.y - this.getHeight() / 2, rand.nextInt(20)));
                         case 1 -> //east
-                                Game.enemies.add(Game.enemies.size(), new Enemy("Test", this.getWidth() / 2 + Game.player.x, rand.nextInt(this.getHeight() + 1) + Game.player.y - this.getHeight() / 2, rand.nextInt(20), 1, 100));
+                                Game.enemies.add(Game.enemies.size(), new Enemy("Test", this.getWidth() / 2 + Game.player.x, rand.nextInt(this.getHeight() + 1) + Game.player.y - this.getHeight() / 2, rand.nextInt(20)));
                         case 2 -> //south
-                                Game.enemies.add(Game.enemies.size(), new Enemy("Test", rand.nextInt(this.getWidth()) + Game.player.x - this.getWidth() / 2, this.getHeight() / 2 + Game.player.y, rand.nextInt(20), 1, 100));
+                                Game.enemies.add(Game.enemies.size(), new Enemy("Test", rand.nextInt(this.getWidth()) + Game.player.x - this.getWidth() / 2, this.getHeight() / 2 + Game.player.y, rand.nextInt(20)));
                         case 3 -> //west
-                                Game.enemies.add(Game.enemies.size(), new Enemy("Test", Game.player.x - this.getWidth() / 2, rand.nextInt(this.getHeight() + 1) + Game.player.y - this.getHeight() / 2, rand.nextInt(20), 1, 100));
+                                Game.enemies.add(Game.enemies.size(), new Enemy("Test", Game.player.x - this.getWidth() / 2, rand.nextInt(this.getHeight() + 1) + Game.player.y - this.getHeight() / 2, rand.nextInt(20)));
                     }
                 }
             }
-
-
+            if (isMousePressed) {
+                mousePressedTime++;
+            }
 
             gamePanel.repaint();
 
@@ -144,7 +145,6 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
 
     @Override
     public void mouseClicked(MouseEvent e) {
-
     }
 
     @Override
@@ -152,11 +152,11 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
 
         switch (e.getButton()) {
             case 1: // lmb
-                Game.player.attack(e.getX(), e.getY());
                 break;
             case 2: // mouse_wheel
                 break;
             case 3: // rmb
+                isMousePressed = true;
                 break;
             case 4: // undo (browser)
                 break;
@@ -167,7 +167,25 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
 
     @Override
     public void mouseReleased(MouseEvent e) {
-
+        switch (e.getButton()) {
+            case 1: // lmb
+                break;
+            case 2: // mouse_wheel
+                break;
+            case 3: // rmb
+                isMousePressed = false;
+                if (mousePressedTime < 100) {
+                    Game.player.attack(e.getX(), e.getY());
+                } else {
+                    // select spell
+                }
+                mousePressedTime = 0;
+                break;
+            case 4: // undo (browser)
+                break;
+            case 5: // redo (browser)
+                break;
+        }
     }
 
     @Override
