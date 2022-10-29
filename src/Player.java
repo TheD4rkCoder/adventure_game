@@ -74,7 +74,6 @@ public class Player extends Character {
                     comprehension_speed = pow(1.02, wisdom);
                 }
             }
-
         }
     }
     @Override
