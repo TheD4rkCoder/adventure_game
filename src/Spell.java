@@ -67,8 +67,8 @@ public class Spell {
         } else {
             angle = Math.atan(delta_Y / delta_X) + ((delta_X > 0) ? PI : 0);
         }
-        double x = o.x + cos(angle) * o.radius;
-        double y = o.y + sin(angle) * o.radius;
+        double x = o.x + cos(angle) * (this.radius-o.radius);
+        double y = o.y + sin(angle) * (this.radius-o.radius);
         Projectile proj = new Projectile(x, y, angle, this.movement_speed * ((Character) o).spell_effectiveness, this.damage_health * damage, this.duration * ((Character) o).spell_effectiveness, this.piercing, this.radius, this.image.getImage().getScaledInstance((int) radius * 2, (int) radius * 2, Image.SCALE_FAST), this, toHit);
         Game.projectiles.add(Game.projectiles.size(), proj);
     }

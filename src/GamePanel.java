@@ -103,7 +103,7 @@ public class GamePanel extends JPanel {
             for (int i = 0; i < Game.player.spells.size(); i++) {
                 // next do logic in gameframe of choosing a spell
                 // afterward do logic in projectile so it saves what it has already hit instead of what it has to hit
-                g2D.drawImage(Game.player.spells.get(i).image.getImage(), (int) (cos(-PI / 2 + i * PI * 2 / Game.player.spells.size()) * 200 + Game.centerX - 50), (int) (sin(-PI / 2 + i * 2 * PI / Game.player.spells.size()) * 200 + Game.centerY - 50), null);
+                g2D.drawImage(Game.player.spells.get(i).image.getImage(), (int) (cos(PI / 2 + i * PI * 2 / Game.player.spells.size()) * 200 + Game.centerX - 50), (int) (sin(-PI / 2 + i * 2 * PI / Game.player.spells.size()) * 200 + Game.centerY - 50), null);
 
             }
             alcom = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1);
