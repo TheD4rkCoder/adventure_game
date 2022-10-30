@@ -203,7 +203,7 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
                                 angleToMouse += 2 * PI;
                             }
                         }
-                        if (distance > 68 && distance < 173 && ((angleToMouse > borderAngle && angleToMouse < borderAngle + 2 * PI / Game.player.spells.size()) || (borderAngle + 2 * PI / Game.player.spells.size() - 2 * PI > 2 * PI && angleToMouse < borderAngle + 2 * PI / Game.player.spells.size() - 2 * PI))) {
+                        if (distance > 68 && distance < 173 && ((angleToMouse > borderAngle && angleToMouse < borderAngle + 2 * PI / Game.player.spells.size()) || (angleToMouse > borderAngle - 2 * PI && angleToMouse < borderAngle - 2 * PI + 2 * PI / Game.player.spells.size()))) {
                             Game.player.selectedSpell = i;
                         }
                     }
