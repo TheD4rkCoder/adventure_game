@@ -187,6 +187,9 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
                         double temp_Y = Game.centerY - (int) (sin(PI / 2 + i * 2 * PI / size) * 80);
                         double distance = sqrt(pow(e.getX() - temp_X, 2) + pow(e.getY() - temp_Y, 2));
                         double borderAngle = PI / 2 + (i - 0.5) * 2 * PI / size;
+                        if (borderAngle > 2 * PI) {
+                            borderAngle -= 2 * PI;
+                        }
                         double angleToMouse;
                         if (e.getX() - temp_X == 0) {
                             if (e.getY() - temp_Y > 0) {
@@ -200,7 +203,7 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
                                 angleToMouse += 2 * PI;
                             }
                         }
-                        if (distance > 68 && distance < 173 && ((angleToMouse > borderAngle && angleToMouse < borderAngle + 2 * PI / Game.player.spells.size()) || (i == size-1 && angleToMouse < borderAngle + 2 * PI / Game.player.spells.size() - 2*PI))) {
+                        if (distance > 68 && distance < 173 && ((angleToMouse > borderAngle && angleToMouse < borderAngle + 2 * PI / Game.player.spells.size()) || (borderAngle + 2 * PI / Game.player.spells.size() - 2 * PI > 2 * PI && angleToMouse < borderAngle + 2 * PI / Game.player.spells.size() - 2 * PI))) {
                             Game.player.selectedSpell = i;
                         }
                     }

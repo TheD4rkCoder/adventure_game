@@ -26,6 +26,14 @@ public class Player extends Character {
         this.spells.add(this.spells.size(), Game.spells[1]);
         this.spells.add(this.spells.size(), Game.spells[2]);
         this.spells.add(this.spells.size(), Game.spells[3]);
+        this.spells.add(this.spells.size(), Game.spells[0]);
+        this.spells.add(this.spells.size(), Game.spells[1]);
+        this.spells.add(this.spells.size(), Game.spells[2]);
+        this.spells.add(this.spells.size(), Game.spells[3]);
+        this.spells.add(this.spells.size(), Game.spells[0]);
+        this.spells.add(this.spells.size(), Game.spells[1]);
+        this.spells.add(this.spells.size(), Game.spells[2]);
+        this.spells.add(this.spells.size(), Game.spells[3]);
 
 
         for (int i = 0; i < 8; ++i) {
