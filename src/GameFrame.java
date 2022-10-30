@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
 import java.util.Random;
 
@@ -23,7 +24,9 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
         this.gamePanel = new GamePanel();
 
         this.gamePanel.addMouseListener(this);
+        this.gamePanel.setBounds(0, 0, 1000, 500);
         this.add(gamePanel);
+
         this.addKeyListener(this);
 
         // "start" the window after adding all components
@@ -181,7 +184,6 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
                     Game.player.attack(e.getX(), e.getY());
                 } else {
                     // select spell
-                    //(Game.centerX - 120 + (int) (cos(PI / 2 + i * 2 * PI / Game.player.spells.size()) * 80), Game.centerY - 120 - (int) (sin(PI / 2 + i * 2 * PI / Game.player.spells.size()) * 80), 240, 240, (int) (90 + (i - 0.5) * 360 / Game.player.spells.size()), 360 / Game.player.spells.size());
                     for (int i = 0, size = Game.player.spells.size(); i < size; i++) {
                         double temp_X = Game.centerX + (int) (cos(PI / 2 + i * 2 * PI / size) * 80);
                         double temp_Y = Game.centerY - (int) (sin(PI / 2 + i * 2 * PI / size) * 80);
