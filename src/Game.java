@@ -1,5 +1,6 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -21,10 +22,10 @@ public class Game {
     }
     // list of all spells (skills) that exist
     static Spell[] spells = new Spell[]{
-            new Spell(new ImageIcon(sprite_sheet.getSubimage(32, 0, 32, 32)), "Mana Bolt", 10, 5, 100, 5, 10, 2, Spell.type_t.projectile, null),
-            new Spell(new ImageIcon("lavapool.png"), "Lava Pool", 10, 5, 200, 1, 1000, 5, Spell.type_t.projectile, null),
-            new Spell(new ImageIcon(sprite_sheet.getSubimage(0, 0, 32, 32)), "Fireball", 30, 20, 100, 4, 30, 3, Spell.type_t.projectile, new Spell(new ImageIcon(sprite_sheet.getSubimage(0, 0, 32, 32)), "Fireball", 20, 0, 10, 0, 100, 5, Spell.type_t.projectile, null)),
-            new Spell(new ImageIcon(sprite_sheet.getSubimage(32, 0, 32, 32)), "Sword swing", 10, 5, 10, 0, 80, 4, Spell.type_t.projectile, null),
+            new Spell(new ImageIcon(sprite_sheet.getSubimage(32, 0, 32, 32).getScaledInstance(100, 100, Image.SCALE_REPLICATE)), "Mana Bolt", 10, 5, 100, 8, 10, 2, Spell.type_t.projectile, null),
+            new Spell(new ImageIcon(new ImageIcon("lavapool.png").getImage().getScaledInstance(100, 100, Image.SCALE_REPLICATE)), "Lava Pool", 10, 5, 200, 0, 100, 5, Spell.type_t.projectile, null),
+            new Spell(new ImageIcon(sprite_sheet.getSubimage(0, 0, 32, 32).getScaledInstance(100, 100, Image.SCALE_REPLICATE)), "Fireball", 30, 20, 100, 8, 30, 3, Spell.type_t.projectile, new Spell(new ImageIcon(sprite_sheet.getSubimage(0, 0, 32, 32)), "Fireball", 20, 0, 10, 0, 100, 5, Spell.type_t.projectile, null)),
+            new Spell(new ImageIcon(sprite_sheet.getSubimage(32, 0, 32, 32).getScaledInstance(100, 100, Image.SCALE_REPLICATE)), "Sword swing", 10, 5, 10, 0, 80, 4, Spell.type_t.projectile, null),
 
     };
     static Player player = new Player("o7");
@@ -34,7 +35,7 @@ public class Game {
     static ArrayList<Projectile> projectiles = new ArrayList<>();
 
 
-    static final int FRAME_TIME = 10; //how long a Frame is in milliseconds
+    static final int FRAME_TIME = 20; //how long a Frame is in milliseconds
     static final int ENEMY_COURSE_ADJUST_TIME = 100; //how long between the adjustments of the enemies course
     static final int COMBO_TIMER_BASE_VALUE = 1000;
     static final int BASE_CRITICAL_CHANCE = 80;

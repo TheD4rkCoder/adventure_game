@@ -8,19 +8,14 @@ import static java.lang.Math.*;
 public class Player extends Character {
     private double comprehension_speed; // now Wisdom
     //affects advancing/leveling speed
-    protected double x_movement;
-    protected double y_movement;
+    protected double x_movement, y_movement;
     protected double mana, maxMana;
 
     protected boolean[] critical_stage = new boolean[8]; //Dexterity
     //different requirements to trigger critical hit
-
-
-    private double item_stat_multiplier; //Wisdom
-
-    private double mastery_multiplier; //Wisdom
+    private double item_stat_multiplier, mastery_multiplier; //Wisdom
     //like elements as mage, skills as warrior and crafting blueprint of tools and items as an alchemist
-
+    public int selectedSpell = 0;
     public Player(String faction) {
         super(faction);
         this.hp = maxHP;
@@ -30,6 +25,8 @@ public class Player extends Character {
         this.spells.add(this.spells.size(), Game.spells[0]);
         this.spells.add(this.spells.size(), Game.spells[1]);
         this.spells.add(this.spells.size(), Game.spells[2]);
+        this.spells.add(this.spells.size(), Game.spells[3]);
+
 
         for (int i = 0; i < 8; ++i) {
             this.critical_stage[i] = false;
@@ -81,7 +78,7 @@ public class Player extends Character {
 
     public void attack(int mouse_X, int mouse_Y) {
         this.addToCombo();
-        this.spells.get(2).summonProjectile(this, Game.centerX - mouse_X, Game.centerY - mouse_Y);
+        this.spells.get(selectedSpell).summonProjectile(this, Game.centerX - mouse_X, Game.centerY - mouse_Y);
     }
 
     public void refresh() {

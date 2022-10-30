@@ -29,7 +29,7 @@ public class Projectile extends GameObject {
         this.image = image;
         this.spell = spell;
 
-        // when enemies cast a projectile, they should overwrite this list with "Game.player"
+        // change
         this.enemiesToHit = toHit;
 
     }

@@ -2,6 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
+import static java.lang.Math.*;
+
 public class GamePanel extends JPanel {
     protected int deltaX;
     protected int deltaY;
@@ -28,8 +30,8 @@ public class GamePanel extends JPanel {
         deltaX = (int) (Game.player.x - Game.centerX); // the ingame coordinates of the top left corner
         deltaY = (int) (Game.player.y - Game.centerY);
         // background calculations
-        screenscrollX = (deltaX % background.getIconWidth() > 0) ? (-(deltaX % background.getIconWidth())) :  ((-(deltaX % background.getIconWidth()))-background.getIconWidth());
-        screenscrollY = (deltaY % background.getIconHeight() > 0) ? (-(deltaY % background.getIconHeight())) :  ((-(deltaY % background.getIconHeight()))-background.getIconHeight());
+        screenscrollX = (deltaX % background.getIconWidth() > 0) ? (-(deltaX % background.getIconWidth())) : ((-(deltaX % background.getIconWidth())) - background.getIconWidth());
+        screenscrollY = (deltaY % background.getIconHeight() > 0) ? (-(deltaY % background.getIconHeight())) : ((-(deltaY % background.getIconHeight())) - background.getIconHeight());
 
         Graphics2D g2D = (Graphics2D) g;
 
@@ -49,17 +51,12 @@ public class GamePanel extends JPanel {
 
         }
 
-        float alpha = 8 * 0.1f;
-        AlphaComposite alcom = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha);
-        g2D.setComposite(alcom);
         // draw all enemies | textures still need to be replaced with images
         g2D.setPaint(Color.green);
         for (int i = 0; i < Game.enemies.size(); i++) {
             GameObject p = Game.enemies.get(i);
             g2D.fillOval((int) (p.x - p.radius - deltaX), (int) (p.y - p.radius - deltaY), (int) p.radius * 2, (int) p.radius * 2);
         }
-        alcom = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1);
-        g2D.setComposite(alcom);
 
         g2D.setPaint(Color.red);
         // draw player and other gui like health bar
@@ -90,6 +87,29 @@ public class GamePanel extends JPanel {
 
         g2D.setPaint(Color.white);
         g2D.drawRect(this.getWidth() - 350, this.getHeight() - 210, 270, 40);
+        // spell choosing cycle
+        if (GameFrame.mousePressedTime > 50) {
+            float alpha = 7 * 0.1f;
+            AlphaComposite alcom = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha);
+            g2D.setComposite(alcom);
+            g2D.setStroke(new BasicStroke(105));
+            for (int i = 0; i < Game.player.spells.size(); i++) {
+                g2D.setPaint(Color.DARK_GRAY);
+                if (i == Game.player.selectedSpell) {
+                    g2D.setPaint(Color.LIGHT_GRAY);
+                }
+                g2D.drawArc(Game.centerX - 120 + (int) (cos(PI / 2 + i * 2 * PI / Game.player.spells.size()) * 80), Game.centerY - 120 - (int) (sin(PI / 2 + i * 2 * PI / Game.player.spells.size()) * 80), 240, 240, (int) (90 + (i - 0.5) * 360 / Game.player.spells.size()), 360 / Game.player.spells.size());
+            }
+            for (int i = 0; i < Game.player.spells.size(); i++) {
+                // next do logic in gameframe of choosing a spell
+                // afterward do logic in projectile so it saves what it has already hit instead of what it has to hit
+                g2D.drawImage(Game.player.spells.get(i).image.getImage(), (int) (cos(-PI / 2 + i * PI * 2 / Game.player.spells.size()) * 200 + Game.centerX - 50), (int) (sin(-PI / 2 + i * 2 * PI / Game.player.spells.size()) * 200 + Game.centerY - 50), null);
+
+            }
+            alcom = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1);
+            g2D.setComposite(alcom);
+        }
+
 
         // some useful commands:
         //g2D.drawImage(image, 0, 0, null);

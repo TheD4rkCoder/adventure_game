@@ -3,8 +3,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 
-import static java.lang.Math.cos;
-import static java.lang.Math.sin;
+import static java.lang.Math.*;
 
 public class Spell {
     protected ImageIcon image;
@@ -61,12 +60,12 @@ public class Spell {
         double angle;
         if (delta_X == 0) {
             if (delta_Y > 0) {
-                angle = 270;
+                angle = 1.5*PI;
             } else {
-                angle = 90;
+                angle = 0.5*PI;
             }
         } else {
-            angle = Math.atan(delta_Y / delta_X) + ((delta_X > 0) ? Math.PI : 0);
+            angle = Math.atan(delta_Y / delta_X) + ((delta_X > 0) ? PI : 0);
         }
         double x = o.x + cos(angle) * o.radius;
         double y = o.y + sin(angle) * o.radius;

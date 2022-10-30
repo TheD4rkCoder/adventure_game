@@ -2,6 +2,9 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.util.Random;
 
+import static java.lang.Math.*;
+import static java.lang.Math.PI;
+
 
 public class GameFrame extends JFrame implements ActionListener, KeyListener, MouseListener {
 
@@ -39,12 +42,12 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == this.timer) {
             // Main game loop
-            if(Game.player.stamina > 0) {
+            if (Game.player.stamina > 0) {
                 if (Game.player.x_movement != 0 && Game.player.y_movement != 0) {
                     Game.player.x += Game.player.x_movement * 0.71;
                     Game.player.y += Game.player.y_movement * 0.71;
                     Game.player.stamina -= 2;
-                } else if(Game.player.x_movement != 0 || Game.player.y_movement != 0){
+                } else if (Game.player.x_movement != 0 || Game.player.y_movement != 0) {
                     Game.player.x += Game.player.x_movement;
                     Game.player.y += Game.player.y_movement;
                     Game.player.stamina -= 2;
@@ -174,10 +177,33 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
                 break;
             case 3: // rmb
                 isMousePressed = false;
-                if (mousePressedTime < 100) {
+                if (mousePressedTime < 50) {
                     Game.player.attack(e.getX(), e.getY());
                 } else {
                     // select spell
+                    //(Game.centerX - 120 + (int) (cos(PI / 2 + i * 2 * PI / Game.player.spells.size()) * 80), Game.centerY - 120 - (int) (sin(PI / 2 + i * 2 * PI / Game.player.spells.size()) * 80), 240, 240, (int) (90 + (i - 0.5) * 360 / Game.player.spells.size()), 360 / Game.player.spells.size());
+                    for (int i = 0, size = Game.player.spells.size(); i < size; i++) {
+                        double temp_X = Game.centerX + (int) (cos(PI / 2 + i * 2 * PI / size) * 80);
+                        double temp_Y = Game.centerY - (int) (sin(PI / 2 + i * 2 * PI / size) * 80);
+                        double distance = sqrt(pow(e.getX() - temp_X, 2) + pow(e.getY() - temp_Y, 2));
+                        double borderAngle = PI / 2 + (i - 0.5) * 2 * PI / size;
+                        double angleToMouse;
+                        if (e.getX() - temp_X == 0) {
+                            if (e.getY() - temp_Y > 0) {
+                                angleToMouse = 1.5 * PI;
+                            } else {
+                                angleToMouse = 0.5 * PI;
+                            }
+                        } else {
+                            angleToMouse = atan((temp_Y - e.getY()) / (e.getX() - temp_X)) + ((temp_X - e.getX() > 0) ? PI : 0);
+                            if (angleToMouse < 0) {
+                                angleToMouse += 2 * PI;
+                            }
+                        }
+                        if (distance > 68 && distance < 173 && ((angleToMouse > borderAngle && angleToMouse < borderAngle + 2 * PI / Game.player.spells.size()) || (i == size-1 && angleToMouse < borderAngle + 2 * PI / Game.player.spells.size() - 2*PI))) {
+                            Game.player.selectedSpell = i;
+                        }
+                    }
                 }
                 mousePressedTime = 0;
                 break;

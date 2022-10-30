@@ -80,7 +80,7 @@ public class Character extends GameObject implements ActionListener {
             case "Dexterity" -> {
                 dexterity += amount;
                 combo_dmg_multiplier = pow(1.00004, dexterity);
-                movement_speed = 1 + pow(1.001, dexterity);
+                movement_speed = 2 + pow(1.002, dexterity);
             }
             default -> wisdom += amount;
         }
