@@ -69,6 +69,7 @@ public class Inventory extends JPanel implements MouseInputListener{
                         }
                         if(items[i].name.equals(item.name)){
                                 items[i] = new Item(new ImageIcon("img.png").getImage(), "Test", "Test");
+                                break;
                         }
                 }
                 selectedItem = 13;
