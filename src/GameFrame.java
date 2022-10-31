@@ -167,6 +167,7 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
                 if(Game.player.inventory.selectedItem > -1 && Game.player.inventory.selectedItem < 9) {
                     Game.player.inventory.dropItem(Game.player.inventory.items[Game.player.inventory.selectedItem]);
                     repaintInventory();
+                    Game.player.inventory.selectedItem = 13;
                 }
             }
         }
@@ -223,11 +224,12 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
                     Game.player.inventory.selectedItem = i;
                 }
             }
-            if(Game.player.inventory.selectedItem > 0 && Game.player.inventory.selectedItem < 9){
+            if(Game.player.inventory.selectedItem > -1 && Game.player.inventory.selectedItem < 9){
                 for(int i = 0; i < 3; ++i){
                     if (Game.player.inventory.hotBarSelection[i].isIn(mouseX + 7, mouseY + 30)) {
                         Game.player.inventory.hotBar[i] = Game.player.inventory.items[Game.player.inventory.selectedItem];
                         repaintInventory();
+                        Game.player.inventory.selectedItem = 13;
                     }
                 }
             }
