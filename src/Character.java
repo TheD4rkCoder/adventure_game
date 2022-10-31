@@ -3,8 +3,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.*;
 
-import static java.lang.Math.log;
-import static java.lang.Math.pow;
+import static java.lang.Math.*;
 
 public class Character extends GameObject implements ActionListener {
     private String faction;
@@ -52,7 +51,12 @@ public class Character extends GameObject implements ActionListener {
             case "Intelligence" -> {
                 intelligence += amount;
                 spell_effectiveness = pow(1.005, intelligence);
-                mana_recovery_speed = (Math.max((pow(1.03, intelligence) - log(stage)), 0.1));
+                if (intelligence > 30) {
+                    mana_recovery_speed = (pow(1.015, intelligence) - log10(intelligence));
+                }
+                else {
+                    mana_recovery_speed = 0.1;
+                }
             }
             case "Strength" -> {
                 strength += amount;
