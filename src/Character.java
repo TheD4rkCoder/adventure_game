@@ -19,6 +19,7 @@ public class Character extends GameObject implements ActionListener {
 
 
     public Character(String faction) {
+        this.image = new ImageIcon("img_1.png");
         this.faction = faction;
 
         this.stage = 1;
@@ -51,7 +52,7 @@ public class Character extends GameObject implements ActionListener {
             case "Intelligence" -> {
                 intelligence += amount;
                 spell_effectiveness = pow(1.005, intelligence);
-                mana_recovery_speed = (((pow(1.03, intelligence) - log(stage)) < 0.1) ? 0.1 : pow(1.03, intelligence) - log(stage));
+                mana_recovery_speed = (Math.max((pow(1.03, intelligence) - log(stage)), 0.1));
             }
             case "Strength" -> {
                 strength += amount;

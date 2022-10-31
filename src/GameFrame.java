@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
 import java.util.Random;
 
@@ -9,25 +10,53 @@ import static java.lang.Math.PI;
 public class GameFrame extends JFrame implements ActionListener, KeyListener, MouseListener {
 
     private GamePanel gamePanel;
+    //private JPanel panel;
+    //private JLayeredPane layer;
     private Timer timer;
     private boolean[] isKeyPressed;
     private boolean isMousePressed;
     public static int mousePressedTime;
     private Timer enemyCourseAdjust;
 
+
     GameFrame(String windowName) {
         super(windowName);
+
+        //this.setLayout(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(1280, 720);
 
+        //this.panel = new JPanel();
         this.gamePanel = new GamePanel();
-
         this.gamePanel.addMouseListener(this);
-        this.add(gamePanel);
+
+        //panel.setLayout(new OverlayLayout(panel));
+        //panel.add(gamePanel);
+        //panel.add(Game.player.inventory);
+        //this.add(panel);
+
+        //this.layer = new JLayeredPane();
+        //layer.add(gamePanel, 0);
+        //layer.add(Game.player.inventory, 1);
+
+
+        //this.add(Game.player.inventory);
+        //this.add(layer);
+        //this.setLayout(null);
+
+        this.add(gamePanel); //Essential
+
+        //gamePanel.set
+        //gamePanel.setBounds(0, 0,this.getWidth(),this.getHeight());
+        //this.add(Game.player.inventory);
+        //Game.player.inventory.setBounds(0, 0,this.getWidth(),this.getHeight());
+
+
         this.addKeyListener(this);
 
         // "start" the window after adding all components
         this.setVisible(true);
+
 
         this.isKeyPressed = new boolean[]{false, false, false, false};
 
@@ -36,6 +65,7 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
 
         this.enemyCourseAdjust = new Timer(Game.ENEMY_COURSE_ADJUST_TIME, this);
         this.enemyCourseAdjust.start();
+
     }
 
     @Override
@@ -120,6 +150,25 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
                     this.isKeyPressed[3] = true;
                 }//d
             }
+            case 69 -> {    //e
+
+                if(Game.player.inventory.opened){
+                    Game.player.inventory.close();
+                    this.timer.restart();
+                }else{
+                    this.timer.stop();
+                    //this.getGraphics().setClip(0, 0, this.getWidth(), this.getHeight());
+
+                    repaintInventory();
+                    Game.player.inventory.open();
+                }
+            }
+            case 81 -> { //q
+                if(Game.player.inventory.selectedItem > -1 && Game.player.inventory.selectedItem < 9) {
+                    Game.player.inventory.dropItem(Game.player.inventory.items[Game.player.inventory.selectedItem]);
+                    repaintInventory();
+                }
+            }
         }
 
     }
@@ -148,6 +197,47 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
 
     @Override
     public void mouseClicked(MouseEvent e) {
+        if(Game.player.inventory.opened){
+            int mouseX = e.getX();
+            int mouseY = e.getY();
+            if(Game.player.pointsAvailable > 0) {
+                if (Game.player.inventory.levelUps[0].isIn(mouseX + 7, mouseY + 30)) {
+                    Game.player.increaseStat("Intelligence", 1);
+                    repaintInventory();
+                } else if (Game.player.inventory.levelUps[1].isIn(mouseX + 7, mouseY + 30)) {
+                    Game.player.increaseStat("Strength", 1);
+                    repaintInventory();
+                } else if (Game.player.inventory.levelUps[2].isIn(mouseX + 7, mouseY + 30)) {
+                    Game.player.increaseStat("Endurance", 1);
+                    repaintInventory();
+                } else if (Game.player.inventory.levelUps[3].isIn(mouseX + 7, mouseY + 30)) {
+                    Game.player.increaseStat("Dexterity", 1);
+                    repaintInventory();
+                } else if (Game.player.inventory.levelUps[4].isIn(mouseX + 7, mouseY + 30)) {
+                    Game.player.increaseStat("Wisdom", 1);
+                    repaintInventory();
+                }
+            }
+            for(int i = 0; i < 9; ++i) {
+                if (Game.player.inventory.itemSelection[i].isIn(mouseX + 7, mouseY + 30)) {
+                    Game.player.inventory.selectedItem = i;
+                }
+            }
+            if(Game.player.inventory.selectedItem > 0 && Game.player.inventory.selectedItem < 9){
+                for(int i = 0; i < 3; ++i){
+                    if (Game.player.inventory.hotBarSelection[i].isIn(mouseX + 7, mouseY + 30)) {
+                        Game.player.inventory.hotBar[i] = Game.player.inventory.items[Game.player.inventory.selectedItem];
+                        repaintInventory();
+                    }
+                }
+            }
+        }
+    }
+
+    public void repaintInventory(){
+        Graphics g = this.getGraphics();
+        g.setClip(0, 0, this.getWidth(), this.getHeight()); //clip stores the size of the frame/window
+        Game.player.inventory.paint(g);
     }
 
     @Override

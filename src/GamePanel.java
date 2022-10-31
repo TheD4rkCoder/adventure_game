@@ -1,6 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 
 import static java.lang.Math.*;
 
@@ -11,16 +10,11 @@ public class GamePanel extends JPanel {
     protected ImageIcon background;
     public static double manabarAnimationOffset;
 
-    //protected Inventory inv;
 
     GamePanel() {
         super();
         this.setPreferredSize(new Dimension(1280, 720));
         background = new ImageIcon("background.png");
-        /*
-        inv = new Inventory();
-        this.add(inv);
-        */
     }
 
 
@@ -71,7 +65,7 @@ public class GamePanel extends JPanel {
         g2D.drawRect(this.getWidth() - 350, this.getHeight() - 90, 270, 40);
         //staminabar
         g2D.setPaint(Color.orange);
-        g2D.drawRect(this.getWidth() - 340, this.getHeight() - 140, (int) (250 * Game.player.stamina / Game.player.maxStamina), 20);
+        g2D.drawRect(this.getWidth() - 340, this.getHeight() - 140, 250 * Game.player.stamina / Game.player.maxStamina, 20);
         g2D.setPaint(Color.white);
         g2D.drawRect(this.getWidth() - 350, this.getHeight() - 150, 270, 40);
         // manabar
@@ -87,6 +81,7 @@ public class GamePanel extends JPanel {
 
         g2D.setPaint(Color.white);
         g2D.drawRect(this.getWidth() - 350, this.getHeight() - 210, 270, 40);
+
         // spell choosing cycle
         if (GameFrame.mousePressedTime > 50) {
             float alpha = 7 * 0.1f;
