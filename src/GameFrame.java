@@ -42,8 +42,13 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
         this.enemyCourseAdjust = new Timer(Game.ENEMY_COURSE_ADJUST_TIME, this);
         this.enemyCourseAdjust.start();
 
+        //Game.player.inventory.addItem(new Armour(new ImageIcon("img.png").getImage(), "Oha", "Test", 20, 3));
+
     }
 
+    public void test (){
+        Game.player.inventory.addItem(new Armour(new ImageIcon("img.png").getImage(), "Oha", "Test", 20, 3));
+    }
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == this.timer) {
@@ -127,7 +132,7 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
                 }//d
             }
             case 69 -> {    //e
-
+                this.test();
                 if(Game.player.inventory.opened){
                     Game.player.inventory.close();
                     this.timer.restart();
@@ -216,6 +221,13 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
                     Game.player.inventory.selectedItem = 12;
                     Game.player.inventory.tempItem = Game.player.inventory.armourSlot;
                     Game.player.inventory.armourSlot = new Item(new ImageIcon("img.png").getImage(), "Test", "Test");
+                    if(Game.player.inventory.tempItem instanceof Armour) {
+                        Game.player.maxHP -= ((Armour) Game.player.inventory.tempItem).hpBuff;
+                        if (Game.player.hp > Game.player.maxHP) {
+                            Game.player.hp = Game.player.maxHP;
+                        }
+                        Game.player.def -= ((Armour) Game.player.inventory.tempItem).defenceBuff;
+                    }
                     repaintInventory();
                 }
             }else{
@@ -246,11 +258,20 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
                     if(Game.player.inventory.armourSelection.isIn(mouseX + 7, mouseY + 30)){
                         if(Game.player.inventory.armourSlot.name.equals("Test")){
                             Game.player.inventory.armourSlot = Game.player.inventory.tempItem;
+                            Game.player.maxHP += ((Armour)Game.player.inventory.tempItem).hpBuff;
+                            Game.player.def += ((Armour)Game.player.inventory.tempItem).defenceBuff;
                             Game.player.inventory.tempItem = new Item(new ImageIcon("img.png").getImage(), "Test", "Test");
                             Game.player.inventory.selectedItem = 13;
                         }else{
                             Item temp = Game.player.inventory.armourSlot;
+                            Game.player.maxHP -= ((Armour)temp).hpBuff;
+                            if(Game.player.hp > Game.player.maxHP){
+                                Game.player.hp = Game.player.maxHP;
+                            }
+                            Game.player.def -= ((Armour)temp).defenceBuff;
                             Game.player.inventory.armourSlot = Game.player.inventory.tempItem;
+                            Game.player.maxHP += ((Armour)Game.player.inventory.tempItem).hpBuff;
+                            Game.player.def += ((Armour)Game.player.inventory.tempItem).defenceBuff;
                             Game.player.inventory.tempItem = temp;
                             Game.player.inventory.selectedItem = 12;
                         }

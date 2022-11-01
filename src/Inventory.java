@@ -42,7 +42,7 @@ public class Inventory extends JPanel implements MouseInputListener{
 
                 addItem(new Item(new ImageIcon("img.png").getImage(), "Oha", "Test"));
                 addItem(new Item(new ImageIcon("img.png").getImage(), "Oha", "Test"));
-                addItem(new Armour(new ImageIcon("img.png").getImage(), "Oha", "Test"));
+
 
 
                 levelUps = new Area[5];
@@ -96,13 +96,14 @@ public class Inventory extends JPanel implements MouseInputListener{
         }
 
         public void addItem(Item item){
-                //* Used to fill ArmourSlot
                 if(item instanceof Armour){
                         if(armourSlot.name.equals("Test")){
                                 armourSlot = item;
+                                Game.player.maxHP += ((Armour) item).hpBuff;
+                                Game.player.def += ((Armour) item).defenceBuff;
                                 return;
                         }
-                }else{//*/
+                }else{
                         for (int i = 0; i < 3; ++i) {
                                 if (hotBar[i].name.equals("Test")) {
                                         hotBar[i] = item;
