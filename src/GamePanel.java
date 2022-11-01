@@ -96,8 +96,6 @@ public class GamePanel extends JPanel {
                 g2D.drawArc(Game.centerX - 120 + (int) (cos(PI / 2 + i * 2 * PI / Game.player.spells.size()) * 80), Game.centerY - 120 - (int) (sin(PI / 2 + i * 2 * PI / Game.player.spells.size()) * 80), 240, 240, (int) (90 + (i - 0.5) * 360 / Game.player.spells.size()), 360 / Game.player.spells.size());
             }
             for (int i = 0; i < Game.player.spells.size(); i++) {
-                // next do logic in gameframe of choosing a spell
-                // afterward do logic in projectile so it saves what it has already hit instead of what it has to hit
                 g2D.drawImage(Game.player.spells.get(i).image.getImage(), (int) (cos(PI / 2 + i * PI * 2 / Game.player.spells.size()) * 200 + Game.centerX - 50), (int) (sin(-PI / 2 + i * 2 * PI / Game.player.spells.size()) * 200 + Game.centerY - 50), null);
 
             }

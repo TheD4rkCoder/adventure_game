@@ -41,6 +41,11 @@ public class Projectile extends GameObject {
 
         // true = yes, the projectile should still exist
 
+
+        // afterward do logic so it saves what it has already hit instead of what it still has to hit
+        // for this, maybe use "faction" of characters
+
+
         for (int i = 0; i < enemiesToHit.size(); ++i) {
             if (Game.collisionCheck(this, enemiesToHit.get(i))) {
                 enemiesToHit.get(i).hp -= (int) (damage);

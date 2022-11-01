@@ -17,7 +17,7 @@ public class Spell {
     protected int piercing;
 
     protected enum type_t {
-        projectile, obstacle, regeneration
+        projectile, melee, aoe, obstacle, regeneration
     }
 
     protected type_t type;
@@ -39,16 +39,22 @@ public class Spell {
         ArrayList<Character> toHit;
         double damage = 1;
         if (o instanceof Player) {
-            if (Game.player.mana - this.mana_cost >= 0) {
-                Game.player.mana -= mana_cost;
+            if (Game.player.mana + Game.player.stamina * 0.1 - this.mana_cost >= 0) {
+                if (Game.player.mana - mana_cost < 0) {
+                    double cost = mana_cost - Game.player.mana;
+                    Game.player.mana = 0;
+                    Game.player.stamina -= cost * 10;
+                } else {
+                    Game.player.mana -= mana_cost;
+                }
                 toHit = new ArrayList<>(Game.enemies);
                 int critDiv = 1;
-                for(int i = 0; i < 8; ++i){
-                    if(Game.player.critical_stage[i]){
+                for (int i = 0; i < 8; ++i) {
+                    if (Game.player.critical_stage[i]) {
                         critDiv *= 2;
                     }
                 }
-                damage = Game.player.spell_effectiveness * ((new Random().nextInt(Game.BASE_CRITICAL_CHANCE/critDiv) == 13) ? Game.player.crit_dmg_multiplier : 1);
+                damage = Game.player.spell_effectiveness * ((new Random().nextInt(Game.BASE_CRITICAL_CHANCE / critDiv) == 13) ? Game.player.crit_dmg_multiplier : 1);
             } else {
                 return;
             }
@@ -60,15 +66,15 @@ public class Spell {
         double angle;
         if (delta_X == 0) {
             if (delta_Y > 0) {
-                angle = 1.5*PI;
+                angle = 1.5 * PI;
             } else {
-                angle = 0.5*PI;
+                angle = 0.5 * PI;
             }
         } else {
             angle = Math.atan(delta_Y / delta_X) + ((delta_X > 0) ? PI : 0);
         }
-        double x = o.x + cos(angle) * (this.radius-o.radius);
-        double y = o.y + sin(angle) * (this.radius-o.radius);
+        double x = o.x + cos(angle) * (this.radius - o.radius);
+        double y = o.y + sin(angle) * (this.radius - o.radius);
         Projectile proj = new Projectile(x, y, angle, this.movement_speed * ((Character) o).spell_effectiveness, this.damage_health * damage, this.duration * ((Character) o).spell_effectiveness, this.piercing, this.radius, this.image.getImage().getScaledInstance((int) radius * 2, (int) radius * 2, Image.SCALE_FAST), this, toHit);
         Game.projectiles.add(Game.projectiles.size(), proj);
     }
@@ -79,7 +85,7 @@ public class Spell {
             if (oldToHit.size() != 0 && oldToHit.get(0) instanceof Player) {
                 toHit = new ArrayList<>();
                 toHit.add(Game.player);
-            }else {
+            } else {
                 toHit = new ArrayList<>(Game.enemies);
             }
             Projectile proj = new Projectile(x, y, angle, this.subSpell.movement_speed, this.subSpell.damage_health, this.subSpell.duration, this.subSpell.piercing, this.subSpell.radius, this.subSpell.image.getImage().getScaledInstance((int) this.subSpell.radius * 2, (int) this.subSpell.radius * 2, Image.SCALE_FAST), this.subSpell, toHit);
