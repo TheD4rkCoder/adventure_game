@@ -8,15 +8,19 @@ public class Inventory extends JPanel implements MouseInputListener{
 
         protected Item[] items;
         protected Item[] hotBar;
+        protected Item armourSlot;
+
+        protected Item tempItem;
 
         protected boolean opened;
 
         protected Area[] levelUps;
 
         protected Area[] itemSelection;
-        protected int selectedItem;
+        protected int selectedItem; //0-8 = ItemSelection 9-11 = HotBar 12 = amourSlot
 
         protected Area[] hotBarSelection;
+        protected Area armourSelection;
 
         Inventory(){
                 this.setPreferredSize(new Dimension(1280,720));
@@ -33,9 +37,13 @@ public class Inventory extends JPanel implements MouseInputListener{
                 for(int i = 0; i < 3; ++i){
                         hotBar[i] = new Item(new ImageIcon("img.png").getImage(), "Test", "Test");
                 }
+                armourSlot = new Item(new ImageIcon("img.png").getImage(), "Test", "Test");
+
 
                 addItem(new Item(new ImageIcon("img.png").getImage(), "Oha", "Test"));
                 addItem(new Item(new ImageIcon("img.png").getImage(), "Oha", "Test"));
+                addItem(new Armour(new ImageIcon("img.png").getImage(), "Oha", "Test"));
+
 
                 levelUps = new Area[5];
 
@@ -58,37 +66,54 @@ public class Inventory extends JPanel implements MouseInputListener{
                         hotBarSelection[i] = new Area(this.x + 110 * i, this.y + 370, 100, 100);
                 }
 
+                armourSelection = new Area(this.x + 330 + 50, this.y + 370, 100, 100);
+
         }
 
-        public void dropItem(Item item){
-                for(int i = 0; i < 9; ++i){
-                        if(i < 3){
-                                if(hotBar[i].name.equals(item.name)){
-                                        hotBar[i] = new Item(new ImageIcon("img.png").getImage(), "Test", "Test");
+        public void dropItem(/*Item item*/){
+                tempItem = new Item(new ImageIcon("img.png").getImage(), "Test", "Test");
+                selectedItem = 13;
+                /* //Previous Version, to remove after Testing
+                if(item instanceof Armour){
+                        armourSlot = new Item(new ImageIcon("img.png").getImage(), "Test", "Test");
+                }else if(selectedItem >= 0 && selectedItem < 9){
+                        for(int i = 0; i < 9; ++i){
+                                if(items[i].name.equals(item.name)){
+                                        items[i] = new Item(new ImageIcon("img.png").getImage(), "Test", "Test");
+                                        break;
                                 }
                         }
-                        if(items[i].name.equals(item.name)){
-                                items[i] = new Item(new ImageIcon("img.png").getImage(), "Test", "Test");
-                                break;
+                }else if(selectedItem < 12){
+                        for(int i = 0; i < 3; ++i){
+                                if(hotBar[i].name.equals(item.name)){
+                                        hotBar[i] = new Item(new ImageIcon("img.png").getImage(), "Test", "Test");
+                                        break;
+                                }
                         }
                 }
                 selectedItem = 13;
+                */
         }
 
         public void addItem(Item item){
+                //* Used to fill ArmourSlot
+                if(item instanceof Armour){
+                        if(armourSlot.name.equals("Test")){
+                                armourSlot = item;
+                                return;
+                        }
+                }else{//*/
+                        for (int i = 0; i < 3; ++i) {
+                                if (hotBar[i].name.equals("Test")) {
+                                        hotBar[i] = item;
+                                        return;
+                                }
+                        }
+                }
                 for(int i = 0; i < 9; ++i){
                         if(items[i].name.equals("Test")){
                                 items[i] = item;
-                                /* //Adds Item to HotBar as well
-                                for(i = 0; i < 3; ++i){
-                                        if(hotBar[i].name.equals("Test")){
-                                                hotBar[i] = item;
-                                                break;
-                                        }
-                                }
-                                */
-
-                                break;
+                                return;
                         }
                 }
         }
@@ -117,7 +142,7 @@ public class Inventory extends JPanel implements MouseInputListener{
 
                 for(int i = 0; i < 3; ++i){
                         for(int j = 0; j < 3; ++j){
-                                if(items[i*3 + j].name.equals("Test")) {
+                                if(items[i * 3 + j].name.equals("Test")) {
                                         g2D.setPaint(Color.GRAY);
                                         g2D.fillRect(this.x + j * 110, this.y + i * 110, 100, 100);
                                 }else{
@@ -205,12 +230,12 @@ public class Inventory extends JPanel implements MouseInputListener{
                 g2D.drawString("Mastery Multiplier: " + String.format("%.2f", Game.player.mastery_multiplier)+ "x", xDist, this.y + attributes.getSize()*5 + specifics.getSize()*13);
                 g2D.drawString("Comprehension Speed: " + String.format("%.2f", Game.player.comprehension_speed), xDist, this.y + attributes.getSize()*5 + specifics.getSize()*14);
 
-                //
+                //Points Available
                 g2D.setFont(attributes);
                 g2D.setPaint(Color.decode("0x000F00FF"));
                 g2D.drawString("Points available: " + Game.player.pointsAvailable, this.x + 330 + 266, this.y + attributes.getSize()*5 + specifics.getSize()*15 + 5);
 
-                //HotBar 360
+                //HotBar
                 g2D.setPaint(Color.BLACK);
                 g2D.fillRect(this.x, this.y + 360, 340, 120);
                 for(int i = 0; i < 3; ++i){
@@ -220,6 +245,16 @@ public class Inventory extends JPanel implements MouseInputListener{
                         }else{
                                 g2D.drawImage(items[i].icon.getImage(),  this.x  + 10 + i * 110,  this.y + 370, null);
                         }
+                }
+
+                //ArmourSlot
+                g2D.setPaint(Color.BLACK);
+                g2D.fillRect(armourSelection.x - 10, armourSelection.y - 10, armourSelection.width + 20, armourSelection.height + 20);
+                if(armourSlot.name.equals("Test")){
+                        g2D.setPaint(Color.GRAY);
+                        g2D.fillRect(armourSelection.x,armourSelection.y,armourSelection.width, armourSelection.height);
+                }else{
+                        g2D.drawImage(armourSlot.icon.getImage(), armourSelection.x, armourSelection.y, null);
                 }
 
 

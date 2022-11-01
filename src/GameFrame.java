@@ -10,8 +10,6 @@ import static java.lang.Math.PI;
 public class GameFrame extends JFrame implements ActionListener, KeyListener, MouseListener {
 
     private GamePanel gamePanel;
-    //private JPanel panel;
-    //private JLayeredPane layer;
     private Timer timer;
     private boolean[] isKeyPressed;
     private boolean isMousePressed;
@@ -22,35 +20,13 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
     GameFrame(String windowName) {
         super(windowName);
 
-        //this.setLayout(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(1280, 720);
 
-        //this.panel = new JPanel();
         this.gamePanel = new GamePanel();
         this.gamePanel.addMouseListener(this);
 
-        //panel.setLayout(new OverlayLayout(panel));
-        //panel.add(gamePanel);
-        //panel.add(Game.player.inventory);
-        //this.add(panel);
-
-        //this.layer = new JLayeredPane();
-        //layer.add(gamePanel, 0);
-        //layer.add(Game.player.inventory, 1);
-
-
-        //this.add(Game.player.inventory);
-        //this.add(layer);
-        //this.setLayout(null);
-
-        this.add(gamePanel); //Essential
-
-        //gamePanel.set
-        //gamePanel.setBounds(0, 0,this.getWidth(),this.getHeight());
-        //this.add(Game.player.inventory);
-        //Game.player.inventory.setBounds(0, 0,this.getWidth(),this.getHeight());
-
+        this.add(gamePanel);
 
         this.addKeyListener(this);
 
@@ -165,7 +141,7 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
             }
             case 81 -> { //q
                 if(Game.player.inventory.selectedItem > -1 && Game.player.inventory.selectedItem < 9) {
-                    Game.player.inventory.dropItem(Game.player.inventory.items[Game.player.inventory.selectedItem]);
+                    Game.player.inventory.dropItem();
                     repaintInventory();
                     Game.player.inventory.selectedItem = 13;
                 }
@@ -219,17 +195,85 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
                     repaintInventory();
                 }
             }
-            for(int i = 0; i < 9; ++i) {
-                if (Game.player.inventory.itemSelection[i].isIn(mouseX + 7, mouseY + 30)) {
-                    Game.player.inventory.selectedItem = i;
-                }
-            }
-            if(Game.player.inventory.selectedItem > -1 && Game.player.inventory.selectedItem < 9){
-                for(int i = 0; i < 3; ++i){
-                    if (Game.player.inventory.hotBarSelection[i].isIn(mouseX + 7, mouseY + 30)) {
-                        Game.player.inventory.hotBar[i] = Game.player.inventory.items[Game.player.inventory.selectedItem];
+            if(Game.player.inventory.selectedItem < 0 || Game.player.inventory.selectedItem >= 13) {
+                for (int i = 0; i < 9; ++i) {
+                    if (Game.player.inventory.itemSelection[i].isIn(mouseX + 7, mouseY + 30)) {
+                        Game.player.inventory.selectedItem = i;
+                        Game.player.inventory.tempItem = Game.player.inventory.items[i];
+                        Game.player.inventory.items[i] = new Item(new ImageIcon("img.png").getImage(), "Test", "Test");
                         repaintInventory();
-                        Game.player.inventory.selectedItem = 13;
+                    }
+                }
+                for (int i = 0; i < 3; ++i) {
+                    if (Game.player.inventory.hotBarSelection[i].isIn(mouseX + 7, mouseY + 30)) {
+                        Game.player.inventory.selectedItem = i + 9;
+                        Game.player.inventory.tempItem = Game.player.inventory.hotBar[i];
+                        Game.player.inventory.hotBar[i] = new Item(new ImageIcon("img.png").getImage(), "Test", "Test");
+                        repaintInventory();
+                    }
+                }
+                if (Game.player.inventory.armourSelection.isIn(mouseX + 7, mouseY + 30)) {
+                    Game.player.inventory.selectedItem = 12;
+                    Game.player.inventory.tempItem = Game.player.inventory.armourSlot;
+                    Game.player.inventory.armourSlot = new Item(new ImageIcon("img.png").getImage(), "Test", "Test");
+                    repaintInventory();
+                }
+            }else{
+                //Click in Inventory
+                for (int i = 0; i < 9; ++i) {
+                    if (Game.player.inventory.itemSelection[i].isIn(mouseX + 7, mouseY + 30)) {
+                        if (Game.player.inventory.items[i].name.equals("Test")) {
+                            Game.player.inventory.items[i] = Game.player.inventory.tempItem;
+                            Game.player.inventory.tempItem = new Item(new ImageIcon("img.png").getImage(), "Test", "Test");
+                            Game.player.inventory.selectedItem = 13;
+                        } else {
+                            Item temp = Game.player.inventory.items[i];
+                            Game.player.inventory.items[i] = Game.player.inventory.tempItem;
+                            Game.player.inventory.tempItem = temp;
+                            Game.player.inventory.selectedItem = i;
+                        }
+                        repaintInventory();
+                        return;
+                    }
+                }
+                //Item of Type Armour can not be put into the HotBar, so it is dropped
+                if(Game.player.inventory.tempItem instanceof Armour){
+                    for(int i = 0; i < 3; ++i){
+                        if(Game.player.inventory.hotBarSelection[i].isIn(mouseX + 7, mouseY + 30)){
+                           return;
+                        }
+                    }
+                    if(Game.player.inventory.armourSelection.isIn(mouseX + 7, mouseY + 30)){
+                        if(Game.player.inventory.armourSlot.name.equals("Test")){
+                            Game.player.inventory.armourSlot = Game.player.inventory.tempItem;
+                            Game.player.inventory.tempItem = new Item(new ImageIcon("img.png").getImage(), "Test", "Test");
+                            Game.player.inventory.selectedItem = 13;
+                        }else{
+                            Item temp = Game.player.inventory.armourSlot;
+                            Game.player.inventory.armourSlot = Game.player.inventory.tempItem;
+                            Game.player.inventory.tempItem = temp;
+                            Game.player.inventory.selectedItem = 12;
+                        }
+                        repaintInventory();
+                        return;
+                    }
+                }else{
+                    //Click in HotBar
+                    for (int i = 0; i < 3; ++i) {
+                        if (Game.player.inventory.hotBarSelection[i].isIn(mouseX + 7, mouseY + 30)) {
+                            if (Game.player.inventory.hotBar[i].name.equals("Test")) {
+                                Game.player.inventory.hotBar[i] = Game.player.inventory.tempItem;
+                                Game.player.inventory.tempItem = new Item(new ImageIcon("img.png").getImage(), "Test", "Test");
+                                Game.player.inventory.selectedItem = 13;
+                            } else {
+                                Item temp = Game.player.inventory.hotBar[i];
+                                Game.player.inventory.hotBar[i] = Game.player.inventory.tempItem;
+                                Game.player.inventory.tempItem = temp;
+                                Game.player.inventory.selectedItem = i + 9;
+                            }
+                            repaintInventory();
+                            return;
+                        }
                     }
                 }
             }
