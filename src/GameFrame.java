@@ -282,7 +282,9 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
             case 3: // rmb
                 isMousePressed = false;
                 if (mousePressedTime < 50) {
-                    Game.player.attack(e.getX(), e.getY());
+                    if (!Game.player.inventory.opened) {
+                        Game.player.attack(e.getX(), e.getY());
+                    }
                 } else {
                     // select spell
                     //(Game.centerX - 120 + (int) (cos(PI / 2 + i * 2 * PI / Game.player.spells.size()) * 80), Game.centerY - 120 - (int) (sin(PI / 2 + i * 2 * PI / Game.player.spells.size()) * 80), 240, 240, (int) (90 + (i - 0.5) * 360 / Game.player.spells.size()), 360 / Game.player.spells.size());

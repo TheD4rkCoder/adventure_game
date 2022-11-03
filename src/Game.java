@@ -45,7 +45,7 @@ public class Game {
             new Spell(new ImageIcon(old_sprite_sheet.getSubimage(32, 0, 32, 32)), "Mana Bolt", 10, 5, 100, 8, 10, 2, Spell.type_t.projectile, null),
             new Spell(new ImageIcon("lavapool.png"), "Lava Pool", 10, 5, 200, 0, 100, 5, Spell.type_t.projectile, null),
             new Spell(new ImageIcon(old_sprite_sheet.getSubimage(0, 0, 32, 32)), "Fireball", 30, 20, 100, 8, 30, 3, Spell.type_t.projectile, new Spell(new ImageIcon(old_sprite_sheet.getSubimage(0, 0, 32, 32)), "Fireball", 20, 0, 10, 0, 100, 5, Spell.type_t.projectile, null)),
-            new Spell(new ImageIcon(old_sprite_sheet.getSubimage(32, 0, 32, 32)), "Sword swing", 10, 5, 10, 0, 80, 4, Spell.type_t.projectile, null),
+            new Spell(new ImageIcon(old_sprite_sheet.getSubimage(32, 0, 32, 32)), "Sword swing", 10, 5, 10, 0, 80, 4, Spell.type_t.physical, null),
 
     };
     static Player player = new Player("o7");
@@ -90,7 +90,7 @@ public class Game {
         } else {
             // every other object is round, so we don't need differentiation
             if (sqrt(pow(o1.x - o2.x, 2) + pow(o1.y - o2.y, 2)) <= o1.radius + o2.radius) {
-                if (!(o1 instanceof Projectile)) {
+                if (!(o1 instanceof Projectile) || ((Projectile) o1).type == Spell.type_t.obstacle) {
                     double deltaX = o1.x - o2.x;
                     double deltaY = o1.y - o2.y;
                     double distance = sqrt(pow(deltaX, 2) + pow(deltaY, 2));

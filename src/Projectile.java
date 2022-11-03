@@ -12,12 +12,14 @@ public class Projectile extends GameObject {
     protected double durationLeft;
     protected int piercing;
 
-    protected ArrayList<Character> enemiesToHit;
+    protected ArrayList<Character> enemiesHit;
+    protected String faction;
 
     protected Spell spell;
     protected double angle;
+    Spell.type_t type;
 
-    Projectile(double x, double y, double angle, double movement_speed, double damage, double durationLeft, int piercing, double radius, Image image, Spell spell, ArrayList toHit) {
+    Projectile(double x, double y, double angle, double movement_speed, double damage, double durationLeft, int piercing, double radius, Spell.type_t type, Image image, Spell spell, String faction) {
         this.x = x;
         this.y = y;
         this.angle = angle;
@@ -26,11 +28,13 @@ public class Projectile extends GameObject {
         this.durationLeft = durationLeft;
         this.piercing = piercing;
         this.radius = radius;
+        this.type = type;
         this.image = image;
         this.spell = spell;
 
         // change
-        this.enemiesToHit = toHit;
+        this.faction = faction;
+        this.enemiesHit = new ArrayList<>();
 
     }
 
@@ -45,23 +49,37 @@ public class Projectile extends GameObject {
         // afterward do logic so it saves what it has already hit instead of what it still has to hit
         // for this, maybe use "faction" of characters
 
-
-        for (int i = 0; i < enemiesToHit.size(); ++i) {
-            if (Game.collisionCheck(this, enemiesToHit.get(i))) {
-                enemiesToHit.get(i).hp -= (int) (damage);
-                enemiesToHit.remove(i);
-                piercing -= 1;
-
-                spell.summonSubProjectile(angle, x, y, enemiesToHit);
-
-                if (piercing < 1) {
-                    return false;
+        if (this.faction.equals("hostile")) {
+            if (this.enemiesHit.size() == 0) {
+                if (Game.collisionCheck(this, Game.player)) {
+                    this.enemiesHit.add(Game.player);
+                    Game.player.hp -= damage;
+                    this.piercing--;
+                    this.spell.summonSubProjectile(angle, x, y, faction); // faction = "hostile"
                 }
-                --i;
+            }
+        } else {
+            for (int i = 0; i < Game.enemies.size(); ++i) {
+                boolean check = false;
+                for (int j = 0; j < this.enemiesHit.size(); j++) {
+                    if (Game.enemies.get(i).equals(this.enemiesHit.get(j))) {
+                        check = true;
+                    }
+                }
+                if (!check && Game.collisionCheck(this, Game.enemies.get(i))) {
+                    enemiesHit.add(Game.enemies.get(i));
+                    Game.enemies.get(i).hp -= this.damage;
+                    this.piercing--;
+                    this.spell.summonSubProjectile(angle, x, y, faction); // faction = "friendly"
+                }
+
             }
         }
+        if (this.piercing < 1) {
+            return false;
+        }
         if (durationLeft < 1) {
-            spell.summonSubProjectile(angle, x, y, enemiesToHit);
+            this.spell.summonSubProjectile(angle, x, y, faction);
             return false;
         }
         return true;
