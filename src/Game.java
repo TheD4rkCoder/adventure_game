@@ -42,13 +42,14 @@ public class Game {
 
     // list of all spells (skills) that exist
     static Spell[] spells = new Spell[]{
-            new Spell(new ImageIcon(old_sprite_sheet.getSubimage(32, 0, 32, 32)), "Mana Bolt", 10, 5, 100, 8, 10, 2, Spell.type_t.projectile, null),
+            new Spell(new ImageIcon(old_sprite_sheet.getSubimage(32*3, 32, 32, 32)), "punch", 5, 5, 10, 0, 30, 2, Spell.type_t.physical, null),
+            new Spell(new ImageIcon(old_sprite_sheet.getSubimage(32, 0, 32, 32)), "Mana Bolt", 10, 5, 50, 8, 10, 2, Spell.type_t.projectile, null),
             new Spell(new ImageIcon("lavapool.png"), "Lava Pool", 10, 5, 200, 0, 100, 5, Spell.type_t.projectile, null),
-            new Spell(new ImageIcon(old_sprite_sheet.getSubimage(0, 0, 32, 32)), "Fireball", 30, 20, 100, 8, 30, 3, Spell.type_t.projectile, new Spell(new ImageIcon(old_sprite_sheet.getSubimage(0, 0, 32, 32)), "Fireball", 20, 0, 10, 0, 100, 5, Spell.type_t.projectile, null)),
-            new Spell(new ImageIcon(old_sprite_sheet.getSubimage(32, 0, 32, 32)), "Sword swing", 10, 5, 10, 0, 80, 4, Spell.type_t.physical, null),
+            new Spell(new ImageIcon(old_sprite_sheet.getSubimage(0, 0, 32, 32)), "Fireball", 30, 20, 50, 5, 30, 3, Spell.type_t.projectile, new Spell(new ImageIcon(old_sprite_sheet.getSubimage(0, 0, 32, 32)), "Fireball", 20, 0, 10, 0, 100, 5, Spell.type_t.projectile, null)),
+            new Spell(new ImageIcon(old_sprite_sheet.getSubimage(32, 0, 32, 32)), "Sword swing", 10, 20, 10, 0, 80, 4, Spell.type_t.physical, null),
 
     };
-    static Player player = new Player("o7");
+    static Player player = new Player("friendly");
     static ArrayList<Enemy> enemies = new ArrayList<>();
     static ArrayList<GameObject> obstacles = new ArrayList<>();//change this once we have obstacle spells
     static ArrayList<Wall> walls = new ArrayList<>();

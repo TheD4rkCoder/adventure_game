@@ -1,8 +1,7 @@
 import java.awt.*;
 import java.util.ArrayList;
 
-import static java.lang.Math.cos;
-import static java.lang.Math.sin;
+import static java.lang.Math.*;
 
 public class Projectile extends GameObject {
 
@@ -45,17 +44,16 @@ public class Projectile extends GameObject {
 
         // true = yes, the projectile should still exist
 
-
-        // afterward do logic so it saves what it has already hit instead of what it still has to hit
-        // for this, maybe use "faction" of characters
-
         if (this.faction.equals("hostile")) {
             if (this.enemiesHit.size() == 0) {
                 if (Game.collisionCheck(this, Game.player)) {
                     this.enemiesHit.add(Game.player);
-                    Game.player.hp -= damage;
+                    double damageDealt = this.damage*0.2*(6-(pow(6, Game.player.def/this.damage)));
+                    if (damageDealt > 0) {
+                        Game.player.hp -= damageDealt;
+                    }
                     this.piercing--;
-                    this.spell.summonSubProjectile(angle, x, y, faction); // faction = "hostile"
+                    this.spell.summonSubProjectile(this); // faction = "hostile"
                 }
             }
         } else {
@@ -68,9 +66,11 @@ public class Projectile extends GameObject {
                 }
                 if (!check && Game.collisionCheck(this, Game.enemies.get(i))) {
                     enemiesHit.add(Game.enemies.get(i));
-                    Game.enemies.get(i).hp -= this.damage;
-                    this.piercing--;
-                    this.spell.summonSubProjectile(angle, x, y, faction); // faction = "friendly"
+                    double damageDealt = this.damage*0.2*(6-(pow(6, Game.enemies.get(i).def/this.damage)));
+                    if (damageDealt > 0) {
+                        Game.enemies.get(i).hp -= damageDealt;
+                    }this.piercing--;
+                    this.spell.summonSubProjectile(this); // faction = "friendly"
                 }
 
             }
@@ -79,7 +79,7 @@ public class Projectile extends GameObject {
             return false;
         }
         if (durationLeft < 1) {
-            this.spell.summonSubProjectile(angle, x, y, faction);
+            this.spell.summonSubProjectile(this);
             return false;
         }
         return true;

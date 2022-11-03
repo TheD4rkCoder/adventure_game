@@ -35,41 +35,44 @@ public class Spell {
         this.type = type;
     }
 
-    public void summonProjectile(GameObject o, double delta_X, double delta_Y /*or mouse_x and mouse_y*/) { //also make a method for removing, so also summon the SubSpell //currently only usable for player
-        String faction;
+    public boolean summonProjectile(GameObject o, double delta_X, double delta_Y) {
         double damage = 1;
-        if (o instanceof Player) {
-
-            if (type == type_t.physical) {
-                if (this.mana_cost <= Game.player.stamina) {
-                    Game.player.stamina -= this.mana_cost;
+        double effectiveness = 1;
+        String faction = "";
+        if (o instanceof Character) {
+            if (o instanceof Player) {
+                if (type == type_t.physical) {
+                    if (this.mana_cost <= Game.player.stamina) {
+                        Game.player.stamina -= this.mana_cost;
+                        damage *= Game.player.melee_dmg_multiplier;
+                    } else {
+                        return false;
+                    }
+                } else if (Game.player.mana + Game.player.stamina * 0.1 - this.mana_cost >= 0) {
+                    damage *= Game.player.spell_effectiveness;
+                    if (Game.player.mana - mana_cost < 0) {
+                        double cost = mana_cost - Game.player.mana;
+                        Game.player.mana = 0;
+                        Game.player.stamina -= cost * 10;
+                    } else {
+                        Game.player.mana -= mana_cost;
+                    }
                 } else {
-                    return;
+                    return false;
                 }
-            } else if (Game.player.mana + Game.player.stamina * 0.1 - this.mana_cost >= 0) {
-
-                if (Game.player.mana - mana_cost < 0) {
-                    double cost = mana_cost - Game.player.mana;
-                    Game.player.mana = 0;
-                    Game.player.stamina -= cost * 10;
+            } else { // if instanceof Enemy
+                ((Character) o).mana_recovery_speed = this.mana_cost * 10;
+                if (this.type == type_t.physical) {
+                    damage *= ((Character) o).melee_dmg_multiplier;
                 } else {
-                    Game.player.mana -= mana_cost;
-                }
-            } else {
-                return;
-            }
-            faction = "friendly";
-            int critDiv = 1;
-            for (int i = 0; i < 8; ++i) {
-                if (Game.player.critical_stage[i]) {
-                    critDiv *= 2;
+                    damage *= ((Character) o).spell_effectiveness;
                 }
             }
-            damage = Game.player.spell_effectiveness * ((new Random().nextInt(Game.BASE_CRITICAL_CHANCE / critDiv) == 13) ? Game.player.crit_dmg_multiplier : 1);
-
-        } else { // if instanceof Enemy
-            ((Enemy) o).mana_recovery_speed = this.mana_cost * 10;
-            faction = "hostile";
+            damage *= ((new Random().nextInt((int) ((Character) o).critrate) == 0) ? ((Character) o).crit_dmg_multiplier : 1);
+            effectiveness *= pow(((Character) o).spell_effectiveness, 0.3);
+            faction = ((Character) o).faction;
+        } else if (o instanceof Projectile) {
+            faction = ((Projectile)o).faction;
         }
         double angle;
         if (delta_X == 0) {
@@ -83,15 +86,19 @@ public class Spell {
         }
         double x = o.x + cos(angle) * (this.radius - o.radius);
         double y = o.y + sin(angle) * (this.radius - o.radius);
-        Projectile proj = new Projectile(x, y, angle, this.movement_speed * ((Character) o).spell_effectiveness, this.damage_health * damage, this.duration * ((Character) o).spell_effectiveness, this.piercing, this.radius, this.type, this.image.getImage().getScaledInstance((int) radius * 2, (int) radius * 2, Image.SCALE_FAST), this, faction);
+
+        Projectile proj = new Projectile(x, y, angle, this.movement_speed * effectiveness, this.damage_health * damage, this.duration * effectiveness, this.piercing, this.radius, this.type, this.image.getImage().getScaledInstance((int) radius * 2, (int) radius * 2, Image.SCALE_FAST), this, faction);
         Game.projectiles.add(Game.projectiles.size(), proj);
+        return true;
     }
 
-    public void summonSubProjectile(double angle, double x, double y, String faction) {
+    public void summonSubProjectile(Projectile p) {
         if (subSpell != null) {
-            Projectile proj = new Projectile(x, y, angle, this.subSpell.movement_speed, this.subSpell.damage_health, this.subSpell.duration, this.subSpell.piercing, this.subSpell.radius, type, this.subSpell.image.getImage().getScaledInstance((int) this.subSpell.radius * 2, (int) this.subSpell.radius * 2, Image.SCALE_FAST), this.subSpell, faction);
-            Game.projectiles.add(Game.projectiles.size(), proj);
+            this.subSpell.summonProjectile(p, cos(p.angle), sin(p.angle));
         }
-
+        //Projectile proj = new Projectile(x, y, angle, this.subSpell.movement_speed, this.subSpell.damage_health, this.subSpell.duration, this.subSpell.piercing, this.subSpell.radius, type, this.subSpell.image.getImage().getScaledInstance((int) this.subSpell.radius * 2, (int) this.subSpell.radius * 2, Image.SCALE_FAST), this.subSpell, faction);
+        //Game.projectiles.add(Game.projectiles.size(), proj);
     }
+
 }
+

@@ -6,12 +6,16 @@ import javax.swing.*;
 import static java.lang.Math.*;
 
 public class Character extends GameObject implements ActionListener {
-    private String faction;
+    public String faction;
 
-    protected int stage, intelligence, strength, dexterity, wisdom, endurance, def, stamina, maxStamina;
+    protected int stage,intelligence,strength,dexterity,wisdom,endurance;
+    protected double def;
+    protected int stamina;
+    protected int maxStamina;
 
     protected double baseDamage, spell_effectiveness, mana_recovery_speed/*in Enemy, cooldown between casts*/, melee_dmg_multiplier, movement_speed, combo_dmg_multiplier, crit_dmg_multiplier, hp, maxHP;
 
+    protected double critrate; //Dexterity
     protected ArrayList<Spell> spells;
     protected Timer comboTimer;
     protected int combo;
@@ -50,9 +54,9 @@ public class Character extends GameObject implements ActionListener {
         switch (stat) {
             case "Intelligence" -> {
                 intelligence += amount;
-                spell_effectiveness = pow(1.005, intelligence);
-                if (intelligence > 30) {
-                    mana_recovery_speed = (pow(1.015, intelligence) - log10(intelligence));
+                spell_effectiveness = pow(1.01, intelligence);
+                if (intelligence > 20) {
+                    mana_recovery_speed = (pow(1.03, intelligence) - log10(intelligence)) - 0.4;
                 }
                 else {
                     mana_recovery_speed = 0.1;
@@ -60,14 +64,14 @@ public class Character extends GameObject implements ActionListener {
             }
             case "Strength" -> {
                 strength += amount;
-                baseDamage = 5 + strength * 2;
-                maxHP = 100 + 2.5 * strength + pow(1.01, endurance);
+                baseDamage = 5 + strength;
+                maxHP = 100 + 2.5 * strength + pow(1.007, endurance)*endurance;
                 hp += 2.5 * amount;
                 if (hp > maxHP) {
                     hp = maxHP;
                 }
-                def = strength + 2 * endurance;
-                melee_dmg_multiplier = pow(1.005, strength);
+                def = strength*0.2 + endurance*0.5;
+                melee_dmg_multiplier = pow(1.01, strength);
                 crit_dmg_multiplier = pow(1.0025, strength);
             }
             case "Endurance" -> {
@@ -77,7 +81,7 @@ public class Character extends GameObject implements ActionListener {
                 if (hp > maxHP) {
                     hp = maxHP;
                 }
-                def = strength + 2 * endurance;
+                def = strength*0.2 + endurance*0.5;
                 stamina += 3 * amount;
                 maxStamina = 100 + 3 * endurance;
 
@@ -85,7 +89,9 @@ public class Character extends GameObject implements ActionListener {
             case "Dexterity" -> {
                 dexterity += amount;
                 combo_dmg_multiplier = pow(1.00004, dexterity);
-                movement_speed = 2 + pow(1.002, dexterity);
+                movement_speed = 2 + pow(1.005, dexterity);
+                crit_dmg_multiplier = 2 + dexterity * 0.05;
+                critrate = 1000.0*pow(0.98, dexterity);
             }
             default -> wisdom += amount;
         }

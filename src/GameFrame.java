@@ -76,13 +76,13 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
                 if (rand.nextInt(500) == 13) {
                     switch (rand.nextInt(4)) {
                         case 0 -> //north
-                                Game.enemies.add(Game.enemies.size(), new Enemy("Test", rand.nextInt(this.getWidth()) + Game.player.x - this.getWidth() / 2, Game.player.y - this.getHeight() / 2, rand.nextInt(20)));
+                                Game.enemies.add(Game.enemies.size(), new Enemy("hostile", rand.nextInt(this.getWidth()) + Game.player.x - this.getWidth() / 2, Game.player.y - this.getHeight() / 2, rand.nextInt(20)));
                         case 1 -> //east
-                                Game.enemies.add(Game.enemies.size(), new Enemy("Test", this.getWidth() / 2 + Game.player.x, rand.nextInt(this.getHeight() + 1) + Game.player.y - this.getHeight() / 2, rand.nextInt(20)));
+                                Game.enemies.add(Game.enemies.size(), new Enemy("hostile", this.getWidth() / 2 + Game.player.x, rand.nextInt(this.getHeight() + 1) + Game.player.y - this.getHeight() / 2, rand.nextInt(20)));
                         case 2 -> //south
-                                Game.enemies.add(Game.enemies.size(), new Enemy("Test", rand.nextInt(this.getWidth()) + Game.player.x - this.getWidth() / 2, this.getHeight() / 2 + Game.player.y, rand.nextInt(20)));
+                                Game.enemies.add(Game.enemies.size(), new Enemy("hostile", rand.nextInt(this.getWidth()) + Game.player.x - this.getWidth() / 2, this.getHeight() / 2 + Game.player.y, rand.nextInt(20)));
                         case 3 -> //west
-                                Game.enemies.add(Game.enemies.size(), new Enemy("Test", Game.player.x - this.getWidth() / 2, rand.nextInt(this.getHeight() + 1) + Game.player.y - this.getHeight() / 2, rand.nextInt(20)));
+                                Game.enemies.add(Game.enemies.size(), new Enemy("hostile", Game.player.x - this.getWidth() / 2, rand.nextInt(this.getHeight() + 1) + Game.player.y - this.getHeight() / 2, rand.nextInt(20)));
                     }
                 }
             }
@@ -132,18 +132,6 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
                     this.isKeyPressed[3] = true;
                 }//d
             }
-            case 69 -> {    //e
-                if (Game.player.inventory.opened) {
-                    Game.player.inventory.close();
-                    this.timer.restart();
-                } else {
-                    this.timer.stop();
-                    //this.getGraphics().setClip(0, 0, this.getWidth(), this.getHeight());
-
-                    repaintInventory();
-                    Game.player.inventory.open();
-                }
-            }
             case 81 -> { //q
                 if (Game.player.inventory.opened) {
                     Game.player.inventory.dropItem();
@@ -173,6 +161,19 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
             case 68 -> {
                 Game.player.x_movement -= Game.player.movement_speed;
                 this.isKeyPressed[3] = false;
+            }
+            case 69 -> {    //e
+                if (Game.player.inventory.opened) {
+                    Game.player.inventory.close();
+                    this.timer.restart();
+                } else {
+                    this.timer.stop();
+                    //this.getGraphics().setClip(0, 0, this.getWidth(), this.getHeight());
+
+                    repaintInventory();
+                    Game.player.inventory.open();
+
+                }
             }
         }
     }
@@ -247,6 +248,10 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
                 if (!Game.player.inventory.opened) {
                     if (Game.player.inventory.hotBar[0] != null && Game.player.inventory.hotBar[0].attack != null) {
                         Game.player.inventory.hotBar[0].attack.summonProjectile(Game.player, Game.centerX - e.getX(), Game.centerY - e.getY());
+                    } else {
+                        if (Game.spells[0].summonProjectile(Game.player, Game.centerX - e.getX(), Game.centerY - e.getY())) {
+                            Game.projectiles.get(Game.projectiles.size() - 1).damage = Game.player.baseDamage;
+                        }
                     }
                 }
                 break;
@@ -259,6 +264,10 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
                 if (!Game.player.inventory.opened) {
                     if (Game.player.inventory.hotBar[2] != null && Game.player.inventory.hotBar[2].attack != null) {
                         Game.player.inventory.hotBar[2].attack.summonProjectile(Game.player, Game.centerX - e.getX(), Game.centerY - e.getY());
+                    } else {
+                        if (Game.spells[0].summonProjectile(Game.player, Game.centerX - e.getX(), Game.centerY - e.getY())) {
+                            Game.projectiles.get(Game.projectiles.size() - 1).damage = Game.player.baseDamage;
+                        }
                     }
                 }
                 break;
@@ -266,6 +275,10 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
                 if (!Game.player.inventory.opened) {
                     if (Game.player.inventory.hotBar[1] != null && Game.player.inventory.hotBar[1].attack != null) {
                         Game.player.inventory.hotBar[1].attack.summonProjectile(Game.player, Game.centerX - e.getX(), Game.centerY - e.getY());
+                    } else {
+                        if (Game.spells[0].summonProjectile(Game.player, Game.centerX - e.getX(), Game.centerY - e.getY())) {
+                            Game.projectiles.get(Game.projectiles.size() - 1).damage = Game.player.baseDamage;
+                        }
                     }
                 }
                 break;

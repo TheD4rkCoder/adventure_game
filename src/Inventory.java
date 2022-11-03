@@ -32,7 +32,7 @@ public class Inventory extends JPanel implements MouseInputListener {
         items = new Item[9];
         hotBar = new Item[3];
         armourSlot = null;
-        addItem(new Item(Game.weapons_sprite_sheet.getSubimage(246, 24, 43, 43), "Sword", "one of the most basic Weapons", Game.spells[3]));
+        addItem(new Item(Game.weapons_sprite_sheet.getSubimage(246, 24, 43, 43), "Sword", "one of the most basic Weapons", Game.spells[4]));
         addItem(new Armour(Game.armour_sprite_sheet.getSubimage(246, 24+43, 43, 43), "Oha", "Test", 100, 20, null));
         addItem(new Item(new ImageIcon("img.png").getImage(), "Oha", "Test", null));
         addItem(new Item(new ImageIcon("img.png").getImage(), "Oha", "Test", null));
@@ -151,12 +151,14 @@ public class Inventory extends JPanel implements MouseInputListener {
 
 
         //BaseStats I guess
+        // maybe round these to 2 decimal points
+
 
         g2D.setFont(specifics);
         g2D.setPaint(Color.red);
         g2D.drawString("HP: " + (int) Game.player.hp + "/" + (int) Game.player.maxHP, xDist, this.y + 271);
         g2D.setPaint(Color.green);
-        g2D.drawString("Defence: " + Game.player.def, xDist, this.y + 286);
+        g2D.drawString("Defence: " + (int) Game.player.def, xDist, this.y + 286);
         g2D.setPaint(Color.orange);
         g2D.drawString("Stamina: " + Game.player.stamina + "/" + Game.player.maxStamina, xDist, this.y + 301);
         g2D.setPaint(Color.blue);
@@ -207,14 +209,9 @@ public class Inventory extends JPanel implements MouseInputListener {
         g2D.drawString("Boosts: HP, Defence, Stamina", xDist, this.y + attributes.getSize() * 3 + specifics.getSize() * 8);
         //Dexterity
         g2D.drawString("Movement Speed: " + String.format("%.2f", Game.player.movement_speed), xDist, this.y + attributes.getSize() * 4 + specifics.getSize() * 9);
-        g2D.drawString("Combo Damage Multiplier: " + String.format("%.2f", Game.player.combo_dmg_multiplier) + "x", xDist, this.y + attributes.getSize() * 4 + specifics.getSize() * 10);
-        int critStage = 0;
-        for (int i = 0; i < 8; ++i) {
-            if (Game.player.critical_stage[i]) {
-                ++critStage;
-            }
-        }
-        g2D.drawString("Critical Stage: " + critStage, xDist, this.y + attributes.getSize() * 4 + specifics.getSize() * 11);
+        g2D.drawString("Critical Damage Multiplier: " + String.format("%.2f", Game.player.crit_dmg_multiplier) + "x", xDist, this.y + attributes.getSize() * 4 + specifics.getSize() * 10);
+
+        g2D.drawString("Critical Chance: " + String.format("%.2f",100 / Game.player.critrate) + "%", xDist, this.y + attributes.getSize() * 4 + specifics.getSize() * 11);
         //Wisdom
         g2D.drawString("Item Stat Multiplier: " + String.format("%.2f", Game.player.item_stat_multiplier) + "x", xDist, this.y + attributes.getSize() * 5 + specifics.getSize() * 12);
         g2D.drawString("Mastery Multiplier: " + String.format("%.2f", Game.player.mastery_multiplier) + "x", xDist, this.y + attributes.getSize() * 5 + specifics.getSize() * 13);
