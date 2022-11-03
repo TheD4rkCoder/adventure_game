@@ -11,21 +11,41 @@ import static java.lang.Math.sqrt;
 
 public class Game {
     // load sprite sheet:
-    final static private BufferedImage sprite_sheet;
+    final static private BufferedImage old_sprite_sheet;
+    final static public BufferedImage weapons_sprite_sheet;
+    final static public BufferedImage armour_sprite_sheet;
 
     static {
         try {
-            sprite_sheet = ImageIO.read(new File("sprite_sheet.png"));
+            weapons_sprite_sheet = ImageIO.read(new File("weapons.png"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
+
+    static {
+        try {
+            armour_sprite_sheet = ImageIO.read(new File("armour.png"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    static {
+        try {
+            old_sprite_sheet = ImageIO.read(new File("sprite_sheet.png"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     // list of all spells (skills) that exist
     static Spell[] spells = new Spell[]{
-            new Spell(new ImageIcon(sprite_sheet.getSubimage(32, 0, 32, 32)), "Mana Bolt", 10, 5, 100, 8, 10, 2, Spell.type_t.projectile, null),
+            new Spell(new ImageIcon(old_sprite_sheet.getSubimage(32, 0, 32, 32)), "Mana Bolt", 10, 5, 100, 8, 10, 2, Spell.type_t.projectile, null),
             new Spell(new ImageIcon("lavapool.png"), "Lava Pool", 10, 5, 200, 0, 100, 5, Spell.type_t.projectile, null),
-            new Spell(new ImageIcon(sprite_sheet.getSubimage(0, 0, 32, 32)), "Fireball", 30, 20, 100, 8, 30, 3, Spell.type_t.projectile, new Spell(new ImageIcon(sprite_sheet.getSubimage(0, 0, 32, 32)), "Fireball", 20, 0, 10, 0, 100, 5, Spell.type_t.projectile, null)),
-            new Spell(new ImageIcon(sprite_sheet.getSubimage(32, 0, 32, 32)), "Sword swing", 10, 5, 10, 0, 80, 4, Spell.type_t.projectile, null),
+            new Spell(new ImageIcon(old_sprite_sheet.getSubimage(0, 0, 32, 32)), "Fireball", 30, 20, 100, 8, 30, 3, Spell.type_t.projectile, new Spell(new ImageIcon(old_sprite_sheet.getSubimage(0, 0, 32, 32)), "Fireball", 20, 0, 10, 0, 100, 5, Spell.type_t.projectile, null)),
+            new Spell(new ImageIcon(old_sprite_sheet.getSubimage(32, 0, 32, 32)), "Sword swing", 10, 5, 10, 0, 80, 4, Spell.type_t.projectile, null),
 
     };
     static Player player = new Player("o7");
