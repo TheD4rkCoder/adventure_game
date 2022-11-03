@@ -244,8 +244,10 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
 
         switch (e.getButton()) {
             case 1: // lmb
-                if (Game.player.inventory.hotBar[0] != null && Game.player.inventory.hotBar[0].attack != null) {
-                    Game.player.inventory.hotBar[0].attack.summonProjectile(Game.player, Game.centerX - e.getX(), Game.centerY - e.getY());
+                if (!Game.player.inventory.opened) {
+                    if (Game.player.inventory.hotBar[0] != null && Game.player.inventory.hotBar[0].attack != null) {
+                        Game.player.inventory.hotBar[0].attack.summonProjectile(Game.player, Game.centerX - e.getX(), Game.centerY - e.getY());
+                    }
                 }
                 break;
             case 2: // mouse_wheel
@@ -254,13 +256,17 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
                 isMousePressed = true;
                 break;
             case 4: // undo (browser)
-                if (Game.player.inventory.hotBar[1] != null && Game.player.inventory.hotBar[1].attack != null) {
-                    Game.player.inventory.hotBar[1].attack.summonProjectile(Game.player, Game.centerX - e.getX(), Game.centerY - e.getY());
+                if (!Game.player.inventory.opened) {
+                    if (Game.player.inventory.hotBar[2] != null && Game.player.inventory.hotBar[2].attack != null) {
+                        Game.player.inventory.hotBar[2].attack.summonProjectile(Game.player, Game.centerX - e.getX(), Game.centerY - e.getY());
+                    }
                 }
                 break;
             case 5: // redo (browser)
-                if (Game.player.inventory.hotBar[2] != null && Game.player.inventory.hotBar[2].attack != null) {
-                    Game.player.inventory.hotBar[2].attack.summonProjectile(Game.player, Game.centerX - e.getX(), Game.centerY - e.getY());
+                if (!Game.player.inventory.opened) {
+                    if (Game.player.inventory.hotBar[1] != null && Game.player.inventory.hotBar[1].attack != null) {
+                        Game.player.inventory.hotBar[1].attack.summonProjectile(Game.player, Game.centerX - e.getX(), Game.centerY - e.getY());
+                    }
                 }
                 break;
         }

@@ -35,14 +35,18 @@ public class GamePanel extends JPanel {
         g2D.drawImage(background.getImage(), screenscrollX, screenscrollY + background.getIconHeight(), null);
         g2D.drawImage(background.getImage(), screenscrollX + background.getIconWidth(), screenscrollY + background.getIconHeight(), null);
 
-        //how to get a different sized image:
-        //image.getImage().getScaledInstance()
+        // draw all items
+        g2D.setPaint(Color.BLACK);
+        for (int i = 0; i < Game.itemsLayingAround.size(); i++) {
+            GameObject p = Game.itemsLayingAround.get(i);
+            g2D.fillRect((int) (p.x - p.radius - deltaX - 10), (int) (p.y - p.radius - deltaY - 10), (int) (2*p.radius+20), (int) (2*p.radius+20));
+            g2D.drawImage(Game.itemsLayingAround.get(i).icon.getImage(), (int) (p.x - p.radius - deltaX), (int) (p.y - p.radius - deltaY), null);
+        }
 
         // draw all projectiles
         for (int i = 0; i < Game.projectiles.size(); i++) {
             GameObject p = Game.projectiles.get(i);
             g2D.drawImage(Game.projectiles.get(i).image, (int) (p.x - p.radius - deltaX), (int) (p.y - p.radius - deltaY), null);
-
         }
 
         // draw all enemies | textures still need to be replaced with images
@@ -81,6 +85,18 @@ public class GamePanel extends JPanel {
 
         g2D.setPaint(Color.white);
         g2D.drawRect(this.getWidth() - 350, this.getHeight() - 210, 270, 40);
+        // hotBar
+        g2D.setPaint(Color.BLACK);
+        g2D.fillRect(this.getWidth() - 720, this.getHeight() - 165 , 340, 120);
+        for (int i = 0; i < 3; ++i) {
+            if (Game.player.inventory.hotBar[i] == null) {
+                g2D.setPaint(Color.GRAY);
+                g2D.fillRect(this.getWidth() - 710 + i * 110, this.getHeight() - 155, 100, 100);
+            } else {
+                g2D.drawImage(Game.player.inventory.hotBar[i].icon.getImage(), this.getWidth() - 710 + i * 110 , this.getHeight() - 155, null);
+            }
+        }
+
 
         // spell choosing cycle
         if (GameFrame.mousePressedTime > 50) {

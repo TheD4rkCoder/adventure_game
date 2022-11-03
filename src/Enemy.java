@@ -56,7 +56,7 @@ public class Enemy extends Character {
                 "\n, spells=" + spells +
                 "\n, comboTimer=" + comboTimer +
                 "\n, combo=" + combo +
-                "\n, image=" + image +
+                "\n, image=" + icon +
                 "\n, x=" + x +
                 "\n, y=" + y +
                 "\n, radius=" + radius +

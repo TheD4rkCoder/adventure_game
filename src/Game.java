@@ -53,6 +53,7 @@ public class Game {
     static ArrayList<GameObject> obstacles = new ArrayList<>();//change this once we have obstacle spells
     static ArrayList<Wall> walls = new ArrayList<>();
     static ArrayList<Projectile> projectiles = new ArrayList<>();
+    static ArrayList<Item> itemsLayingAround = new ArrayList<>();
 
 
     static final int FRAME_TIME = 20; //how long a Frame is in milliseconds
@@ -129,6 +130,14 @@ public class Game {
             if (!Game.projectiles.get(i).move()) {
                 Game.projectiles.remove(i);
                 --i;
+            }
+        }
+        // Item pickup/ collision with items
+        for (int i = 0; i < Game.itemsLayingAround.size(); i++) {
+            if (collisionCheck(player, itemsLayingAround.get(i))) {
+                if (player.inventory.addItem(itemsLayingAround.get(i))) {
+                    itemsLayingAround.remove(i);
+                }
             }
         }
     }

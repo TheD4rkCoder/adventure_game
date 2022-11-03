@@ -21,7 +21,7 @@ public class Player extends Character {
     public Player(String faction) {
         super(faction);
         this.hp = maxHP;
-        this.image = new ImageIcon("img_1.png");
+        this.icon = new ImageIcon("img_1.png");
         this.radius = 20;
 
         this.spells.add(this.spells.size(), Game.spells[0]);

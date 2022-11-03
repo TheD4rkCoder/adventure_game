@@ -33,7 +33,7 @@ public class Inventory extends JPanel implements MouseInputListener {
         hotBar = new Item[3];
         armourSlot = null;
         addItem(new Item(Game.weapons_sprite_sheet.getSubimage(246, 24, 43, 43), "Sword", "one of the most basic Weapons", Game.spells[3]));
-        addItem(new Armour(Game.armour_sprite_sheet.getSubimage(246, 24, 43, 43), "Oha", "Test", 100, 20, null));
+        addItem(new Armour(Game.armour_sprite_sheet.getSubimage(246, 24+43, 43, 43), "Oha", "Test", 100, 20, null));
         addItem(new Item(new ImageIcon("img.png").getImage(), "Oha", "Test", null));
         addItem(new Item(new ImageIcon("img.png").getImage(), "Oha", "Test", null));
 
@@ -63,7 +63,12 @@ public class Inventory extends JPanel implements MouseInputListener {
     }
 
     public void dropItem(/*Item item*/) {
-        tempItem = null;
+        if (tempItem != null) {
+            tempItem.x = Game.player.x;
+            tempItem.y = Game.player.y - tempItem.radius - Game.player.radius - 30;
+            Game.itemsLayingAround.add(tempItem);
+            tempItem = null;
+        }
                 /* //Previous Version, to remove after Testing
                 if(item instanceof Armour){
                         armourSlot = new Item(new ImageIcon("img.png").getImage(), "Test", "Test");
@@ -86,20 +91,21 @@ public class Inventory extends JPanel implements MouseInputListener {
                 */
     }
 
-    public void addItem(Item item) {
+    public boolean addItem(Item item) {
         for (int i = 0; i < 3; ++i) {
             if (hotBar[i] == null) {
                 hotBar[i] = item;
-                return;
+                return true;
             }
         }
 
         for (int i = 0; i < 9; ++i) {
             if (items[i] == null) {
                 items[i] = item;
-                return;
+                return true;
             }
         }
+        return false;
     }
 
     public void paint(Graphics g) { //Due to the transferring of the graphics object from GameFrame the position gets offset so that 0 0 in GamePanel are 7 and 30 here
@@ -138,7 +144,7 @@ public class Inventory extends JPanel implements MouseInputListener {
         int xDist = this.x + 330;
 
         //Insert Player image
-        g2D.drawImage(Game.player.image.getImage(), xDist, this.y, null);
+        g2D.drawImage(Game.player.icon.getImage(), xDist, this.y, null);
 
         Font attributes = new Font("Arial", Font.PLAIN, 20);
         Font specifics = new Font("Arial", Font.PLAIN, 15);

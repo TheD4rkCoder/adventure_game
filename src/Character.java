@@ -18,7 +18,7 @@ public class Character extends GameObject implements ActionListener {
 
 
     public Character(String faction) {
-        this.image = new ImageIcon("img_1.png");
+        this.icon = new ImageIcon("img_1.png");
         this.faction = faction;
 
         this.stage = 1;

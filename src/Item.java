@@ -1,10 +1,9 @@
 import javax.swing.*;
 import java.awt.*;
 
-public class Item {
-    protected ImageIcon icon;
-    protected Image image;
+public class Item extends GameObject{
 
+    protected Image image;
     protected String name;
     protected String description;
     public Spell attack;
@@ -16,6 +15,7 @@ public class Item {
         this.name = name;
         this.description = description;
         this.attack = attack;
+        this.radius = 50;
     }
 
 }
