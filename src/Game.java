@@ -11,7 +11,7 @@ import static java.lang.Math.sqrt;
 
 public class Game {
     // load sprite sheet:
-    final static private BufferedImage old_sprite_sheet;
+    final static public BufferedImage old_sprite_sheet;
     final static public BufferedImage weapons_sprite_sheet;
     final static public BufferedImage armour_sprite_sheet;
 

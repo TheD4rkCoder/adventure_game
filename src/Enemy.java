@@ -92,7 +92,7 @@ public class Enemy extends Character {
 
     public void attack() {
         this.addToCombo();
-        this.spells.get(0).summonProjectile(this, this.x - Game.player.x, this.y - Game.player.y);
+        this.spells.get(0).summonProjectile(this, this.x - Game.player.x, this.y - Game.player.y, false);
 
     }
 }

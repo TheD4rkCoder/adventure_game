@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.awt.*;
 import java.util.Arrays;
 
 import static java.lang.Math.*;
@@ -16,13 +17,15 @@ public class Player extends Character {
 
     protected int pointsAvailable;
     protected Inventory inventory;
+    protected double experience;
 
     public Player(String faction) {
         super(faction);
         super.levelUp(0);
         this.hp = maxHP;
-        this.icon = new ImageIcon("img_1.png");
         this.radius = 20;
+        this.icon = new ImageIcon(Game.old_sprite_sheet.getSubimage(32, 32, 32, 32).getScaledInstance((int) (2*this.radius), (int) (2*this.radius), Image.SCALE_FAST));
+        this.experience = 0;
 
         this.spells.add(this.spells.size(), Game.spells[1]);
         this.spells.add(this.spells.size(), Game.spells[2]);
@@ -43,10 +46,8 @@ public class Player extends Character {
         super.increaseStat(stat, amount);
         switch (stat) {
             case "Intelligence" -> maxMana = pow(1.05, intelligence) + intelligence + 10;
-            case "Dexterity" -> {
-            }
             case "Wisdom" -> {
-                item_stat_multiplier = pow(1.005, wisdom);
+                item_stat_multiplier = pow(1.015, wisdom);
                 mastery_multiplier = wisdom * 0.02 + 1;
                 comprehension_speed = pow(1.02, wisdom);
             }
@@ -72,7 +73,7 @@ public class Player extends Character {
 
     public void attack(int mouse_X, int mouse_Y) {
         this.addToCombo();
-        this.spells.get(selectedSpell).summonProjectile(this, Game.centerX - mouse_X, Game.centerY - mouse_Y);
+        this.spells.get(selectedSpell).summonProjectile(this, Game.centerX - mouse_X, Game.centerY - mouse_Y, false);
     }
 
     public void refresh() {

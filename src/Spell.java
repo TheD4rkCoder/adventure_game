@@ -8,16 +8,12 @@ import static java.lang.Math.*;
 public class Spell {
     protected ImageIcon image;
     protected String name;
-    protected double damage_health;
-    protected double mana_cost;
+    protected double damage_health, mana_cost, duration, movement_speed, radius;
     protected Spell subSpell; // spell that spawns after the projectile of this spell gets removed
-    protected double duration;
-    protected double movement_speed;
-    protected double radius;
     protected int piercing;
 
     protected enum type_t {
-        projectile, physical, aoe, obstacle, regeneration
+        projectile, physical, aoe, obstacle, buff
     }
 
     protected type_t type;
@@ -35,7 +31,7 @@ public class Spell {
         this.type = type;
     }
 
-    public boolean summonProjectile(GameObject o, double delta_X, double delta_Y) {
+    public boolean summonProjectile(GameObject o, double delta_X, double delta_Y, boolean fromItem) {
         double damage = 1;
         double effectiveness = 1;
         String faction = "";
@@ -59,6 +55,9 @@ public class Spell {
                     }
                 } else {
                     return false;
+                }
+                if (fromItem) {
+                    damage *= Game.player.item_stat_multiplier;
                 }
             } else { // if instanceof Enemy
                 ((Character) o).mana_recovery_speed = this.mana_cost * 10;
@@ -94,7 +93,7 @@ public class Spell {
 
     public void summonSubProjectile(Projectile p) {
         if (subSpell != null) {
-            this.subSpell.summonProjectile(p, cos(p.angle), sin(p.angle));
+            this.subSpell.summonProjectile(p, cos(p.angle), sin(p.angle), false);
         }
         //Projectile proj = new Projectile(x, y, angle, this.subSpell.movement_speed, this.subSpell.damage_health, this.subSpell.duration, this.subSpell.piercing, this.subSpell.radius, type, this.subSpell.image.getImage().getScaledInstance((int) this.subSpell.radius * 2, (int) this.subSpell.radius * 2, Image.SCALE_FAST), this.subSpell, faction);
         //Game.projectiles.add(Game.projectiles.size(), proj);

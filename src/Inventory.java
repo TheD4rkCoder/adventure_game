@@ -144,7 +144,7 @@ public class Inventory extends JPanel implements MouseInputListener {
         int xDist = this.x + 330;
 
         //Insert Player image
-        g2D.drawImage(Game.player.icon.getImage(), xDist, this.y, null);
+        g2D.drawImage(Game.player.icon.getImage().getScaledInstance(250, 250, Image.SCALE_FAST), xDist, this.y, null);
 
         Font attributes = new Font("Arial", Font.PLAIN, 20);
         Font specifics = new Font("Arial", Font.PLAIN, 15);

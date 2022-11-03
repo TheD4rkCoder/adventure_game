@@ -39,16 +39,17 @@ public class GamePanel extends JPanel {
         g2D.setPaint(Color.BLACK);
         for (int i = 0; i < Game.itemsLayingAround.size(); i++) {
             GameObject p = Game.itemsLayingAround.get(i);
-            g2D.fillRect((int) (p.x - p.radius - deltaX - 10), (int) (p.y - p.radius - deltaY - 10), (int) (2*p.radius+20), (int) (2*p.radius+20));
+            g2D.fillRect((int) (p.x - p.radius - deltaX - 10), (int) (p.y - p.radius - deltaY - 10), (int) (2 * p.radius + 20), (int) (2 * p.radius + 20));
             g2D.drawImage(Game.itemsLayingAround.get(i).icon.getImage(), (int) (p.x - p.radius - deltaX), (int) (p.y - p.radius - deltaY), null);
         }
 
         // draw all projectiles
         for (int i = 0; i < Game.projectiles.size(); i++) {
-            GameObject p = Game.projectiles.get(i);
-            g2D.drawImage(Game.projectiles.get(i).image, (int) (p.x - p.radius - deltaX), (int) (p.y - p.radius - deltaY), null);
+            if (Game.projectiles.get(i).type != Spell.type_t.buff) {
+                GameObject p = Game.projectiles.get(i);
+                g2D.drawImage(Game.projectiles.get(i).image, (int) (p.x - p.radius - deltaX), (int) (p.y - p.radius - deltaY), null);
+            }
         }
-
         // draw all enemies | textures still need to be replaced with images
         g2D.setPaint(Color.green);
         for (int i = 0; i < Game.enemies.size(); i++) {
@@ -56,14 +57,13 @@ public class GamePanel extends JPanel {
             g2D.fillOval((int) (p.x - p.radius - deltaX), (int) (p.y - p.radius - deltaY), (int) p.radius * 2, (int) p.radius * 2);
         }
 
-        g2D.setPaint(Color.red);
-        // draw player and other gui like health bar
-        //g2D.drawRect((int) (Game.player.x-Game.player.radius), (int) (Game.player.y-Game.player.radius), (int)Game.player.radius*2, (int)Game.player.radius*2);
-        g2D.fillOval((int) (this.getWidth() / 2 - Game.player.radius), (int) (this.getHeight() / 2 - Game.player.radius), (int) Game.player.radius * 2, (int) Game.player.radius * 2);
+        // draw player
+        g2D.drawImage(Game.player.icon.getImage(), (int) (Game.centerX-Game.player.radius), (int) (Game.centerY-Game.player.radius), null);
 
         // user GUI:
         g2D.setStroke(new BasicStroke(10));
         // healthbar
+        g2D.setPaint(Color.red);
         g2D.drawRect(this.getWidth() - 340, this.getHeight() - 80, (int) (250 * Game.player.hp / Game.player.maxHP), 20);
         g2D.setPaint(Color.white);
         g2D.drawRect(this.getWidth() - 350, this.getHeight() - 90, 270, 40);
@@ -87,13 +87,13 @@ public class GamePanel extends JPanel {
         g2D.drawRect(this.getWidth() - 350, this.getHeight() - 210, 270, 40);
         // hotBar
         g2D.setPaint(Color.BLACK);
-        g2D.fillRect(this.getWidth() - 720, this.getHeight() - 165 , 340, 120);
+        g2D.fillRect(this.getWidth() - 720, this.getHeight() - 165, 340, 120);
         for (int i = 0; i < 3; ++i) {
             if (Game.player.inventory.hotBar[i] == null) {
                 g2D.setPaint(Color.GRAY);
                 g2D.fillRect(this.getWidth() - 710 + i * 110, this.getHeight() - 155, 100, 100);
             } else {
-                g2D.drawImage(Game.player.inventory.hotBar[i].icon.getImage(), this.getWidth() - 710 + i * 110 , this.getHeight() - 155, null);
+                g2D.drawImage(Game.player.inventory.hotBar[i].icon.getImage(), this.getWidth() - 710 + i * 110, this.getHeight() - 155, null);
             }
         }
 
