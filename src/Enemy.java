@@ -1,15 +1,18 @@
 import java.lang.Math;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Random;
 
 import static java.lang.Math.PI;
 
 public class Enemy extends Character {
 
-    private double range;
+    private ArrayList<Double> range_of_spells;
     protected double distanceToPlayer;
     protected double angleToPlayer;
+    protected Item[] items;
 
-    public Enemy(String faction, double x, double y, int stage) {
+    public Enemy(String faction, double x, double y, int stage, Item[] items) {
         super(faction);
         //insert Image
         this.radius = 25;
@@ -17,11 +20,26 @@ public class Enemy extends Character {
         this.y = y;
         this.calculateDistanceToPlayer();
 
-        this.spells.add(this.spells.size(), Game.spells[4]);
-        this.range = this.spells.get(0).duration * this.spells.get(0).movement_speed + this.spells.get(0).radius;
-
         levelUp(stage);
+
+        this.items = items;
+        for (int i = 0; i < items.length; i++) {
+            if (items[i] instanceof Armour) {
+                this.maxHP += ((Armour) items[i]).hpBuff;
+                this.def += ((Armour) items[i]).defenceBuff;
+            } else {
+                if (items[i].attack != null) {
+                    this.spells.add(this.spells.size(), items[i].attack);
+                }
+            }
+        }
         this.hp = maxHP;
+
+        this.range_of_spells = new ArrayList<>();
+        for (int i = 0; i < spells.size(); i++) {
+            this.range_of_spells.add(this.spells.get(i).duration * this.spells.get(i).movement_speed + this.spells.get(i).radius + this.radius);
+        }
+
     }
 
     public void calculateDistanceToPlayer() {
@@ -34,7 +52,6 @@ public class Enemy extends Character {
     @Override
     public String toString() {
         return "Enemy{" +
-                "\nrange=" + range +
                 "\n, distanceToPlayer=" + distanceToPlayer +
                 "\n, angleToPlayer=" + angleToPlayer +
                 "\n, stage=" + stage +
@@ -70,9 +87,9 @@ public class Enemy extends Character {
         if (distanceToPlayer > 739) {
             return;
         }
-        if (distanceToPlayer < range/2) {
-            this.x += Math.sin(angleToPlayer + PI) * movement_speed;
-            this.y -= Math.cos(angleToPlayer + PI) * movement_speed;
+        if (distanceToPlayer < range_of_spells.stream().max(Comparator.naturalOrder()).get() * 0.7 && distanceToPlayer > range_of_spells.stream().min(Comparator.naturalOrder()).get() * 2) {
+            this.x -= Math.cos(angleToPlayer) * movement_speed;
+            this.y -= Math.sin(angleToPlayer) * movement_speed;
 
         } else {
             this.x += Math.cos(angleToPlayer) * movement_speed;
@@ -82,17 +99,20 @@ public class Enemy extends Character {
         //Collision with Player
 
 
-        if (distanceToPlayer < range && mana_recovery_speed < 0) {
-            attack();
+        for (int i = 0; i < spells.size(); i++) {
+            if (distanceToPlayer < range_of_spells.get(i) && ((spells.get(i).type == Spell.type_t.physical && stamina < 0) || (spells.get(i).type != Spell.type_t.physical && mana_recovery_speed < 0))) {
+                attack(i);
+            }
         }
         this.mana_recovery_speed--;
+        this.stamina--;
 
         Game.collisionCheck(this, Game.player);
     }
 
-    public void attack() {
+    public void attack(int index) {
         this.addToCombo();
-        this.spells.get(0).summonProjectile(this, this.x - Game.player.x, this.y - Game.player.y, false);
+        this.spells.get(index).summonProjectile(this, this.x - Game.player.x, this.y - Game.player.y, false);
 
     }
 }

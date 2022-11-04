@@ -18,13 +18,15 @@ public class Player extends Character {
     protected int pointsAvailable;
     protected Inventory inventory;
     protected double experience;
+    protected Inventory spellInventory;
 
     public Player(String faction) {
         super(faction);
-        super.levelUp(0);
-        this.hp = maxHP;
+
+        this.inventory = new Inventory();
+        this.spellInventory = new Inventory();
         this.radius = 20;
-        this.icon = new ImageIcon(Game.old_sprite_sheet.getSubimage(32, 32, 32, 32).getScaledInstance((int) (2*this.radius), (int) (2*this.radius), Image.SCALE_FAST));
+        this.icon = new ImageIcon(Game.old_sprite_sheet.getSubimage(32, 32, 32, 32).getScaledInstance((int) (2 * this.radius), (int) (2 * this.radius), Image.SCALE_FAST));
         this.experience = 0;
 
         this.spells.add(this.spells.size(), Game.spells[1]);
@@ -33,19 +35,31 @@ public class Player extends Character {
         this.spells.add(this.spells.size(), Game.spells[4]);
 
         this.levelUp(20);
-
-        this.inventory = new Inventory();
-        this.pointsAvailable = 20;
+        this.increaseStat("Intelligence", 0);
+        this.increaseStat("Strength", 0);
+        this.increaseStat("Endurance", 0);
+        this.increaseStat("Dexterity", 0);
+        this.increaseStat("Wisdom", 0);
+        this.hp = maxHP;
     }
+
     public void levelUp(int amount) {
         this.stage += amount;
         this.pointsAvailable += 4 * amount;
     }
+
     @Override
     public void increaseStat(String stat, int amount) {
         super.increaseStat(stat, amount);
         switch (stat) {
             case "Intelligence" -> maxMana = pow(1.05, intelligence) + intelligence + 10;
+
+            case "Strength", "Endurance" -> {
+                if (this.inventory.armourSlot != null) {
+                    this.maxHP += ((Armour) this.inventory.armourSlot).hpBuff;
+                    this.def += ((Armour) this.inventory.armourSlot).defenceBuff;
+                }
+            }
             case "Wisdom" -> {
                 item_stat_multiplier = pow(1.015, wisdom);
                 mastery_multiplier = wisdom * 0.02 + 1;
@@ -58,7 +72,7 @@ public class Player extends Character {
     @Override
     public void printStats() {
         super.printStats();
-        System.out.println( "Player{" +
+        System.out.println("Player{" +
                 "comprehension_speed=" + comprehension_speed +
                 ", x_movement=" + x_movement +
                 ", y_movement=" + y_movement +

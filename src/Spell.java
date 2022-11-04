@@ -60,11 +60,12 @@ public class Spell {
                     damage *= Game.player.item_stat_multiplier;
                 }
             } else { // if instanceof Enemy
-                ((Character) o).mana_recovery_speed = this.mana_cost * 10;
                 if (this.type == type_t.physical) {
                     damage *= ((Character) o).melee_dmg_multiplier;
+                    ((Character) o).stamina = (int) this.mana_cost * 10;
                 } else {
                     damage *= ((Character) o).spell_effectiveness;
+                    ((Character) o).mana_recovery_speed = this.mana_cost * 10;
                 }
             }
             damage *= ((new Random().nextInt((int) ((Character) o).critrate) == 0) ? ((Character) o).crit_dmg_multiplier : 1);
@@ -93,7 +94,7 @@ public class Spell {
 
     public void summonSubProjectile(Projectile p) {
         if (subSpell != null) {
-            this.subSpell.summonProjectile(p, cos(p.angle), sin(p.angle), false);
+            this.subSpell.summonProjectile(p, -cos(p.angle), -sin(p.angle), false);
         }
         //Projectile proj = new Projectile(x, y, angle, this.subSpell.movement_speed, this.subSpell.damage_health, this.subSpell.duration, this.subSpell.piercing, this.subSpell.radius, type, this.subSpell.image.getImage().getScaledInstance((int) this.subSpell.radius * 2, (int) this.subSpell.radius * 2, Image.SCALE_FAST), this.subSpell, faction);
         //Game.projectiles.add(Game.projectiles.size(), proj);

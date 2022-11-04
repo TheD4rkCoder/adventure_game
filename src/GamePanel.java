@@ -85,21 +85,25 @@ public class GamePanel extends JPanel {
 
         g2D.setPaint(Color.white);
         g2D.drawRect(this.getWidth() - 350, this.getHeight() - 210, 270, 40);
+
         // hotBar
         g2D.setPaint(Color.BLACK);
         g2D.fillRect(this.getWidth() - 720, this.getHeight() - 165, 340, 120);
+        g2D.setFont(new Font("Arial", Font.PLAIN, 20));
         for (int i = 0; i < 3; ++i) {
             if (Game.player.inventory.hotBar[i] == null) {
                 g2D.setPaint(Color.GRAY);
                 g2D.fillRect(this.getWidth() - 710 + i * 110, this.getHeight() - 155, 100, 100);
             } else {
                 g2D.drawImage(Game.player.inventory.hotBar[i].icon.getImage(), this.getWidth() - 710 + i * 110, this.getHeight() - 155, null);
+                g2D.setPaint(Color.white);
+                g2D.drawString(String.format("%d", Game.player.inventory.hotBar[i].amount), this.getWidth() - 700 + i * 110, this.getHeight() - 135);
+
             }
         }
 
-
-        // spell choosing cycle
-        if (GameFrame.mousePressedTime > 50) {
+        // spell choosing circle
+        if (GameFrame.mousePressedTime > 20) {
             float alpha = 7 * 0.1f;
             AlphaComposite alcom = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha);
             g2D.setComposite(alcom);

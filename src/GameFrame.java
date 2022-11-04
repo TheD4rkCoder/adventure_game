@@ -68,21 +68,19 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
             Game.player.refresh();
             Game.collisions_and_movements();
 
-            Random rand = new Random();
-
 
             //EnemySpawning | later let them spawn in random structures
-            for (int i = 0; i < rand.nextInt(10); ++i) {
-                if (rand.nextInt(500) == 13) {
-                    switch (rand.nextInt(4)) {
+            for (int i = 0; i < Game.random.nextInt(10); ++i) {
+                if (Game.random.nextInt(500) == 13) {
+                    switch (Game.random.nextInt(4)) {
                         case 0 -> //north
-                                Game.enemies.add(Game.enemies.size(), new Enemy("hostile", rand.nextInt(this.getWidth()) + Game.player.x - this.getWidth() / 2, Game.player.y - this.getHeight() / 2, rand.nextInt(20)));
+                                Game.enemies.add(Game.enemies.size(), new Enemy("hostile", Game.random.nextInt(this.getWidth()) + Game.player.x - this.getWidth() / 2, Game.player.y - this.getHeight() / 2, Game.random.nextInt(20), new Item[]{Item.random_weapon(), Item.random_weapon()}));
                         case 1 -> //east
-                                Game.enemies.add(Game.enemies.size(), new Enemy("hostile", this.getWidth() / 2 + Game.player.x, rand.nextInt(this.getHeight() + 1) + Game.player.y - this.getHeight() / 2, rand.nextInt(20)));
+                                Game.enemies.add(Game.enemies.size(), new Enemy("hostile", this.getWidth() / 2 + Game.player.x, Game.random.nextInt(this.getHeight() + 1) + Game.player.y - this.getHeight() / 2, Game.random.nextInt(20), new Item[]{Item.random_weapon(), Item.random_weapon()}));
                         case 2 -> //south
-                                Game.enemies.add(Game.enemies.size(), new Enemy("hostile", rand.nextInt(this.getWidth()) + Game.player.x - this.getWidth() / 2, this.getHeight() / 2 + Game.player.y, rand.nextInt(20)));
+                                Game.enemies.add(Game.enemies.size(), new Enemy("hostile", Game.random.nextInt(this.getWidth()) + Game.player.x - this.getWidth() / 2, this.getHeight() / 2 + Game.player.y, Game.random.nextInt(20), new Item[]{Item.random_weapon(), Item.random_weapon()}));
                         case 3 -> //west
-                                Game.enemies.add(Game.enemies.size(), new Enemy("hostile", Game.player.x - this.getWidth() / 2, rand.nextInt(this.getHeight() + 1) + Game.player.y - this.getHeight() / 2, rand.nextInt(20)));
+                                Game.enemies.add(Game.enemies.size(), new Enemy("hostile", Game.player.x - this.getWidth() / 2, Game.random.nextInt(this.getHeight() + 1) + Game.player.y - this.getHeight() / 2, Game.random.nextInt(20), new Item[]{Item.random_weapon(), Item.random_weapon()}));
                     }
                 }
             }
@@ -135,6 +133,9 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
             case 81 -> { //q
                 if (Game.player.inventory.opened) {
                     Game.player.inventory.dropItem();
+                    repaintInventory();
+                } else if (Game.player.spellInventory.opened) {
+                    Game.player.spellInventory.dropItem();
                     repaintInventory();
                 }
 
@@ -198,17 +199,63 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
             }
             for (int i = 0; i < 9; ++i) {
                 if (Game.player.inventory.itemSelection[i].isIn(mouseX + 7, mouseY + 30)) {
-                    Item temp = Game.player.inventory.items[i];
-                    Game.player.inventory.items[i] = Game.player.inventory.tempItem;
-                    Game.player.inventory.tempItem = temp;
+                    if (e.getButton() == 1) {
+                        if (Game.player.inventory.items[i] != null && Game.player.inventory.tempItem != null && Game.player.inventory.items[i].name.equals(Game.player.inventory.tempItem.name)) {
+                            Game.player.inventory.items[i].amount += Game.player.inventory.tempItem.amount;
+                            Game.player.inventory.tempItem = null;
+                        } else {
+                            Item temp = Game.player.inventory.items[i];
+                            Game.player.inventory.items[i] = Game.player.inventory.tempItem;
+                            Game.player.inventory.tempItem = temp;
+                        }
+                    } else if (e.getButton() == 3 && Game.player.inventory.items[i] != null) {
+                        if (Game.player.inventory.tempItem == null) {
+                            if (!(Game.player.inventory.items[i] instanceof Armour)) {
+                                Game.player.inventory.tempItem = new Item(Game.player.inventory.items[i].image, Game.player.inventory.items[i].name, 1, Game.player.inventory.items[i].description, Game.player.inventory.items[i].attack);
+                            } else {
+                                Armour temp = (Armour) Game.player.inventory.items[i];
+                                Game.player.inventory.tempItem = new Armour(temp.image, temp.name, temp.description, temp.hpBuff, temp.defenceBuff, temp.attack);
+                            }
+                            Game.player.inventory.items[i].amount--;
+                        } else if (Game.player.inventory.tempItem.name.equals(Game.player.inventory.items[i].name)) {
+                            Game.player.inventory.items[i].amount--;
+                            Game.player.inventory.tempItem.amount++;
+                        }
+                        if (Game.player.inventory.items[i].amount < 1) {
+                            Game.player.inventory.items[i] = null;
+                        }
+                    }
                 }
 
             }
             for (int i = 0; i < 3; ++i) {
                 if (Game.player.inventory.hotBarSelection[i].isIn(mouseX + 7, mouseY + 30)) {
-                    Item temp = Game.player.inventory.hotBar[i];
-                    Game.player.inventory.hotBar[i] = Game.player.inventory.tempItem;
-                    Game.player.inventory.tempItem = temp;
+                    if (e.getButton() == 1) {
+                        if (Game.player.inventory.hotBar[i] != null && Game.player.inventory.tempItem != null && Game.player.inventory.hotBar[i].name.equals(Game.player.inventory.tempItem.name)) {
+                            Game.player.inventory.hotBar[i].amount += Game.player.inventory.tempItem.amount;
+                            Game.player.inventory.tempItem = null;
+                        } else {
+                            Item temp = Game.player.inventory.hotBar[i];
+                            Game.player.inventory.hotBar[i] = Game.player.inventory.tempItem;
+                            Game.player.inventory.tempItem = temp;
+                        }
+                    } else if (e.getButton() == 3 && Game.player.inventory.hotBar[i] != null) {
+                        if (Game.player.inventory.tempItem == null) {
+                            if (!(Game.player.inventory.hotBar[i] instanceof Armour)) {
+                                Game.player.inventory.tempItem = new Item(Game.player.inventory.hotBar[i].image, Game.player.inventory.hotBar[i].name, 1, Game.player.inventory.hotBar[i].description, Game.player.inventory.hotBar[i].attack);
+                            } else {
+                                Armour temp = (Armour) Game.player.inventory.hotBar[i];
+                                Game.player.inventory.tempItem = new Armour(temp.image, temp.name, temp.description, temp.hpBuff, temp.defenceBuff, temp.attack);
+                            }
+                            Game.player.inventory.hotBar[i].amount--;
+                        } else if (Game.player.inventory.tempItem.name.equals(Game.player.inventory.hotBar[i].name)) {
+                            Game.player.inventory.hotBar[i].amount--;
+                            Game.player.inventory.tempItem.amount++;
+                        }
+                        if (Game.player.inventory.hotBar[i].amount < 1) {
+                            Game.player.inventory.hotBar[i] = null;
+                        }
+                    }
                 }
 
             }
@@ -237,51 +284,54 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
     public void repaintInventory() {
         Graphics g = this.getGraphics();
         g.setClip(0, 0, this.getWidth(), this.getHeight()); //clip stores the size of the frame/window
-        Game.player.inventory.paint(g);
+        if (Game.player.inventory.opened) {
+            Game.player.inventory.paint(g);
+        } else if (Game.player.spellInventory.opened) {
+            Game.player.spellInventory.paint(g);
+        }
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
 
-        switch (e.getButton()) {
-            case 1: // lmb
-                if (!Game.player.inventory.opened) {
+        if (!Game.player.inventory.opened && Game.player.spellInventory.opened) {
+            switch (e.getButton()) {
+                case 1: // lmb
                     if (Game.player.inventory.hotBar[0] != null && Game.player.inventory.hotBar[0].attack != null) {
                         Game.player.inventory.hotBar[0].attack.summonProjectile(Game.player, Game.centerX - e.getX(), Game.centerY - e.getY(), true);
                     } else {
                         if (Game.spells[0].summonProjectile(Game.player, Game.centerX - e.getX(), Game.centerY - e.getY(), false)) {
                             Game.projectiles.get(Game.projectiles.size() - 1).damage = Game.player.baseDamage;
+
                         }
                     }
-                }
-                break;
-            case 2: // mouse_wheel
-                break;
-            case 3: // rmb
-                isMousePressed = true;
-                break;
-            case 4: // undo (browser)
-                if (!Game.player.inventory.opened) {
+                    break;
+                case 2: // mouse_wheel
+                    break;
+                case 3: // rmb
+                    isMousePressed = true;
+                    break;
+                case 4: // undo (browser)
                     if (Game.player.inventory.hotBar[2] != null && Game.player.inventory.hotBar[2].attack != null) {
                         Game.player.inventory.hotBar[2].attack.summonProjectile(Game.player, Game.centerX - e.getX(), Game.centerY - e.getY(), true);
                     } else {
                         if (Game.spells[0].summonProjectile(Game.player, Game.centerX - e.getX(), Game.centerY - e.getY(), false)) {
                             Game.projectiles.get(Game.projectiles.size() - 1).damage = Game.player.baseDamage;
                         }
+
                     }
-                }
-                break;
-            case 5: // redo (browser)
-                if (!Game.player.inventory.opened) {
+                    break;
+                case 5: // redo (browser)
                     if (Game.player.inventory.hotBar[1] != null && Game.player.inventory.hotBar[1].attack != null) {
                         Game.player.inventory.hotBar[1].attack.summonProjectile(Game.player, Game.centerX - e.getX(), Game.centerY - e.getY(), true);
                     } else {
-                        if (Game.spells[0].summonProjectile(Game.player, Game.centerX - e.getX(), Game.centerY - e.getY() ,false)) {
+                        if (Game.spells[0].summonProjectile(Game.player, Game.centerX - e.getX(), Game.centerY - e.getY(), false)) {
                             Game.projectiles.get(Game.projectiles.size() - 1).damage = Game.player.baseDamage;
+
                         }
                     }
-                }
-                break;
+                    break;
+            }
         }
     }
 
@@ -294,13 +344,14 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
                 break;
             case 3: // rmb
                 isMousePressed = false;
-                if (mousePressedTime < 50) {
+                if (mousePressedTime < 20) {
                     if (!Game.player.inventory.opened) {
                         Game.player.attack(e.getX(), e.getY());
                     }
                 } else {
                     // select spell
                     //(Game.centerX - 120 + (int) (cos(PI / 2 + i * 2 * PI / Game.player.spells.size()) * 80), Game.centerY - 120 - (int) (sin(PI / 2 + i * 2 * PI / Game.player.spells.size()) * 80), 240, 240, (int) (90 + (i - 0.5) * 360 / Game.player.spells.size()), 360 / Game.player.spells.size());
+
                     for (int i = 0, size = Game.player.spells.size(); i < size; i++) {
                         double temp_X = Game.centerX + (int) (cos(PI / 2 + i * 2 * PI / size) * 80);
                         double temp_Y = Game.centerY - (int) (sin(PI / 2 + i * 2 * PI / size) * 80);

@@ -5,11 +5,13 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Random;
 
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
 
 public class Game {
+    static Random random = new Random();
     // load sprite sheet:
     final static public BufferedImage old_sprite_sheet;
     final static public BufferedImage weapons_sprite_sheet;
@@ -55,7 +57,6 @@ public class Game {
     static ArrayList<Wall> walls = new ArrayList<>();
     static ArrayList<Projectile> projectiles = new ArrayList<>();
     static ArrayList<Item> itemsLayingAround = new ArrayList<>();
-
 
     static final int FRAME_TIME = 20; //how long a Frame is in milliseconds
     static final int ENEMY_COURSE_ADJUST_TIME = 100; //how long between the adjustments of the enemies course

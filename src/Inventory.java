@@ -32,10 +32,14 @@ public class Inventory extends JPanel implements MouseInputListener {
         items = new Item[9];
         hotBar = new Item[3];
         armourSlot = null;
-        addItem(new Item(Game.weapons_sprite_sheet.getSubimage(246, 24, 43, 43), "Sword", "one of the most basic Weapons", Game.spells[4]));
-        addItem(new Armour(Game.armour_sprite_sheet.getSubimage(246, 24+43, 43, 43), "Oha", "Test", 100, 20, null));
-        addItem(new Item(new ImageIcon("img.png").getImage(), "Oha", "Test", null));
-        addItem(new Item(new ImageIcon("img.png").getImage(), "Oha", "Test", null));
+        addItem(new Item(Game.weapons_sprite_sheet.getSubimage(246, 24, 43, 43), "Sword", 1, "one of the most basic Weapons", Game.spells[4]));
+        addItem(Item.random_weapon());
+        addItem(Item.random_weapon());
+        addItem(Item.random_weapon());
+
+        addItem(new Armour(Game.armour_sprite_sheet.getSubimage(246, 24 + 43, 43, 43), "basic armour", "Test", 100, 20, null));
+        addItem(new Item(new ImageIcon("img.png").getImage(), "Oha", 2, "Test", null));
+        addItem(new Item(new ImageIcon("img.png").getImage(), "Oha", 6, "Test", null));
 
 
         levelUps = new Area[5];
@@ -93,6 +97,23 @@ public class Inventory extends JPanel implements MouseInputListener {
 
     public boolean addItem(Item item) {
         for (int i = 0; i < 3; ++i) {
+            if (hotBar[i] != null) {
+                if (hotBar[i].name.equals(item.name)) {
+                    hotBar[i].amount += item.amount;
+                    return true;
+                }
+            }
+        }
+
+        for (int i = 0; i < 9; ++i) {
+            if (items[i] != null) {
+                if (items[i].name.equals(item.name)) {
+                    items[i].amount += item.amount;
+                    return true;
+                }
+            }
+        }
+        for (int i = 0; i < 3; ++i) {
             if (hotBar[i] == null) {
                 hotBar[i] = item;
                 return true;
@@ -129,17 +150,6 @@ public class Inventory extends JPanel implements MouseInputListener {
         //Draw Inventory outline/background
         g2D.fillRect(190, 190, 920, 350);
 
-
-        for (int i = 0; i < 3; ++i) {
-            for (int j = 0; j < 3; ++j) {
-                if (items[i * 3 + j] == null) {
-                    g2D.setPaint(Color.GRAY);
-                    g2D.fillRect(this.x + j * 110, this.y + i * 110, 100, 100);
-                } else {
-                    g2D.drawImage(items[i * 3 + j].icon.getImage(), this.x + j * 110, this.y + i * 110, null);
-                }
-            }
-        }
 
         int xDist = this.x + 330;
 
@@ -211,7 +221,7 @@ public class Inventory extends JPanel implements MouseInputListener {
         g2D.drawString("Movement Speed: " + String.format("%.2f", Game.player.movement_speed), xDist, this.y + attributes.getSize() * 4 + specifics.getSize() * 9);
         g2D.drawString("Critical Damage Multiplier: " + String.format("%.2f", Game.player.crit_dmg_multiplier) + "x", xDist, this.y + attributes.getSize() * 4 + specifics.getSize() * 10);
 
-        g2D.drawString("Critical Chance: " + String.format("%.2f",100 / Game.player.critrate) + "%", xDist, this.y + attributes.getSize() * 4 + specifics.getSize() * 11);
+        g2D.drawString("Critical Chance: " + String.format("%.2f", 100 / Game.player.critrate) + "%", xDist, this.y + attributes.getSize() * 4 + specifics.getSize() * 11);
         //Wisdom
         g2D.drawString("Item Stat Multiplier: " + String.format("%.2f", Game.player.item_stat_multiplier) + "x", xDist, this.y + attributes.getSize() * 5 + specifics.getSize() * 12);
         g2D.drawString("Mastery Multiplier: " + String.format("%.2f", Game.player.mastery_multiplier) + "x", xDist, this.y + attributes.getSize() * 5 + specifics.getSize() * 13);
@@ -222,6 +232,21 @@ public class Inventory extends JPanel implements MouseInputListener {
         g2D.setPaint(Color.decode("0x000F00FF"));
         g2D.drawString("Points available: " + Game.player.pointsAvailable, this.x + 330 + 266, this.y + attributes.getSize() * 5 + specifics.getSize() * 15 + 5);
 
+        // inventory slots
+        for (int i = 0; i < 3; ++i) {
+            for (int j = 0; j < 3; ++j) {
+                if (items[i * 3 + j] == null) {
+                    g2D.setPaint(Color.GRAY);
+                    g2D.fillRect(this.x + j * 110, this.y + i * 110, 100, 100);
+                } else {
+                    g2D.drawImage(items[i * 3 + j].icon.getImage(), this.x + j * 110, this.y + i * 110, null);
+                    g2D.setPaint(Color.white);
+                    g2D.drawString(String.format("%d", items[i * 3 + j].amount), this.x + 10 + j * 110, this.y + 20 + i * 110);
+
+                }
+            }
+        }
+
         //HotBar
         g2D.setPaint(Color.BLACK);
         g2D.fillRect(this.x, this.y + 360, 340, 120);
@@ -231,17 +256,23 @@ public class Inventory extends JPanel implements MouseInputListener {
                 g2D.fillRect(this.x + 10 + i * 110, this.y + 370, 100, 100);
             } else {
                 g2D.drawImage(hotBar[i].icon.getImage(), this.x + 10 + i * 110, this.y + 370, null);
+                g2D.setPaint(Color.white);
+                g2D.drawString(String.format("%d", hotBar[i].amount), this.x + 20 + i * 110, this.y + 390);
+
             }
         }
 
         //ArmourSlot
         g2D.setPaint(Color.BLACK);
         g2D.fillRect(armourSelection.x - 10, armourSelection.y - 10, armourSelection.width + 20, armourSelection.height + 20);
-        if (armourSlot== null) {
+        if (armourSlot == null) {
             g2D.setPaint(Color.GRAY);
             g2D.fillRect(armourSelection.x, armourSelection.y, armourSelection.width, armourSelection.height);
         } else {
             g2D.drawImage(armourSlot.icon.getImage(), armourSelection.x, armourSelection.y, null);
+            g2D.setPaint(Color.white);
+            g2D.drawString(String.format("%d", armourSlot.amount), armourSelection.x + 10, armourSelection.y + 20);
+
         }
         g2D.setPaint(Color.BLACK);
         g2D.fillRect(armourSelection.x - 10 + 400, armourSelection.y - 10, armourSelection.width + 20, armourSelection.height + 20);
@@ -250,6 +281,9 @@ public class Inventory extends JPanel implements MouseInputListener {
             g2D.fillRect(armourSelection.x + 400, armourSelection.y, armourSelection.width, armourSelection.height);
         } else {
             g2D.drawImage(tempItem.icon.getImage(), armourSelection.x + 400, armourSelection.y, null);
+            g2D.setPaint(Color.white);
+            g2D.drawString(String.format("%d", tempItem.amount), armourSelection.x + 410, armourSelection.y + 20);
+
         }
     }
 

@@ -56,7 +56,7 @@ public class Character extends GameObject implements ActionListener {
                 intelligence += amount;
                 spell_effectiveness = pow(1.01, intelligence);
                 if (intelligence > 20) {
-                    mana_recovery_speed = (pow(1.03, intelligence) - log10(intelligence)) - 0.4;
+                    mana_recovery_speed = pow(1.005, intelligence) - 1;
                 }
                 else {
                     mana_recovery_speed = 0.1;
