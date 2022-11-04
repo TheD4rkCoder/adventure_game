@@ -30,6 +30,7 @@ public class Player extends Character {
         this.inventory.addItem(Item.random_weapon());
         this.spellInventory.addItem(Item.random_weapon());
         this.spellInventory.addItem(Item.random_weapon());
+
         this.inventory.addItem(new Armour(Game.armour_sprite_sheet.getSubimage(246, 24 + 43, 43, 43), "basic armour", "Test", 100, 20, null));
 
         this.radius = 20;

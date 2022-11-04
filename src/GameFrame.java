@@ -202,17 +202,19 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
             if (inv.opened) {
                 int mouseX = e.getX();
                 int mouseY = e.getY();
-                if (Game.player.pointsAvailable > 0) {
-                    if (inv.levelUps[0].isIn(mouseX + 7, mouseY + 30)) {
-                        Game.player.increaseStat("Intelligence", 1);
-                    } else if (inv.levelUps[1].isIn(mouseX + 7, mouseY + 30)) {
-                        Game.player.increaseStat("Strength", 1);
-                    } else if (inv.levelUps[2].isIn(mouseX + 7, mouseY + 30)) {
-                        Game.player.increaseStat("Endurance", 1);
-                    } else if (inv.levelUps[3].isIn(mouseX + 7, mouseY + 30)) {
-                        Game.player.increaseStat("Dexterity", 1);
-                    } else if (inv.levelUps[4].isIn(mouseX + 7, mouseY + 30)) {
-                        Game.player.increaseStat("Wisdom", 1);
+                if (k == 1) {
+                    if (Game.player.pointsAvailable > 0) {
+                        if (inv.levelUps[0].isIn(mouseX + 7, mouseY + 30)) {
+                            Game.player.increaseStat("Intelligence", 1);
+                        } else if (inv.levelUps[1].isIn(mouseX + 7, mouseY + 30)) {
+                            Game.player.increaseStat("Strength", 1);
+                        } else if (inv.levelUps[2].isIn(mouseX + 7, mouseY + 30)) {
+                            Game.player.increaseStat("Endurance", 1);
+                        } else if (inv.levelUps[3].isIn(mouseX + 7, mouseY + 30)) {
+                            Game.player.increaseStat("Dexterity", 1);
+                        } else if (inv.levelUps[4].isIn(mouseX + 7, mouseY + 30)) {
+                            Game.player.increaseStat("Wisdom", 1);
+                        }
                     }
                 }
                 for (int i = 0; i < 9; ++i) {
