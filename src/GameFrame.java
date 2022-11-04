@@ -202,7 +202,7 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
             if (inv.opened) {
                 int mouseX = e.getX();
                 int mouseY = e.getY();
-                if (k == 1) {
+                if (k == 0) {
                     if (Game.player.pointsAvailable > 0) {
                         if (inv.levelUps[0].isIn(mouseX + 7, mouseY + 30)) {
                             Game.player.increaseStat("Intelligence", 1);

@@ -43,39 +43,39 @@ public class Projectile extends GameObject {
         --durationLeft;
 
         // true = yes, the projectile should still exist
-
-        if (this.faction.equals("hostile")) {
-            if (this.enemiesHit.size() == 0) {
-                if (Game.collisionCheck(this, Game.player)) {
-                    this.enemiesHit.add(Game.player);
-                    double damageDealt = this.damage*0.2*(6-(pow(6, Game.player.def/this.damage)));
-                    if (damageDealt > 0) {
-                        Game.player.hp -= damageDealt;
-                    }
-                    this.piercing--;
-                    this.spell.summonSubProjectile(this); // faction = "hostile"
-                }
-            }
-        } else {
-            for (int i = 0; i < Game.enemies.size(); ++i) {
-                boolean check = false;
-                for (int j = 0; j < this.enemiesHit.size(); j++) {
-                    if (Game.enemies.get(i).equals(this.enemiesHit.get(j))) {
-                        check = true;
+        if (this.piercing > 0) {
+            if (this.faction.equals("hostile")) {
+                if (this.enemiesHit.size() == 0) {
+                    if (Game.collisionCheck(this, Game.player)) {
+                        this.enemiesHit.add(Game.player);
+                        double damageDealt = this.damage * 0.2 * (6 - (pow(6, Game.player.def / this.damage)));
+                        if (damageDealt > 0) {
+                            Game.player.hp -= damageDealt;
+                        }
+                        this.piercing--;
+                        this.spell.summonSubProjectile(this); // faction = "hostile"
                     }
                 }
-                if (!check && Game.collisionCheck(this, Game.enemies.get(i))) {
-                    enemiesHit.add(Game.enemies.get(i));
-                    double damageDealt = this.damage*0.2*(6-(pow(6, Game.enemies.get(i).def/this.damage)));
-                    if (damageDealt > 0) {
-                        Game.enemies.get(i).hp -= damageDealt;
-                    }this.piercing--;
-                    this.spell.summonSubProjectile(this); // faction = "friendly"
+            } else {
+                for (int i = 0; i < Game.enemies.size(); ++i) {
+                    boolean check = false;
+                    for (int j = 0; j < this.enemiesHit.size(); j++) {
+                        if (Game.enemies.get(i).equals(this.enemiesHit.get(j))) {
+                            check = true;
+                        }
+                    }
+                    if (!check && Game.collisionCheck(this, Game.enemies.get(i))) {
+                        enemiesHit.add(Game.enemies.get(i));
+                        double damageDealt = this.damage * 0.2 * (6 - (pow(6, Game.enemies.get(i).def / this.damage)));
+                        if (damageDealt > 0) {
+                            Game.enemies.get(i).hp -= damageDealt;
+                        }
+                        this.piercing--;
+                        this.spell.summonSubProjectile(this); // faction = "friendly"
+                    }
                 }
-
             }
-        }
-        if (this.piercing < 1) {
+        } else if (this.movement_speed != 0) {
             return false;
         }
         if (durationLeft < 1) {
