@@ -245,9 +245,8 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
                                 inv.items[i] = null;
                             }
                         } else if (e.getButton() == 2) {
-                            if (inv.items[i] == null) {
+                            inv.showItemStats = inv.items[i];
 
-                            }
                         }
                     }
 
@@ -279,12 +278,17 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
                             if (inv.hotBar[i].amount < 1) {
                                 inv.hotBar[i] = null;
                             }
+                        } else if (e.getButton() == 2) {
+                            inv.showItemStats = inv.hotBar[i];
+
                         }
                     }
 
                 }
                 if (inv.armourSelection.isIn(mouseX + 7, mouseY + 30)) {
-                    if (inv.tempItem instanceof Armour || inv.tempItem == null) {
+                    if (e.getButton() == 2) {
+                        inv.showItemStats = inv.armourSlot;
+                    } else if (inv.tempItem instanceof Armour || inv.tempItem == null) {
                         if (inv.armourSlot != null) {
                             Game.player.maxHP -= ((Armour) inv.armourSlot).hpBuff;
                             Game.player.def -= ((Armour) inv.armourSlot).defenceBuff;

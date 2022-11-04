@@ -9,10 +9,11 @@ public class Inventory extends JPanel implements MouseInputListener {
     protected Item[] items;
     protected Item[] hotBar;
     protected Item armourSlot;
-
+    public Item showItemStats;
     protected Item tempItem;
 
     protected boolean opened;
+    private boolean painted;
 
     protected Area[] levelUps;
 
@@ -136,7 +137,8 @@ public class Inventory extends JPanel implements MouseInputListener {
         float alpha = 6 * 0.1f;
         AlphaComposite alcom = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha);
 
-        if (!opened) {
+        if (!painted) {
+            painted = true;
             g2D.setComposite(alcom);
             g2D.fillRect(0, 0, windowWidth, windowHeight);
 
@@ -150,86 +152,155 @@ public class Inventory extends JPanel implements MouseInputListener {
         g2D.fillRect(190, 190, 920, 350);
 
 
-        if (this.equals(Game.player.inventory)) {
-            int xDist = this.x + 330;
+        int xDist = this.x + 330;
 
-            //Insert Player image
-            g2D.drawImage(Game.player.icon.getImage().getScaledInstance(250, 250, Image.SCALE_FAST), xDist, this.y, null);
+        if (showItemStats == null) {
+            if (this.equals(Game.player.inventory)) {
 
-
-            //BaseStats I guess
-            // maybe round these to 2 decimal points
+                //Insert Player image
+                g2D.drawImage(Game.player.icon.getImage().getScaledInstance(250, 250, Image.SCALE_FAST), xDist, this.y, null);
 
 
-            g2D.setFont(specifics);
-            g2D.setPaint(Color.red);
-            g2D.drawString("HP: " + (int) Game.player.hp + "/" + (int) Game.player.maxHP, xDist, this.y + 271);
-            g2D.setPaint(Color.green);
-            g2D.drawString("Defence: " + (int) Game.player.def, xDist, this.y + 286);
-            g2D.setPaint(Color.orange);
-            g2D.drawString("Stamina: " + Game.player.stamina + "/" + Game.player.maxStamina, xDist, this.y + 301);
-            g2D.setPaint(Color.blue);
-            g2D.drawString("Mana: " + (int) Game.player.mana + "/" + (int) Game.player.maxMana, xDist, this.y + 316);
+                //BaseStats I guess
+                // maybe round these to 2 decimal points
+
+
+                g2D.setFont(specifics);
+                g2D.setPaint(Color.red);
+                g2D.drawString("HP: " + (int) Game.player.hp + "/" + (int) Game.player.maxHP, xDist, this.y + 271);
+                g2D.setPaint(Color.green);
+                g2D.drawString("Defence: " + (int) Game.player.def, xDist, this.y + 286);
+                g2D.setPaint(Color.orange);
+                g2D.drawString("Stamina: " + Game.player.stamina + "/" + Game.player.maxStamina, xDist, this.y + 301);
+                g2D.setPaint(Color.blue);
+                g2D.drawString("Mana: " + (int) Game.player.mana + "/" + (int) Game.player.maxMana, xDist, this.y + 316);
+
+                xDist += 266;
+                //LevelUpButtons
+                if (Game.player.pointsAvailable < 1) {
+                    alcom = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f);
+                    g2D.setComposite(alcom);
+                }
+                g2D.setPaint(Color.cyan);
+                g2D.fillRect(this.levelUps[0].x, this.levelUps[0].y, this.levelUps[0].width, this.levelUps[0].height);
+                g2D.fillRect(this.levelUps[1].x, this.levelUps[1].y, this.levelUps[1].width, this.levelUps[1].height);
+                g2D.fillRect(this.levelUps[2].x, this.levelUps[2].y, this.levelUps[2].width, this.levelUps[2].height);
+                g2D.fillRect(this.levelUps[3].x, this.levelUps[3].y, this.levelUps[3].width, this.levelUps[3].height);
+                g2D.fillRect(this.levelUps[4].x, this.levelUps[4].y, this.levelUps[4].width, this.levelUps[4].height);
+
+                if (Game.player.pointsAvailable < 1) {
+                    alcom = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f);
+                    g2D.setComposite(alcom);
+                }
+
+                xDist += 25;
+                //Attributes
+                g2D.setFont(attributes);
+                g2D.setPaint(Color.decode("0x0032CEF3"));
+                g2D.drawString("Intelligence: " + Game.player.intelligence, xDist, this.y + attributes.getSize());
+                g2D.drawString("Strength: " + Game.player.strength, xDist, this.y + attributes.getSize() * 2 + specifics.getSize() * 3);
+                g2D.drawString("Endurance: " + Game.player.endurance, xDist, this.y + attributes.getSize() * 3 + specifics.getSize() * 7);
+                g2D.drawString("Dexterity: " + Game.player.dexterity, xDist, this.y + attributes.getSize() * 4 + specifics.getSize() * 8);
+                g2D.drawString("Wisdom: " + Game.player.wisdom, xDist, this.y + attributes.getSize() * 5 + specifics.getSize() * 11);
+
+                //Specific Stats
+                xDist += 20;
+                g2D.setFont(specifics);
+                g2D.setPaint(Color.decode("0x0025A1BE"));
+                //Intelligence
+                g2D.drawString("Mana Recovery Speed (per Tick): " + String.format("%.2f", Game.player.mana_recovery_speed), xDist, this.y + attributes.getSize() + specifics.getSize());
+                g2D.drawString("Spell Effectiveness: " + String.format("%.2f", Game.player.spell_effectiveness) + "x", xDist, this.y + attributes.getSize() + specifics.getSize() * 2);
+                g2D.drawString("Boosts: Mana", xDist, this.y + attributes.getSize() + specifics.getSize() * 3);
+                //Strength
+                g2D.drawString("Base Damage: " + String.format("%.2f", Game.player.baseDamage), xDist, this.y + attributes.getSize() * 2 + specifics.getSize() * 4);
+                g2D.drawString("Melee Damage Multiplier: " + String.format("%.2f", Game.player.melee_dmg_multiplier) + "x", xDist, this.y + attributes.getSize() * 2 + specifics.getSize() * 5);
+                g2D.drawString("Critical Hit Damage Multiplier: " + String.format("%.2f", Game.player.crit_dmg_multiplier) + "x", xDist, this.y + attributes.getSize() * 2 + specifics.getSize() * 6);
+                g2D.drawString("Boosts: HP, Defence", xDist, this.y + attributes.getSize() * 2 + specifics.getSize() * 7);
+                //Endurance
+                g2D.drawString("Boosts: HP, Defence, Stamina", xDist, this.y + attributes.getSize() * 3 + specifics.getSize() * 8);
+                //Dexterity
+                g2D.drawString("Movement Speed: " + String.format("%.2f", Game.player.movement_speed), xDist, this.y + attributes.getSize() * 4 + specifics.getSize() * 9);
+                g2D.drawString("Critical Damage Multiplier: " + String.format("%.2f", Game.player.crit_dmg_multiplier) + "x", xDist, this.y + attributes.getSize() * 4 + specifics.getSize() * 10);
+
+                g2D.drawString("Critical Chance: " + String.format("%.2f", 100 / Game.player.critrate) + "%", xDist, this.y + attributes.getSize() * 4 + specifics.getSize() * 11);
+                //Wisdom
+                g2D.drawString("Item Stat Multiplier: " + String.format("%.2f", Game.player.item_stat_multiplier) + "x", xDist, this.y + attributes.getSize() * 5 + specifics.getSize() * 12);
+                g2D.drawString("Mastery Multiplier: " + String.format("%.2f", Game.player.mastery_multiplier) + "x", xDist, this.y + attributes.getSize() * 5 + specifics.getSize() * 13);
+                g2D.drawString("Comprehension Speed: " + String.format("%.2f", Game.player.comprehension_speed), xDist, this.y + attributes.getSize() * 5 + specifics.getSize() * 14);
+
+                //Points Available
+                g2D.setFont(attributes);
+                g2D.setPaint(Color.decode("0x000F00FF"));
+                g2D.drawString("Points available: " + Game.player.pointsAvailable, this.x + 330 + 266, this.y + attributes.getSize() * 5 + specifics.getSize() * 15 + 5);
+            }
+        } else {
+
+            //Insert Item image
+            g2D.drawImage(showItemStats.image.getScaledInstance(250, 250, Image.SCALE_FAST), xDist, this.y, null);
+
+            g2D.setFont(new Font("Arial", Font.PLAIN, 40));
+            g2D.setPaint(Color.decode("0x0032CEF3"));
+            g2D.drawString(this.showItemStats.name, xDist, this.y + 291);
+
+            g2D.setFont(attributes);
+            g2D.setPaint(Color.white);
+            g2D.drawString("Amount: " + this.showItemStats.amount, xDist, this.y + 321);
 
             xDist += 266;
-            //LevelUpButtons
-            if (Game.player.pointsAvailable < 1) {
-                alcom = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f);
-                g2D.setComposite(alcom);
+
+            //xDist += 25;
+
+            //Attributes of the item
+            g2D.drawString(this.showItemStats.description, xDist, this.y + attributes.getSize());
+
+            int yDist = this.y + 3 * attributes.getSize();
+            if (this.showItemStats.attack != null) {
+                Spell attack = this.showItemStats.attack;
+                for (int j = 1; attack != null; j++) {
+                    g2D.setFont(attributes);
+                    g2D.setPaint(Color.white);
+                    g2D.drawString("Attack " + j + ": " + attack.name, xDist, yDist);
+                    yDist += attributes.getSize();
+                    //Specific Stats
+                    xDist += 20;
+                    g2D.setFont(specifics);
+                    g2D.setPaint(Color.decode("0x0025A1BE"));
+                    if (attack.type == Spell.type_t.projectile || attack.type == Spell.type_t.physical) {
+                        g2D.drawString("Damage: " + String.format("%.2f", attack.damage_health), xDist, yDist);
+                        yDist += specifics.getSize();
+                        if (attack.type == Spell.type_t.projectile) {
+                            g2D.drawString("Mana cost: " + String.format("%.2f", attack.mana_cost), xDist, yDist);
+                        } else {
+                            g2D.drawString("Stamina cost: " + String.format("%.2f", attack.mana_cost), xDist, yDist);
+                        }
+                        yDist += specifics.getSize();
+                        g2D.drawString("Speed: " + String.format("%.2f", attack.movement_speed), xDist, yDist);
+                        yDist += specifics.getSize();
+                        g2D.drawString("size: " + String.format("%.2f", attack.radius), xDist, yDist);
+                        yDist += specifics.getSize();
+                        g2D.drawString("Pierce: " + String.format("%d", attack.piercing), xDist, yDist);
+                        yDist += specifics.getSize();
+                        g2D.drawString("Duration: " + String.format("%.2f", attack.duration), xDist, yDist);
+                        yDist += attributes.getSize();
+                        attack = attack.subSpell;
+                    }
+                    xDist -= 20;
+                }
             }
-            g2D.setPaint(Color.cyan);
-            g2D.fillRect(this.levelUps[0].x, this.levelUps[0].y, this.levelUps[0].width, this.levelUps[0].height);
-            g2D.fillRect(this.levelUps[1].x, this.levelUps[1].y, this.levelUps[1].width, this.levelUps[1].height);
-            g2D.fillRect(this.levelUps[2].x, this.levelUps[2].y, this.levelUps[2].width, this.levelUps[2].height);
-            g2D.fillRect(this.levelUps[3].x, this.levelUps[3].y, this.levelUps[3].width, this.levelUps[3].height);
-            g2D.fillRect(this.levelUps[4].x, this.levelUps[4].y, this.levelUps[4].width, this.levelUps[4].height);
+            if (this.showItemStats instanceof Armour) {
+                g2D.setFont(attributes);
+                g2D.setPaint(Color.white);
+                g2D.drawString("Armour values: ", xDist, yDist);
+                yDist += attributes.getSize();
+                xDist += 20;
+                g2D.setFont(specifics);
+                g2D.setPaint(Color.decode("0x0025A1BE"));
+                g2D.drawString("Extra Health: " + String.format("%.2f", ((Armour) this.showItemStats).hpBuff), xDist, yDist);
+                yDist += specifics.getSize();
+                g2D.drawString("Defence: " + String.format("%.2f", ((Armour) this.showItemStats).defenceBuff), xDist, yDist);
 
-            if (Game.player.pointsAvailable < 1) {
-                alcom = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f);
-                g2D.setComposite(alcom);
             }
-
-            xDist += 25;
-            //Attributes
-            g2D.setFont(attributes);
-            g2D.setPaint(Color.decode("0x0032CEF3"));
-            g2D.drawString("Intelligence: " + Game.player.intelligence, xDist, this.y + attributes.getSize());
-            g2D.drawString("Strength: " + Game.player.strength, xDist, this.y + attributes.getSize() * 2 + specifics.getSize() * 3);
-            g2D.drawString("Endurance: " + Game.player.endurance, xDist, this.y + attributes.getSize() * 3 + specifics.getSize() * 7);
-            g2D.drawString("Dexterity: " + Game.player.dexterity, xDist, this.y + attributes.getSize() * 4 + specifics.getSize() * 8);
-            g2D.drawString("Wisdom: " + Game.player.wisdom, xDist, this.y + attributes.getSize() * 5 + specifics.getSize() * 11);
-
-            //Specific Stats
-            xDist += 20;
-            g2D.setFont(specifics);
-            g2D.setPaint(Color.decode("0x0025A1BE"));
-            //Intelligence
-            g2D.drawString("Mana Recovery Speed (per Tick): " + String.format("%.2f", Game.player.mana_recovery_speed), xDist, this.y + attributes.getSize() + specifics.getSize());
-            g2D.drawString("Spell Effectiveness: " + String.format("%.2f", Game.player.spell_effectiveness) + "x", xDist, this.y + attributes.getSize() + specifics.getSize() * 2);
-            g2D.drawString("Boosts: Mana", xDist, this.y + attributes.getSize() + specifics.getSize() * 3);
-            //Strength
-            g2D.drawString("Base Damage: " + String.format("%.2f", Game.player.baseDamage), xDist, this.y + attributes.getSize() * 2 + specifics.getSize() * 4);
-            g2D.drawString("Melee Damage Multiplier: " + String.format("%.2f", Game.player.melee_dmg_multiplier) + "x", xDist, this.y + attributes.getSize() * 2 + specifics.getSize() * 5);
-            g2D.drawString("Critical Hit Damage Multiplier: " + String.format("%.2f", Game.player.crit_dmg_multiplier) + "x", xDist, this.y + attributes.getSize() * 2 + specifics.getSize() * 6);
-            g2D.drawString("Boosts: HP, Defence", xDist, this.y + attributes.getSize() * 2 + specifics.getSize() * 7);
-            //Endurance
-            g2D.drawString("Boosts: HP, Defence, Stamina", xDist, this.y + attributes.getSize() * 3 + specifics.getSize() * 8);
-            //Dexterity
-            g2D.drawString("Movement Speed: " + String.format("%.2f", Game.player.movement_speed), xDist, this.y + attributes.getSize() * 4 + specifics.getSize() * 9);
-            g2D.drawString("Critical Damage Multiplier: " + String.format("%.2f", Game.player.crit_dmg_multiplier) + "x", xDist, this.y + attributes.getSize() * 4 + specifics.getSize() * 10);
-
-            g2D.drawString("Critical Chance: " + String.format("%.2f", 100 / Game.player.critrate) + "%", xDist, this.y + attributes.getSize() * 4 + specifics.getSize() * 11);
-            //Wisdom
-            g2D.drawString("Item Stat Multiplier: " + String.format("%.2f", Game.player.item_stat_multiplier) + "x", xDist, this.y + attributes.getSize() * 5 + specifics.getSize() * 12);
-            g2D.drawString("Mastery Multiplier: " + String.format("%.2f", Game.player.mastery_multiplier) + "x", xDist, this.y + attributes.getSize() * 5 + specifics.getSize() * 13);
-            g2D.drawString("Comprehension Speed: " + String.format("%.2f", Game.player.comprehension_speed), xDist, this.y + attributes.getSize() * 5 + specifics.getSize() * 14);
-
-            //Points Available
-            g2D.setFont(attributes);
-            g2D.setPaint(Color.decode("0x000F00FF"));
-            g2D.drawString("Points available: " + Game.player.pointsAvailable, this.x + 330 + 266, this.y + attributes.getSize() * 5 + specifics.getSize() * 15 + 5);
         }
-
         g2D.setFont(attributes);
         // inventory slots
         for (int i = 0; i < 3; ++i) {
@@ -293,6 +364,7 @@ public class Inventory extends JPanel implements MouseInputListener {
 
     public void close() {
         this.opened = false;
+        this.painted = false;
     }
 
     @Override
