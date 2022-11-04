@@ -365,6 +365,7 @@ public class Inventory extends JPanel implements MouseInputListener {
     public void close() {
         this.opened = false;
         this.painted = false;
+        this.showItemStats = null;
     }
 
     @Override
