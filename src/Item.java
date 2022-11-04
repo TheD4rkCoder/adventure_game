@@ -21,12 +21,15 @@ public class Item extends GameObject{
     }
     static public Item random_weapon() {
         Spell attack;
+        Image image;
         if (Game.random.nextInt(2) == 0) {
+            image = Game.weapons_sprite_sheet.getSubimage(246+43, 24, 43, 43);
             attack = new Spell(new ImageIcon(Game.old_sprite_sheet.getSubimage(32 * 5, 32, 32, 32)), "Sword swing", Game.random.nextInt(20) + 5, 20, 10, 0, 80, 2, Spell.type_t.physical, null);
         } else {
+            image = Game.weapons_sprite_sheet.getSubimage(246+43*2, 24+43*9, 43, 43);
             attack = new Spell(new ImageIcon(Game.old_sprite_sheet.getSubimage(32, 0, 32, 32)), "Mana Bolt", Game.random.nextInt(20) + 5, 20, 50, 8, 20, 2, Spell.type_t.projectile, null);
         }
-        Item weapon = new Item(Game.weapons_sprite_sheet.getSubimage(246+43, 24, 43, 43), String.format("Sword %d", Game.random.nextInt(1000)),1, "a Sword", attack);
+        Item weapon = new Item(image, String.format("Sword %d", Game.random.nextInt(1000)),1, "a Sword", attack);
         return weapon;
     }
 
