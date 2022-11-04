@@ -32,14 +32,11 @@ public class Inventory extends JPanel implements MouseInputListener {
         items = new Item[9];
         hotBar = new Item[3];
         armourSlot = null;
-        addItem(new Item(Game.weapons_sprite_sheet.getSubimage(246, 24, 43, 43), "Sword", 1, "one of the most basic Weapons", Game.spells[4]));
-        addItem(Item.random_weapon());
-        addItem(Item.random_weapon());
-        addItem(Item.random_weapon());
+        //addItem(new Item(Game.weapons_sprite_sheet.getSubimage(246, 24, 43, 43), "Sword", 1, "one of the most basic Weapons", Game.spells[4]));
 
-        addItem(new Armour(Game.armour_sprite_sheet.getSubimage(246, 24 + 43, 43, 43), "basic armour", "Test", 100, 20, null));
-        addItem(new Item(new ImageIcon("img.png").getImage(), "Oha", 2, "Test", null));
-        addItem(new Item(new ImageIcon("img.png").getImage(), "Oha", 6, "Test", null));
+
+        //addItem(new Item(new ImageIcon("img.png").getImage(), "Oha", 2, "Test", null));
+        //addItem(new Item(new ImageIcon("img.png").getImage(), "Oha", 6, "Test", null));
 
 
         levelUps = new Area[5];

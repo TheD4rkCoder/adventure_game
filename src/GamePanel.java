@@ -58,7 +58,7 @@ public class GamePanel extends JPanel {
         }
 
         // draw player
-        g2D.drawImage(Game.player.icon.getImage(), (int) (Game.centerX-Game.player.radius), (int) (Game.centerY-Game.player.radius), null);
+        g2D.drawImage(Game.player.icon.getImage(), (int) (Game.centerX - Game.player.radius), (int) (Game.centerY - Game.player.radius), null);
 
         // user GUI:
         g2D.setStroke(new BasicStroke(10));
@@ -108,16 +108,26 @@ public class GamePanel extends JPanel {
             AlphaComposite alcom = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha);
             g2D.setComposite(alcom);
             g2D.setStroke(new BasicStroke(105));
-            for (int i = 0; i < Game.player.spells.size(); i++) {
+            int size = 0;
+            for (int i = 0; i < 9; i++) {
+                if (Game.player.spellInventory.items[i] != null && Game.player.spellInventory.items[i].attack != null) {
+                    size++;
+                }
+            }
+            for (int i = 0; i < size; i++) {
                 g2D.setPaint(Color.DARK_GRAY);
-                if (i == Game.player.selectedSpell) {
+                if (i == Game.player.selectedSpellInt) {
                     g2D.setPaint(Color.LIGHT_GRAY);
                 }
-                g2D.drawArc(Game.centerX - 120 + (int) (cos(PI / 2 + i * 2 * PI / Game.player.spells.size()) * 80), Game.centerY - 120 - (int) (sin(PI / 2 + i * 2 * PI / Game.player.spells.size()) * 80), 240, 240, (int) (90 + (i - 0.5) * 360 / Game.player.spells.size()), 360 / Game.player.spells.size());
+                g2D.drawArc(Game.centerX - 120 + (int) (cos(PI / 2 + i * 2 * PI / size) * 80), Game.centerY - 120 - (int) (sin(PI / 2 + i * 2 * PI / size) * 80), 240, 240, (int) (90 + (i - 0.5) * 360 / size), 360 / size);
             }
-            for (int i = 0; i < Game.player.spells.size(); i++) {
-                g2D.drawImage(Game.player.spells.get(i).image.getImage(), (int) (cos(PI / 2 + i * PI * 2 / Game.player.spells.size()) * 200 + Game.centerX - 50), (int) (sin(-PI / 2 + i * 2 * PI / Game.player.spells.size()) * 200 + Game.centerY - 50), null);
-
+            for (int j = 0, i = 0; j < 9; j++) {
+                if (Game.player.spellInventory.items[j] != null) {
+                    if (Game.player.spellInventory.items[j].attack != null) {
+                            g2D.drawImage(Game.player.spellInventory.items[j].attack.image.getImage(), (int) (cos(PI / 2 + i * PI * 2 / size) * 200 + Game.centerX - 50), (int) (sin(-PI / 2 + i * 2 * PI / size) * 200 + Game.centerY - 50), null);
+                            i++;
+                    }
+                }
             }
             alcom = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1);
             g2D.setComposite(alcom);

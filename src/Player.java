@@ -13,8 +13,8 @@ public class Player extends Character {
     //different requirements to trigger critical hit
     protected double item_stat_multiplier, mastery_multiplier; //Wisdom
     //like elements as mage, skills as warrior and crafting blueprint of tools and items as an alchemist
-    public int selectedSpell = 0;
-
+    public Spell selectedSpell;
+    public int selectedSpellInt;
     protected int pointsAvailable;
     protected Inventory inventory;
     protected double experience;
@@ -25,6 +25,13 @@ public class Player extends Character {
 
         this.inventory = new Inventory();
         this.spellInventory = new Inventory();
+
+        this.inventory.addItem(Item.random_weapon());
+        this.inventory.addItem(Item.random_weapon());
+        this.spellInventory.addItem(Item.random_weapon());
+        this.spellInventory.addItem(Item.random_weapon());
+        this.inventory.addItem(new Armour(Game.armour_sprite_sheet.getSubimage(246, 24 + 43, 43, 43), "basic armour", "Test", 100, 20, null));
+
         this.radius = 20;
         this.icon = new ImageIcon(Game.old_sprite_sheet.getSubimage(32, 32, 32, 32).getScaledInstance((int) (2 * this.radius), (int) (2 * this.radius), Image.SCALE_FAST));
         this.experience = 0;
@@ -86,8 +93,10 @@ public class Player extends Character {
 
 
     public void attack(int mouse_X, int mouse_Y) {
-        this.addToCombo();
-        this.spells.get(selectedSpell).summonProjectile(this, Game.centerX - mouse_X, Game.centerY - mouse_Y, false);
+        if (this.selectedSpell != null) {
+            this.addToCombo();
+            this.selectedSpell.summonProjectile(this, Game.centerX - mouse_X, Game.centerY - mouse_Y, false);
+        }
     }
 
     public void refresh() {
