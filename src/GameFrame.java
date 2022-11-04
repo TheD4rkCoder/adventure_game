@@ -244,6 +244,10 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
                             if (inv.items[i].amount < 1) {
                                 inv.items[i] = null;
                             }
+                        } else if (e.getButton() == 2) {
+                            if (inv.items[i] == null) {
+
+                            }
                         }
                     }
 

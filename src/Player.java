@@ -22,6 +22,8 @@ public class Player extends Character {
 
     public Player(String faction) {
         super(faction);
+        this.x_movement = 0;
+        this.y_movement = 0;
 
         this.inventory = new Inventory();
         this.spellInventory = new Inventory();
