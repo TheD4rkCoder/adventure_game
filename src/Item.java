@@ -10,13 +10,13 @@ public class Item extends GameObject {
     int amount;
 boolean consumable;
     Item(Image image, String name, int amount, String description, Spell attack, boolean consumable) {
-        this.image = image;
+        this.image = image.getScaledInstance(30, 30, Image.SCALE_FAST);
         this.icon = new ImageIcon();
-        this.icon.setImage(image.getScaledInstance(100, 100, 0));
+        this.icon.setImage(image.getScaledInstance(100, 100, Image.SCALE_FAST));
         this.name = name;
         this.description = description;
         this.attack = attack;
-        this.radius = 50;
+        this.radius = 15;
         this.amount = amount;
         this.consumable = consumable;
     }

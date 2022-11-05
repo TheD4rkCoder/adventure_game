@@ -72,7 +72,7 @@ public class Game {
     static final int BASE_CRITICAL_CHANCE = 80;
     static int centerX, centerY;
 
-    static public boolean collisionCheck(GameObject o1, GameObject o2 /*if you want to check collision with a wall, the wall always comes second*/) {
+    static public boolean collisionCheck(GameObject o1, GameObject o2, boolean should_push /*if you want to check collision with a wall, the wall always comes second*/) {
         if (o1 instanceof Wall) {
             // does not work with angles
             Wall wall = (Wall) o2;
@@ -100,7 +100,7 @@ public class Game {
         } else {
             // every other object is round, so we don't need differentiation
             if (sqrt(pow(o1.x - o2.x, 2) + pow(o1.y - o2.y, 2)) <= o1.radius + o2.radius) {
-                if (!(o1 instanceof Projectile) || ((Projectile) o1).type == Spell.type_t.obstacle) {
+                if (should_push) {
                     double deltaX = o1.x - o2.x;
                     double deltaY = o1.y - o2.y;
                     double distance = sqrt(pow(deltaX, 2) + pow(deltaY, 2));
@@ -139,7 +139,7 @@ public class Game {
         for (int i = 0; i < Game.enemies.size(); i++) {
             for (int j = 0; j < Game.enemies.size(); j++) {
                 if (i != j)
-                    Game.collisionCheck(Game.enemies.get(i), Game.enemies.get(j));
+                    Game.collisionCheck(Game.enemies.get(i), Game.enemies.get(j), true);
             }
         }
         // ProjectileMovement; ProjectileCollision is in their .move() method
@@ -151,7 +151,7 @@ public class Game {
         }
         // Item pickup/ collision with items
         for (int i = 0; i < Game.itemsLayingAround.size(); i++) {
-            if (collisionCheck(player, itemsLayingAround.get(i))) {
+            if (collisionCheck(player, itemsLayingAround.get(i), false)) {
                 if (player.inventory.addItem(itemsLayingAround.get(i))) {
                     itemsLayingAround.remove(i);
                 }
