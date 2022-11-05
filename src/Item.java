@@ -26,11 +26,11 @@ boolean consumable;
         Image image;
         String name;
         if (Game.random.nextInt(2) == 0) {
-            name = String.format("Wand %d", Game.random.nextInt(10000));
+            name = "Basic sword";
             image = Game.weapons_sprite_sheet.getSubimage(246 + 43, 24, 43, 43);
             attack = new Spell(new ImageIcon(Game.old_sprite_sheet.getSubimage(32 * 5, 32, 32, 32)), "Sword swing", Game.random.nextInt(20) + 5, 20, 10, 0, 80, 2, Spell.type_t.physical, null);
         } else {
-            name = String.format("Sword %d", Game.random.nextInt(10000));
+            name = "Basic wand";
             image = Game.weapons_sprite_sheet.getSubimage(246 + 43 * 2, 24 + 43 * 9, 43, 43);
             attack = new Spell(new ImageIcon(Game.old_sprite_sheet.getSubimage(32, 0, 32, 32)), "Mana Bolt", Game.random.nextInt(20) + 5, 20, 50, 8, 20, 2, Spell.type_t.projectile, null);
         }
