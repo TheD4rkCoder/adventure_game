@@ -133,7 +133,14 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
                     Game.player.spellInventory.dropItem();
                     repaintInventory();
                 }
-
+            }
+            case 73 -> {
+                if (Game.player.inventory.opened) {
+                    Game.player.inventory.showItemStats = Game.player.inventory.tempItem;
+                } else if (Game.player.spellInventory.opened) {
+                    Game.player.spellInventory.showItemStats = Game.player.spellInventory.tempItem;
+                }
+                repaintInventory();
             }
         }
 
@@ -241,7 +248,6 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
                             }
                         } else if (e.getButton() == 2) {
                             inv.showItemStats = inv.items[i];
-
                         }
                     }
 
