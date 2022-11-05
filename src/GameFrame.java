@@ -280,7 +280,6 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
                             }
                         } else if (e.getButton() == 2) {
                             inv.showItemStats = inv.hotBar[i];
-
                         }
                     }
 

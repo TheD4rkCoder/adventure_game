@@ -331,19 +331,21 @@ public class Inventory extends JPanel implements MouseInputListener {
 
             }
         }
+        if (this.equals(Game.player.inventory)) {
+            //ArmourSlot
+            g2D.setPaint(Color.BLACK);
+            g2D.fillRect(armourSelection.x - 10, armourSelection.y - 10, armourSelection.width + 20, armourSelection.height + 20);
+            if (armourSlot == null) {
+                g2D.setPaint(Color.GRAY);
+                g2D.fillRect(armourSelection.x, armourSelection.y, armourSelection.width, armourSelection.height);
+            } else {
+                g2D.drawImage(armourSlot.icon.getImage(), armourSelection.x, armourSelection.y, null);
+                g2D.setPaint(Color.white);
+                g2D.drawString(String.format("%d", armourSlot.amount), armourSelection.x + 10, armourSelection.y + 20);
 
-        //ArmourSlot
-        g2D.setPaint(Color.BLACK);
-        g2D.fillRect(armourSelection.x - 10, armourSelection.y - 10, armourSelection.width + 20, armourSelection.height + 20);
-        if (armourSlot == null) {
-            g2D.setPaint(Color.GRAY);
-            g2D.fillRect(armourSelection.x, armourSelection.y, armourSelection.width, armourSelection.height);
-        } else {
-            g2D.drawImage(armourSlot.icon.getImage(), armourSelection.x, armourSelection.y, null);
-            g2D.setPaint(Color.white);
-            g2D.drawString(String.format("%d", armourSlot.amount), armourSelection.x + 10, armourSelection.y + 20);
-
+            }
         }
+        // tempSlot
         g2D.setPaint(Color.BLACK);
         g2D.fillRect(armourSelection.x - 10 + 400, armourSelection.y - 10, armourSelection.width + 20, armourSelection.height + 20);
         if (tempItem == null) {
