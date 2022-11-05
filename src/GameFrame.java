@@ -231,7 +231,7 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
                         } else if (e.getButton() == 3 && inv.items[i] != null) {
                             if (inv.tempItem == null) {
                                 if (!(inv.items[i] instanceof Armour)) {
-                                    inv.tempItem = new Item(inv.items[i].image, inv.items[i].name, 1, inv.items[i].description, inv.items[i].attack);
+                                    inv.tempItem = new Item(inv.items[i].image, inv.items[i].name, 1, inv.items[i].description, inv.items[i].attack, inv.items[i].consumable);
                                 } else {
                                     Armour temp = (Armour) inv.items[i];
                                     inv.tempItem = new Armour(temp.image, temp.name, temp.description, temp.hpBuff, temp.defenceBuff, temp.attack);
@@ -265,7 +265,7 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
                         } else if (e.getButton() == 3 && inv.hotBar[i] != null) {
                             if (inv.tempItem == null) {
                                 if (!(inv.hotBar[i] instanceof Armour)) {
-                                    inv.tempItem = new Item(inv.hotBar[i].image, inv.hotBar[i].name, 1, inv.hotBar[i].description, inv.hotBar[i].attack);
+                                    inv.tempItem = new Item(inv.hotBar[i].image, inv.hotBar[i].name, 1, inv.hotBar[i].description, inv.hotBar[i].attack, inv.hotBar[i].consumable);
                                 } else {
                                     Armour temp = (Armour) inv.hotBar[i];
                                     inv.tempItem = new Armour(temp.image, temp.name, temp.description, temp.hpBuff, temp.defenceBuff, temp.attack);

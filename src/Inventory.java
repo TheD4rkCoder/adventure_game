@@ -3,6 +3,8 @@ import javax.swing.event.MouseInputListener;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
+import static java.lang.Math.*;
+
 public class Inventory extends JPanel implements MouseInputListener {
     protected int x, y;
 
@@ -66,8 +68,9 @@ public class Inventory extends JPanel implements MouseInputListener {
 
     public void dropItem(/*Item item*/) {
         if (tempItem != null) {
-            tempItem.x = Game.player.x;
-            tempItem.y = Game.player.y - tempItem.radius - Game.player.radius - 30;
+            double random_angle = PI * Game.random.nextInt(100)/50;
+            tempItem.x = Game.player.x + cos(random_angle) * (tempItem.radius + Game.player.radius + 30);
+            tempItem.y = Game.player.y + sin(random_angle) * (tempItem.radius + Game.player.radius + 30);
             Game.itemsLayingAround.add(tempItem);
             tempItem = null;
         }

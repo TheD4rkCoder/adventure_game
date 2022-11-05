@@ -35,7 +35,7 @@ public class Player extends Character {
         this.pickUpItem(Item.random_weapon());
 
         this.inventory.addItem(new Armour(Game.armour_sprite_sheet.getSubimage(246, 24 + 43, 43, 43), "basic armour", "Test", 100, 20, null));
-        this.inventory.addItem(new Item(Game.weapons_sprite_sheet.getSubimage(246 + 43 * 3, 24 + 43 * 9, 43, 43), "fire staff", 1, "a weapon", Game.spells[3]));
+        this.inventory.addItem(new Item(Game.weapons_sprite_sheet.getSubimage(246 + 43 * 3, 24 + 43 * 9, 43, 43), "fire staff", 1, "a weapon", Game.spells[3], false));
         this.radius = 20;
         this.icon = new ImageIcon(Game.old_sprite_sheet.getSubimage(32, 32, 32, 32).getScaledInstance((int) (2 * this.radius), (int) (2 * this.radius), Image.SCALE_FAST));
         this.experience = 0;

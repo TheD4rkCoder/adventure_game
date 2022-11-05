@@ -8,8 +8,8 @@ public class Item extends GameObject {
     protected String description;
     public Spell attack;
     int amount;
-
-    Item(Image image, String name, int amount, String description, Spell attack) {
+boolean consumable;
+    Item(Image image, String name, int amount, String description, Spell attack, boolean consumable) {
         this.image = image;
         this.icon = new ImageIcon();
         this.icon.setImage(image.getScaledInstance(100, 100, 0));
@@ -18,6 +18,7 @@ public class Item extends GameObject {
         this.attack = attack;
         this.radius = 50;
         this.amount = amount;
+        this.consumable = consumable;
     }
 
     static public Item random_weapon() {
@@ -33,7 +34,7 @@ public class Item extends GameObject {
             image = Game.weapons_sprite_sheet.getSubimage(246 + 43 * 2, 24 + 43 * 9, 43, 43);
             attack = new Spell(new ImageIcon(Game.old_sprite_sheet.getSubimage(32, 0, 32, 32)), "Mana Bolt", Game.random.nextInt(20) + 5, 20, 50, 8, 20, 2, Spell.type_t.projectile, null);
         }
-        Item weapon = new Item(image, name, 1, "A weapon", attack);
+        Item weapon = new Item(image, name, 1, "A weapon", attack, false);
         return weapon;
     }
 
@@ -59,7 +60,7 @@ public class Item extends GameObject {
             image = Game.wands_and_books_sprite_sheet.getSubimage(246+43*5, 24+43*5, 43, 43);
             attack = new Spell(new ImageIcon("lavapool.png"), "Lava Pool", 10, 5, 200, 0, 100, 5, Spell.type_t.projectile, null);
         }
-        Item weapon = new Item(image, name, 1, description, attack);
+        Item weapon = new Item(image, name, 1, description, attack, false);
         return weapon;
     }
     public boolean equals(Item item) {

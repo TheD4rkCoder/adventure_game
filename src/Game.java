@@ -7,8 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
-import static java.lang.Math.pow;
-import static java.lang.Math.sqrt;
+import static java.lang.Math.*;
 
 public class Game {
     static Random random = new Random();
@@ -25,6 +24,7 @@ public class Game {
             throw new RuntimeException(e);
         }
     }
+
     static {
         try {
             weapons_sprite_sheet = ImageIO.read(new File("weapons.png"));
@@ -52,7 +52,7 @@ public class Game {
 
     // list of all spells (skills) that exist
     static Spell[] spells = new Spell[]{
-            new Spell(new ImageIcon(old_sprite_sheet.getSubimage(32*3, 32, 32, 32)), "punch", 5, 5, 10, 0, 30, 2, Spell.type_t.physical, null),
+            new Spell(new ImageIcon(old_sprite_sheet.getSubimage(32 * 3, 32, 32, 32)), "punch", 5, 5, 10, 0, 30, 2, Spell.type_t.physical, null),
             new Spell(new ImageIcon(old_sprite_sheet.getSubimage(32, 0, 32, 32)), "Mana Bolt", 10, 5, 50, 8, 10, 2, Spell.type_t.projectile, null),
             new Spell(new ImageIcon("lavapool.png"), "Lava Pool", 10, 5, 200, 0, 100, 5, Spell.type_t.projectile, null),
             new Spell(new ImageIcon(old_sprite_sheet.getSubimage(0, 0, 32, 32)), "Fireball", 30, 20, 50, 5, 30, 3, Spell.type_t.projectile, new Spell(new ImageIcon(old_sprite_sheet.getSubimage(0, 0, 32, 32)), "Explosion", 20, 0, 10, 0, 100, 5, Spell.type_t.projectile, null)),
@@ -121,7 +121,14 @@ public class Game {
     static public void collisions_and_movements() {
         // EnemyMovement; collision with player is in .move() method
         for (int i = 0; i < Game.enemies.size(); i++) {
-            if (Game.enemies.get(i).hp <= 0) {
+            if (enemies.get(i).hp <= 0) {
+                for (int j = 0; j < enemies.get(i).items.length; j++) {
+                    double random_angle = PI * Game.random.nextInt(100) / 50;
+                    Item tempItem = enemies.get(i).items[j];
+                    tempItem.x = enemies.get(i).x + cos(random_angle) * (tempItem.radius + Game.player.radius + 30);
+                    tempItem.y = enemies.get(i).y + sin(random_angle) * (tempItem.radius + Game.player.radius + 30);
+                    Game.itemsLayingAround.add(tempItem);
+                }
                 Game.enemies.remove(i);
                 --i;
             } else {
