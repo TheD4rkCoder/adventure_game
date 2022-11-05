@@ -57,11 +57,10 @@ public class Game {
             new Spell(new ImageIcon("lavapool.png"), "Lava Pool", 10, 5, 200, 0, 100, 5, Spell.type_t.projectile, null),
             new Spell(new ImageIcon(old_sprite_sheet.getSubimage(0, 0, 32, 32)), "Fireball", 30, 20, 50, 5, 30, 3, Spell.type_t.projectile, new Spell(new ImageIcon(old_sprite_sheet.getSubimage(0, 0, 32, 32)), "Explosion", 20, 0, 10, 0, 100, 5, Spell.type_t.projectile, null)),
             new Spell(new ImageIcon(old_sprite_sheet.getSubimage(32, 0, 32, 32)), "Sword swing", 10, 20, 10, 0, 80, 4, Spell.type_t.physical, null),
-
     };
-    static Player player = new Player("friendly");
     static ArrayList<Enemy> enemies = new ArrayList<>();
     static ArrayList<GameObject> obstacles = new ArrayList<>();//change this once we have obstacle spells
+    static Player player = new Player("friendly");
     static ArrayList<Wall> walls = new ArrayList<>();
     static ArrayList<Projectile> projectiles = new ArrayList<>();
     static ArrayList<Item> itemsLayingAround = new ArrayList<>();
@@ -73,7 +72,7 @@ public class Game {
     static int centerX, centerY;
 
     static public boolean collisionCheck(GameObject o1, GameObject o2, boolean should_push /*if you want to check collision with a wall, the wall always comes second*/) {
-        if (o1 instanceof Wall) {
+        if (o2 instanceof Wall) {
             // does not work with angles
             Wall wall = (Wall) o2;
             if (o1.x + o1.radius > wall.x && o1.x - o1.radius < o2.x + wall.width && o1.y + o1.radius > wall.y && o1.y - o1.radius < wall.y + wall.height) {
@@ -100,17 +99,25 @@ public class Game {
         } else {
             // every other object is round, so we don't need differentiation
             if (sqrt(pow(o1.x - o2.x, 2) + pow(o1.y - o2.y, 2)) <= o1.radius + o2.radius) {
+
                 if (should_push) {
                     double deltaX = o1.x - o2.x;
                     double deltaY = o1.y - o2.y;
                     double distance = sqrt(pow(deltaX, 2) + pow(deltaY, 2));
                     double angle = Math.atan(deltaY / deltaX) + ((deltaX > 0) ? 0 : Math.PI);
-                    double reset = (o1.radius + o2.radius - distance + 1) / 2;
+                    if (o2.getClass().equals(GameObject.class)) {
+                        double reset = o1.radius + o2.radius - distance + 1;
 
-                    o1.x = o1.x + Math.cos(angle) * reset;
-                    o1.y = o1.y + Math.sin(angle) * reset;
-                    o2.x = o2.x - Math.cos(angle) * reset;
-                    o2.y = o2.y - Math.sin(angle) * reset;
+                        o1.x = o1.x + Math.cos(angle) * reset;
+                        o1.y = o1.y + Math.sin(angle) * reset;
+                    } else {
+                        double reset = (o1.radius + o2.radius - distance + 1) / 2;
+
+                        o1.x = o1.x + Math.cos(angle) * reset;
+                        o1.y = o1.y + Math.sin(angle) * reset;
+                        o2.x = o2.x - Math.cos(angle) * reset;
+                        o2.y = o2.y - Math.sin(angle) * reset;
+                    }
                 }
                 return true;
             }
@@ -133,20 +140,30 @@ public class Game {
                 --i;
             } else {
                 Game.enemies.get(i).moveTowardsPlayer();
+
+                // enemy collision with obstacles
+                for (int j = 0; j < obstacles.size(); j++) {
+                    collisionCheck(enemies.get(i), obstacles.get(j), true);
+                }
+                // enemy collision with other enemies
+                for (int j = 0; j < Game.enemies.size(); j++) {
+                    if (i != j)
+                        Game.collisionCheck(Game.enemies.get(i), Game.enemies.get(j), true);
+                }
             }
         }
-        // EnemyCollision
-        for (int i = 0; i < Game.enemies.size(); i++) {
-            for (int j = 0; j < Game.enemies.size(); j++) {
-                if (i != j)
-                    Game.collisionCheck(Game.enemies.get(i), Game.enemies.get(j), true);
-            }
-        }
+
         // ProjectileMovement; ProjectileCollision is in their .move() method
         for (int i = 0; i < Game.projectiles.size(); i++) {
             if (!Game.projectiles.get(i).move()) {
                 Game.projectiles.remove(i);
                 --i;
+            } else {
+                for (int j = 0; j < obstacles.size(); j++) {
+                    if (collisionCheck(projectiles.get(i), obstacles.get(j), false)) {
+                        projectiles.get(i).piercing = 0;
+                    }
+                }
             }
         }
         // Item pickup/ collision with items
@@ -156,6 +173,10 @@ public class Game {
                     itemsLayingAround.remove(i);
                 }
             }
+        }
+
+        for (int j = 0; j < obstacles.size(); j++) {
+            collisionCheck(player, obstacles.get(j), true);
         }
     }
 }

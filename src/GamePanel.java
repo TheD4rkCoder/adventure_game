@@ -42,6 +42,11 @@ public class GamePanel extends JPanel {
             g2D.fillRect((int) (p.x - p.radius - deltaX - 5), (int) (p.y - p.radius - deltaY - 5), (int) (2 * p.radius + 10), (int) (2 * p.radius + 10));
             g2D.drawImage(Game.itemsLayingAround.get(i).image, (int) (p.x - p.radius - deltaX), (int) (p.y - p.radius - deltaY), null);
         }
+        // draw all obstacles
+        for (int i = 0; i < Game.obstacles.size(); i++) {
+                GameObject p = Game.obstacles.get(i);
+                g2D.drawImage(Game.obstacles.get(i).icon.getImage(), (int) (p.x - p.radius - deltaX), (int) (p.y - p.radius - deltaY), null);
+        }
 
         // draw all projectiles
         for (int i = 0; i < Game.projectiles.size(); i++) {
