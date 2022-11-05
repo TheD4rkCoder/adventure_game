@@ -51,7 +51,7 @@ public class Game {
     }
 
     // list of all spells (skills) that exist
-    static Spell[] spells = new Spell[]{
+    static final Spell[] spells = new Spell[]{
             new Spell(new ImageIcon(old_sprite_sheet.getSubimage(32 * 3, 32, 32, 32)), "punch", 5, 5, 10, 0, 30, 2, Spell.type_t.physical, null),
             new Spell(new ImageIcon(old_sprite_sheet.getSubimage(32, 0, 32, 32)), "Mana Bolt", 10, 5, 50, 8, 10, 2, Spell.type_t.projectile, null),
             new Spell(new ImageIcon("lavapool.png"), "Lava Pool", 10, 5, 200, 0, 100, 5, Spell.type_t.projectile, null),

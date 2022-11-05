@@ -8,7 +8,7 @@ public class Item extends GameObject {
     protected String description;
     public Spell attack;
     int amount;
-boolean consumable;
+    boolean consumable;
     Item(Image image, String name, int amount, String description, Spell attack, boolean consumable) {
         this.image = image;
         this.icon = new ImageIcon();
