@@ -46,7 +46,7 @@ public class Projectile extends GameObject {
         if (this.piercing > 0) {
             if (this.faction.equals("hostile")) {
                 if (this.enemiesHit.size() == 0) {
-                    if (Game.collisionCheck(this, Game.player)) {
+                    if (Game.collisionCheck(this, Game.player, false)) {
                         this.enemiesHit.add(Game.player);
                         double damageDealt = this.damage * 0.2 * (6 - (pow(6, Game.player.def / this.damage)));
                         if (damageDealt > 0) {
@@ -64,7 +64,7 @@ public class Projectile extends GameObject {
                             check = true;
                         }
                     }
-                    if (!check && Game.collisionCheck(this, Game.enemies.get(i))) {
+                    if (!check && Game.collisionCheck(this, Game.enemies.get(i), false)) {
                         enemiesHit.add(Game.enemies.get(i));
                         double damageDealt = this.damage * 0.2 * (6 - (pow(6, Game.enemies.get(i).def / this.damage)));
                         if (damageDealt > 0) {

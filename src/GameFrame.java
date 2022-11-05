@@ -46,10 +46,6 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
 
     }
 
-    public void test() {
-        Game.player.inventory.addItem(new Armour(new ImageIcon("img.png").getImage(), "Oha", "Test", 20, 3, null));
-    }
-
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == this.timer) {
@@ -87,7 +83,6 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
             if (isMousePressed) {
                 mousePressedTime++;
             }
-
             gamePanel.repaint();
 
         } else if (e.getSource() == this.enemyCourseAdjust) {
@@ -138,7 +133,14 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
                     Game.player.spellInventory.dropItem();
                     repaintInventory();
                 }
-
+            }
+            case 73 -> {
+                if (Game.player.inventory.opened) {
+                    Game.player.inventory.showItemStats = Game.player.inventory.tempItem;
+                } else if (Game.player.spellInventory.opened) {
+                    Game.player.spellInventory.showItemStats = Game.player.spellInventory.tempItem;
+                }
+                repaintInventory();
             }
         }
 
@@ -217,7 +219,7 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
                         }
                     }
                 }
-                for (int i = 0; i < 9; ++i) {
+                for (int i = 0; i < inv.items.length; ++i) {
                     if (inv.itemSelection[i].isIn(mouseX + 7, mouseY + 30)) {
                         if (e.getButton() == 1) {
                             if (inv.items[i] != null && inv.tempItem != null && inv.items[i].equals(inv.tempItem)) {
@@ -246,12 +248,11 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
                             }
                         } else if (e.getButton() == 2) {
                             inv.showItemStats = inv.items[i];
-
                         }
                     }
 
                 }
-                for (int i = 0; i < 3; ++i) {
+                for (int i = 0; i < inv.hotBar.length; ++i) {
                     if (inv.hotBarSelection[i].isIn(mouseX + 7, mouseY + 30)) {
                         if (e.getButton() == 1) {
                             if (inv.hotBar[i] != null && inv.tempItem != null && inv.hotBar[i].equals(inv.tempItem)) {

@@ -52,6 +52,14 @@ public class Player extends Character {
         this.increaseStat("Dexterity", 0);
         this.increaseStat("Wisdom", 0);
         this.hp = maxHP;
+
+
+        GameObject test = new GameObject();
+        test.x = 100;
+        test.y = 0;
+        test.radius = 100;
+        test.icon = new ImageIcon(Game.old_sprite_sheet.getSubimage(0, 32, 32, 32).getScaledInstance(200, 200, Image.SCALE_FAST));
+        Game.obstacles.add(Game.obstacles.size(), test);
     }
 
     public void levelUp(int amount) {

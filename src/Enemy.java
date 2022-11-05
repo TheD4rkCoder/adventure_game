@@ -107,7 +107,7 @@ public class Enemy extends Character {
         this.mana_recovery_speed--;
         this.stamina--;
 
-        Game.collisionCheck(this, Game.player);
+        Game.collisionCheck(this, Game.player, true);
     }
 
     public void attack(int index) {
