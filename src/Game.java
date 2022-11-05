@@ -16,7 +16,15 @@ public class Game {
     final static public BufferedImage old_sprite_sheet;
     final static public BufferedImage weapons_sprite_sheet;
     final static public BufferedImage armour_sprite_sheet;
+    final static public BufferedImage wands_and_books_sprite_sheet;
 
+    static {
+        try {
+            wands_and_books_sprite_sheet = ImageIO.read(new File("wands_and_books.png"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
     static {
         try {
             weapons_sprite_sheet = ImageIO.read(new File("weapons.png"));

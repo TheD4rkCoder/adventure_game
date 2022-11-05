@@ -96,7 +96,7 @@ public class Inventory extends JPanel implements MouseInputListener {
     public boolean addItem(Item item) {
         for (int i = 0; i < 3; ++i) {
             if (hotBar[i] != null) {
-                if (hotBar[i].name.equals(item.name)) {
+                if (hotBar[i].equals(item)) {
                     hotBar[i].amount += item.amount;
                     return true;
                 }
@@ -105,7 +105,7 @@ public class Inventory extends JPanel implements MouseInputListener {
 
         for (int i = 0; i < 9; ++i) {
             if (items[i] != null) {
-                if (items[i].name.equals(item.name)) {
+                if (items[i].equals(item)) {
                     items[i].amount += item.amount;
                     return true;
                 }

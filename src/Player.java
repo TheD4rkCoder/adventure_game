@@ -28,13 +28,14 @@ public class Player extends Character {
         this.inventory = new Inventory();
         this.spellInventory = new Inventory();
 
-        this.inventory.addItem(Item.random_weapon());
-        this.inventory.addItem(Item.random_weapon());
-        this.spellInventory.addItem(Item.random_weapon());
-        this.spellInventory.addItem(Item.random_weapon());
+        this.pickUpItem(Item.random_spell_book());
+        this.pickUpItem(Item.random_spell_book());
+        this.pickUpItem(Item.random_spell_book());
+        this.pickUpItem(Item.random_weapon());
+        this.pickUpItem(Item.random_weapon());
 
         this.inventory.addItem(new Armour(Game.armour_sprite_sheet.getSubimage(246, 24 + 43, 43, 43), "basic armour", "Test", 100, 20, null));
-        this.inventory.addItem(new Item(Game.weapons_sprite_sheet.getSubimage(246+43*3, 24+43*9, 43, 43), "fire staff", 1, "a weapon", Game.spells[3]));
+        this.inventory.addItem(new Item(Game.weapons_sprite_sheet.getSubimage(246 + 43 * 3, 24 + 43 * 9, 43, 43), "fire staff", 1, "a weapon", Game.spells[3]));
         this.radius = 20;
         this.icon = new ImageIcon(Game.old_sprite_sheet.getSubimage(32, 32, 32, 32).getScaledInstance((int) (2 * this.radius), (int) (2 * this.radius), Image.SCALE_FAST));
         this.experience = 0;
@@ -99,6 +100,14 @@ public class Player extends Character {
         if (this.selectedSpell != null) {
             this.addToCombo();
             this.selectedSpell.summonProjectile(this, Game.centerX - mouse_X, Game.centerY - mouse_Y, false);
+        }
+    }
+
+    public void pickUpItem(Item item) {
+        if (item.name.equals("Spell book") || item.name.equals("Spell scroll")) {
+            spellInventory.addItem(item);
+        } else {
+            inventory.addItem(item);
         }
     }
 

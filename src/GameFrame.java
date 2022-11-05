@@ -220,7 +220,7 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
                 for (int i = 0; i < 9; ++i) {
                     if (inv.itemSelection[i].isIn(mouseX + 7, mouseY + 30)) {
                         if (e.getButton() == 1) {
-                            if (inv.items[i] != null && inv.tempItem != null && inv.items[i].name.equals(inv.tempItem.name)) {
+                            if (inv.items[i] != null && inv.tempItem != null && inv.items[i].equals(inv.tempItem)) {
                                 inv.items[i].amount += inv.tempItem.amount;
                                 inv.tempItem = null;
                             } else {
@@ -237,7 +237,7 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
                                     inv.tempItem = new Armour(temp.image, temp.name, temp.description, temp.hpBuff, temp.defenceBuff, temp.attack);
                                 }
                                 inv.items[i].amount--;
-                            } else if (inv.tempItem.name.equals(inv.items[i].name)) {
+                            } else if (inv.items[i].equals(inv.tempItem)) {
                                 inv.items[i].amount--;
                                 inv.tempItem.amount++;
                             }
@@ -254,7 +254,7 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
                 for (int i = 0; i < 3; ++i) {
                     if (inv.hotBarSelection[i].isIn(mouseX + 7, mouseY + 30)) {
                         if (e.getButton() == 1) {
-                            if (inv.hotBar[i] != null && inv.tempItem != null && inv.hotBar[i].name.equals(inv.tempItem.name)) {
+                            if (inv.hotBar[i] != null && inv.tempItem != null && inv.hotBar[i].equals(inv.tempItem)) {
                                 inv.hotBar[i].amount += inv.tempItem.amount;
                                 inv.tempItem = null;
                             } else {
@@ -271,7 +271,7 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
                                     inv.tempItem = new Armour(temp.image, temp.name, temp.description, temp.hpBuff, temp.defenceBuff, temp.attack);
                                 }
                                 inv.hotBar[i].amount--;
-                            } else if (inv.tempItem.name.equals(inv.hotBar[i].name)) {
+                            } else if (inv.tempItem.equals(inv.hotBar[i])) {
                                 inv.hotBar[i].amount--;
                                 inv.tempItem.amount++;
                             }
