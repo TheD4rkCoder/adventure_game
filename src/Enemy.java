@@ -1,13 +1,13 @@
+import javax.swing.*;
 import java.lang.Math;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Random;
 
 import static java.lang.Math.PI;
 
-public class Enemy extends Character {
+public class Enemy extends Character{
 
-    private ArrayList<Double> range_of_spells;
+    transient private ArrayList<Double> range_of_spells;
     protected double distanceToPlayer;
     protected double angleToPlayer;
     protected Item[] items;
@@ -114,5 +114,20 @@ public class Enemy extends Character {
         this.addToCombo();
         this.spells.get(index).summonProjectile(this, this.x - Game.player.x, this.y - Game.player.y, false);
 
+    }
+
+    public void load(){
+        radius = 25;
+        stage = (intelligence + endurance + strength + dexterity + wisdom)/4;
+        levelUp(0);
+        this.comboTimer = new Timer(Game.COMBO_TIMER_BASE_VALUE, this);
+        this.combo = 0;
+        this.range_of_spells = new ArrayList<>();
+        for (int i = 0; i < spells.size(); i++) {
+            this.range_of_spells.add(this.spells.get(i).duration * this.spells.get(i).movement_speed + this.spells.get(i).radius + this.radius);
+        }
+        for (Item item : items) {
+            item.load();
+        }
     }
 }

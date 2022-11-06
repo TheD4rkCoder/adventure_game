@@ -1,12 +1,15 @@
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.Random;
 
 import static java.lang.Math.*;
 
-public class Spell {
+public class Spell implements Serializable {
     protected ImageIcon image;
+
+    protected int []imageValues;
+    protected String source;
     protected String name;
     protected double damage_health, mana_cost, duration, movement_speed, radius;
     protected Spell subSpell; // spell that spawns after the projectile of this spell gets removed
@@ -18,7 +21,13 @@ public class Spell {
 
     protected type_t type;
 
-    public Spell(ImageIcon image, String name, double damage_health, double mana_cost, double duration, double movement_speed, double radius, int piercing, type_t type, Spell subSpell) {
+    public Spell(int []imageValues, String source, String name, double damage_health, double mana_cost, double duration, double movement_speed, double radius, int piercing, type_t type, Spell subSpell) {
+        this.source = source;
+        this.imageValues = imageValues;
+        switch(source){
+            case "old_sprite_sheet" -> this.image = new ImageIcon(Game.old_sprite_sheet.getSubimage(imageValues[0], imageValues[1], imageValues[2], imageValues[3]).getScaledInstance(30, 30, Image.SCALE_REPLICATE));
+            case "lavapool.png" -> this.image = new ImageIcon("lavapool.png");
+        }
         this.image = new ImageIcon(image.getImage().getScaledInstance(100, 100, Image.SCALE_REPLICATE));
         this.name = name;
         this.damage_health = damage_health;
@@ -87,7 +96,8 @@ public class Spell {
         double x = o.x + cos(angle) * (this.radius - o.radius);
         double y = o.y + sin(angle) * (this.radius - o.radius);
 
-        Projectile proj = new Projectile(x, y, angle, this.movement_speed * effectiveness, this.damage_health * damage, this.duration * effectiveness, this.piercing, this.radius, this.type, this.image.getImage().getScaledInstance((int) radius * 2, (int) radius * 2, Image.SCALE_FAST), this, faction);
+        //Projectile proj = new Projectile(x, y, angle, this.movement_speed * effectiveness, this.damage_health * damage, this.duration * effectiveness, this.piercing, this.radius, this.type, this.image.getImage().getScaledInstance((int) radius * 2, (int) radius * 2, Image.SCALE_FAST), this, faction);
+        Projectile proj = new Projectile(x, y, angle, this.movement_speed * effectiveness, this.damage_health * damage, this.duration * effectiveness, this.piercing, this.radius, this.type, new double []{this.imageValues[0],this.imageValues[1],this.imageValues[2],this.imageValues[3],radius * 2, radius * 2}, this.source,  this, faction);
         Game.projectiles.add(Game.projectiles.size(), proj);
         return true;
     }

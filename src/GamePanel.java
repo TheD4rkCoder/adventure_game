@@ -1,20 +1,64 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.io.File;
 
 import static java.lang.Math.*;
 
-public class GamePanel extends JPanel {
+public class GamePanel extends JPanel implements KeyListener {
     protected int deltaX;
     protected int deltaY;
     protected int screenscrollX, screenscrollY;
     protected ImageIcon background;
     public static double manabarAnimationOffset;
 
+    protected boolean pauseMenuOpened;
+
+    protected Area continueButton;
+    protected Area saveButton;
+
+    protected JTextField loadInput;
+    protected Area loadButton;
+    protected boolean writing;
+    protected boolean painted;
+    protected boolean notAvailable;
+    protected boolean saved;
+    protected Area notAvailableArea;
 
     GamePanel() {
         super();
         this.setPreferredSize(new Dimension(1280, 720));
         background = new ImageIcon("background.png");
+        pauseMenuOpened = false;
+
+        this.setLayout(null);
+
+        continueButton = new Area(500,50,300,50);
+
+        saveButton = new Area(500,150,300,50);
+
+        loadButton = new Area(500,200,300,50);
+
+        notAvailableArea = new Area(0,0,300,50);
+
+        loadInput = new JTextField();
+        loadInput.setBounds(500, 250, 100, 50);
+        loadInput.setFont(new Font("Consolas",Font.PLAIN,35));
+        loadInput.setBackground(Color.darkGray);
+        loadInput.setForeground(Color.white);
+        loadInput.setCaretColor(Color.white);
+        loadInput.addKeyListener(this);
+        //loadInput.setText("");
+        this.add(loadInput);
+        loadInput.setVisible(false);
+
+        writing = false;
+        painted = false;
+        notAvailable = false;
+
+        this.setVisible(true);
+
     }
 
 
@@ -28,6 +72,63 @@ public class GamePanel extends JPanel {
         screenscrollY = (deltaY % background.getIconHeight() > 0) ? (-(deltaY % background.getIconHeight())) : ((-(deltaY % background.getIconHeight())) - background.getIconHeight());
 
         Graphics2D g2D = (Graphics2D) g;
+
+        //PauseMenu
+        if(pauseMenuOpened){
+            g2D.setPaint(Color.BLACK);
+            float alpha = 6 * 0.1f;
+            AlphaComposite alcom = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha);
+            if(!painted) {
+                painted = true;
+                g2D.setComposite(alcom);
+                g2D.fillRect(0, 0, this.getWidth(), this.getHeight());
+
+                alcom = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f);
+                g2D.setComposite(alcom);
+            }
+            g2D.setStroke(new BasicStroke(10));
+            Font attributes = new Font("Arial", Font.BOLD, 30);
+
+
+            g2D.drawRect(continueButton.x, continueButton.y, continueButton.width, continueButton.height);
+            g2D.setPaint(Color.darkGray);
+            g2D.fillRect(continueButton.x, continueButton.y, continueButton.width, continueButton.height);
+            g2D.setFont(attributes);
+            g2D.setPaint(Color.white);
+            g2D.drawString("Continue", continueButton.x + continueButton.width/2 - 70, continueButton.y + 35);
+
+            g2D.setPaint(Color.BLACK);
+            g2D.drawRect(saveButton.x, saveButton.y, saveButton.width, saveButton.height);
+            g2D.setPaint(Color.darkGray);
+            g2D.fillRect(saveButton.x, saveButton.y, saveButton.width, saveButton.height);
+            g2D.setFont(attributes);
+            g2D.setPaint(Color.white);
+            g2D.drawString("Save", saveButton.x + saveButton.width/2 - 35, saveButton.y + 35);
+
+            g2D.setPaint(Color.BLACK);
+            g2D.drawRect(loadButton.x, loadButton.y, loadButton.width, loadButton.height);
+            g2D.setPaint(Color.darkGray);
+            g2D.fillRect(loadButton.x, loadButton.y, loadButton.width, loadButton.height);
+            g2D.setPaint(Color.white);
+            g2D.drawString("Load", loadButton.x + loadButton.width/2 - 35, loadButton.y + 35);
+            if(notAvailable || saved){
+                g2D.setPaint(Color.BLACK);
+                g2D.drawRect(notAvailableArea.x, notAvailableArea.y, notAvailableArea.width, notAvailableArea.height);
+                g2D.setPaint(Color.darkGray);
+                g2D.fillRect(notAvailableArea.x, notAvailableArea.y, notAvailableArea.width, notAvailableArea.height);
+                if(notAvailable) {
+                    g2D.setPaint(Color.red);
+                    g2D.drawString("Not available", notAvailableArea.x + notAvailableArea.width / 2 - (int) (6.5 * 17.5), notAvailableArea.y + 35);
+                }else{
+                    g2D.setPaint(Color.green);
+                    g2D.drawString("Saved", notAvailableArea.x + notAvailableArea.width / 2 - (int) (2.5 * 17.5), notAvailableArea.y + 35);
+                }
+            }
+            if(writing){
+                loadInput.setVisible(true);
+            }
+            return;
+        }
 
         // paint background
         g2D.drawImage(background.getImage(), screenscrollX, screenscrollY, null);
@@ -43,10 +144,11 @@ public class GamePanel extends JPanel {
             g2D.drawImage(Game.itemsLayingAround.get(i).image, (int) (p.x - p.radius - deltaX), (int) (p.y - p.radius - deltaY), null);
         }
         // draw all obstacles
+        /*
         for (int i = 0; i < Game.obstacles.size(); i++) {
                 GameObject p = Game.obstacles.get(i);
                 g2D.drawImage(Game.obstacles.get(i).icon.getImage(), (int) (p.x - p.radius - deltaX), (int) (p.y - p.radius - deltaY), null);
-        }
+        }*/
 
         // draw all projectiles
         for (int i = 0; i < Game.projectiles.size(); i++) {
@@ -158,5 +260,47 @@ public class GamePanel extends JPanel {
 
         //g2D.setFont(new Font("Ink Free",Font.BOLD,50));
         //g2D.drawString("U R A WINNER! :D", 50, 50);
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        if (e.getKeyCode() == 10) {
+            if (pauseMenuOpened && writing) {
+                int i = Integer.parseInt(loadInput.getText());
+                File f = new File("C:\\Users\\Fabian\\Desktop\\Oberschule\\4AT\\Informatik\\Java\\adventure_game\\save_" + i + ".ser");
+                if(!f.exists()){
+                    System.out.println("Not available");
+                    notAvailable = true;
+                    repaint();
+                    return;
+                }else{
+
+                    Game.load(i);
+                    System.out.println("Test");
+                }
+                this.writing = false;
+
+                this.loadInput.setVisible(false);
+                this.loadInput.setEnabled(false);
+
+                this.getFocusCycleRootAncestor().requestFocus();
+
+                try {
+                    new Robot().keyPress(27);
+                } catch (AWTException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
     }
 }

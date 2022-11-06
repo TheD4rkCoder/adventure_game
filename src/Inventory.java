@@ -2,11 +2,12 @@ import javax.swing.*;
 import javax.swing.event.MouseInputListener;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.io.Serializable;
 
 import static java.lang.Math.*;
 
-public class Inventory extends JPanel implements MouseInputListener {
-    protected int x, y;
+public class Inventory extends JPanel implements MouseInputListener, Serializable {
+    transient protected int x, y;
 
     protected Item[] items;
     protected Item[] hotBar;
@@ -14,16 +15,16 @@ public class Inventory extends JPanel implements MouseInputListener {
     public Item showItemStats;
     protected Item tempItem;
 
-    protected boolean opened;
-    private boolean painted;
+    transient protected boolean opened;
+    transient private boolean painted;
 
-    protected Area[] levelUps;
+    transient protected Area[] levelUps;
 
-    protected Area[] itemSelection;
+    transient protected Area[] itemSelection;
     protected int selectedItem; //0-8 = ItemSelection 9-11 = HotBar 12 = amourSlot
 
-    protected Area[] hotBarSelection;
-    protected Area armourSelection;
+    transient protected Area[] hotBarSelection;
+    transient protected Area armourSelection;
 
     Inventory() {
         this.setPreferredSize(new Dimension(1280, 720));
@@ -407,4 +408,49 @@ public class Inventory extends JPanel implements MouseInputListener {
 
     }
 
+    public void load(){
+        for(int i = 0; i < 9; ++i){
+            if(items[i] != null) {
+                items[i].load();
+            }
+            if(i < 3 && hotBar[i] != null){
+                hotBar[i].load();
+            }
+        }
+        if(armourSlot != null) {
+            armourSlot.load();
+        }
+        if(tempItem != null) {
+            tempItem.load();
+        }
+
+        this.setPreferredSize(new Dimension(1280, 720));
+        this.x = 200;
+        this.y = 200;
+
+        this.opened = false;
+
+        levelUps = new Area[5];
+
+        levelUps[0] = new Area(this.x + 596, this.y, 20, 20); //Intelligence
+        levelUps[1] = new Area(this.x + 596, this.y + 65, 20, 20); //Strength
+        levelUps[2] = new Area(this.x + 596, this.y + 145, 20, 20); //Endurance
+        levelUps[3] = new Area(this.x + 596, this.y + 180, 20, 20); //Dexterity
+        levelUps[4] = new Area(this.x + 596, this.y + 245, 20, 20); //Wisdom
+
+        itemSelection = new Area[9];
+        for (int i = 0; i < 3; ++i) {
+            for (int j = 0; j < 3; ++j) {
+                itemSelection[i * 3 + j] = new Area(this.x + j * 110, this.y + i * 110, 100, 100);
+            }
+        }
+
+        hotBarSelection = new Area[3];
+        for (int i = 0; i < 3; ++i) {
+            hotBarSelection[i] = new Area(this.x + 110 * i, this.y + 370, 100, 100);
+        }
+
+        armourSelection = new Area(this.x + 330 + 50, this.y + 370, 100, 100);
+
+    }
 }

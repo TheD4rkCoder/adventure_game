@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -6,7 +7,9 @@ import static java.lang.Math.*;
 public class Projectile extends GameObject {
 
     protected double movement_speed;
-    protected Image image;
+    transient protected Image image;
+    protected double []imageValues;
+    protected String source;
     protected double damage;
     protected double durationLeft;
     protected int piercing;
@@ -18,7 +21,7 @@ public class Projectile extends GameObject {
     protected double angle;
     Spell.type_t type;
 
-    Projectile(double x, double y, double angle, double movement_speed, double damage, double durationLeft, int piercing, double radius, Spell.type_t type, Image image, Spell spell, String faction) {
+    Projectile(double x, double y, double angle, double movement_speed, double damage, double durationLeft, int piercing, double radius, Spell.type_t type, double[]imageValues, String source, Spell spell, String faction) {
         this.x = x;
         this.y = y;
         this.angle = angle;
@@ -28,7 +31,14 @@ public class Projectile extends GameObject {
         this.piercing = piercing;
         this.radius = radius;
         this.type = type;
-        this.image = image;
+
+        this.source = source;
+        this.imageValues = imageValues;
+        switch(source){
+            case "old_sprite_sheet" -> this.image = new ImageIcon(Game.old_sprite_sheet.getSubimage((int )imageValues[0], (int) imageValues[1], (int) imageValues[2], (int) imageValues[3])).getImage().getScaledInstance(30, 30, Image.SCALE_REPLICATE).getScaledInstance((int) imageValues[4], (int) imageValues[5], Image.SCALE_FAST);
+            case "lavapool.png" -> this.image = new ImageIcon("lavapool.png").getImage();
+        }
+
         this.spell = spell;
 
         // change
@@ -62,6 +72,7 @@ public class Projectile extends GameObject {
                     for (int j = 0; j < this.enemiesHit.size(); j++) {
                         if (Game.enemies.get(i).equals(this.enemiesHit.get(j))) {
                             check = true;
+                            break;
                         }
                     }
                     if (!check && Game.collisionCheck(this, Game.enemies.get(i), false)) {
@@ -83,5 +94,12 @@ public class Projectile extends GameObject {
             return false;
         }
         return true;
+    }
+
+    public void load(){
+        switch(source){
+            case "old_sprite_sheet" -> this.image = new ImageIcon(Game.old_sprite_sheet.getSubimage((int )imageValues[0], (int) imageValues[1], (int) imageValues[2], (int) imageValues[3])).getImage().getScaledInstance(30, 30, Image.SCALE_REPLICATE).getScaledInstance((int) imageValues[4], (int) imageValues[5], Image.SCALE_FAST);
+            case "lavapool.png" -> this.image = new ImageIcon("lavapool.png").getImage();
+        }
     }
 }

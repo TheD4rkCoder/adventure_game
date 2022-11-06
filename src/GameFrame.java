@@ -1,7 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Random;
 
 import static java.lang.Math.*;
 import static java.lang.Math.PI;
@@ -134,7 +133,7 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
                     repaintInventory();
                 }
             }
-            case 73 -> {
+            case 73 -> { //i
                 if (Game.player.inventory.opened) {
                     Game.player.inventory.showItemStats = Game.player.inventory.tempItem;
                 } else if (Game.player.spellInventory.opened) {
@@ -142,51 +141,74 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
                 }
                 repaintInventory();
             }
+            case 27 -> {//esc
+                if(Game.player.inventory.opened){
+                    Game.player.inventory.close();
+                    gamePanel.repaint();
+                    gamePanel.pauseMenuOpened = true;
+                    gamePanel.repaint();
+                }else if(Game.player.spellInventory.opened){
+                    Game.player.spellInventory.close();
+                    gamePanel.repaint();
+                    gamePanel.pauseMenuOpened = true;
+                    gamePanel.repaint();
+                }else if(gamePanel.pauseMenuOpened){
+                    gamePanel.pauseMenuOpened = false;
+                    gamePanel.repaint();
+                    gamePanel.painted = false;
+                    gamePanel.saved = false;
+                    gamePanel.notAvailable = false;
+                    this.timer.restart();
+                }else{
+                    this.timer.stop();
+                    //gamePanel.repaint();
+                    gamePanel.pauseMenuOpened = true;
+                    gamePanel.repaint();
+                }
+            }
         }
 
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        switch (e.getKeyCode()) {
-            case 87 -> {
-                Game.player.y_movement += Game.player.movement_speed;
-                this.isKeyPressed[0] = false;
-            }
-            case 65 -> {
-                Game.player.x_movement += Game.player.movement_speed;
-                this.isKeyPressed[1] = false;
-            }
-            case 83 -> {
-                Game.player.y_movement -= Game.player.movement_speed;
-                this.isKeyPressed[2] = false;
-            }
-            case 68 -> {
-                Game.player.x_movement -= Game.player.movement_speed;
-                this.isKeyPressed[3] = false;
-            }
-            case 69 -> {    //e
-                if (Game.player.inventory.opened) {
-                    Game.player.inventory.close();
-                    this.timer.restart();
-                } else if (!Game.player.spellInventory.opened) {
-                    this.timer.stop();
-                    //this.getGraphics().setClip(0, 0, this.getWidth(), this.getHeight());
-
-                    Game.player.inventory.open();
-                    repaintInventory();
+        if(!gamePanel.pauseMenuOpened) {
+            switch (e.getKeyCode()) {
+                case 87 -> {
+                    Game.player.y_movement += Game.player.movement_speed;
+                    this.isKeyPressed[0] = false;
                 }
-            }
-            case 82 -> {    //r
-                if (Game.player.spellInventory.opened) {
-                    Game.player.spellInventory.close();
-                    this.timer.restart();
-                } else if (!Game.player.inventory.opened) {
-                    this.timer.stop();
-                    //this.getGraphics().setClip(0, 0, this.getWidth(), this.getHeight());
-
-                    Game.player.spellInventory.open();
-                    repaintInventory();
+                case 65 -> {
+                    Game.player.x_movement += Game.player.movement_speed;
+                    this.isKeyPressed[1] = false;
+                }
+                case 83 -> {
+                    Game.player.y_movement -= Game.player.movement_speed;
+                    this.isKeyPressed[2] = false;
+                }
+                case 68 -> {
+                    Game.player.x_movement -= Game.player.movement_speed;
+                    this.isKeyPressed[3] = false;
+                }
+                case 69 -> {//e
+                    if (Game.player.inventory.opened) {
+                        Game.player.inventory.close();
+                        this.timer.restart();
+                    } else if (!Game.player.spellInventory.opened) {
+                        this.timer.stop();
+                        Game.player.inventory.open();
+                        repaintInventory();
+                    }
+                }
+                case 82 -> {    //r
+                    if (Game.player.spellInventory.opened) {
+                        Game.player.spellInventory.close();
+                        this.timer.restart();
+                    } else if (!Game.player.inventory.opened) {
+                        this.timer.stop();
+                        Game.player.spellInventory.open();
+                        repaintInventory();
+                    }
                 }
             }
         }
@@ -194,6 +216,35 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
 
     @Override
     public void mouseClicked(MouseEvent e) {
+        if(gamePanel.pauseMenuOpened){
+            int mouseX = e.getX();
+            int mouseY = e.getY();
+            if(gamePanel.saveButton.isIn(mouseX, mouseY)){
+                Game.save();
+                gamePanel.saved = true;
+                gamePanel.notAvailable = false;
+                gamePanel.repaint();
+                return;
+            }
+            if(gamePanel.loadButton.isIn(mouseX, mouseY)){
+                gamePanel.writing = true;
+                gamePanel.saved = false;
+                gamePanel.repaint();
+                gamePanel.loadInput.setVisible(true);
+                gamePanel.loadInput.setEnabled(true);
+                return;
+            }
+            if(gamePanel.continueButton.isIn(mouseX, mouseY)){
+                gamePanel.pauseMenuOpened = false;
+                gamePanel.repaint();
+                gamePanel.painted = false;
+                gamePanel.saved = false;
+                gamePanel.notAvailable = false;
+                this.timer.restart();
+                this.requestFocus();
+                return;
+            }
+        }
         for (int k = 0; k < 2; k++) {
             Inventory inv;
             if (k == 0) {
@@ -233,10 +284,12 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
                         } else if (e.getButton() == 3 && inv.items[i] != null) {
                             if (inv.tempItem == null) {
                                 if (!(inv.items[i] instanceof Armour)) {
-                                    inv.tempItem = new Item(inv.items[i].image, inv.items[i].name, 1, inv.items[i].description, inv.items[i].attack, inv.items[i].consumable);
+                                    //inv.tempItem = new Item(inv.items[i].image, inv.items[i].name, 1, inv.items[i].description, inv.items[i].attack, inv.items[i].consumable);
+                                    inv.tempItem = new Item(inv.items[i].imageValues, inv.items[i].source, inv.items[i].name, 1, inv.items[i].description, inv.items[i].attack, inv.items[i].consumable);
                                 } else {
                                     Armour temp = (Armour) inv.items[i];
-                                    inv.tempItem = new Armour(temp.image, temp.name, temp.description, temp.hpBuff, temp.defenceBuff, temp.attack);
+                                    //inv.tempItem = new Armour(temp.image, temp.name, temp.description, temp.hpBuff, temp.defenceBuff, temp.attack);
+                                    inv.tempItem = new Armour(temp.imageValues, temp.source, temp.name, temp.description, temp.hpBuff, temp.defenceBuff, temp.attack);
                                 }
                                 inv.items[i].amount--;
                             } else if (inv.items[i].equals(inv.tempItem)) {
@@ -266,10 +319,12 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
                         } else if (e.getButton() == 3 && inv.hotBar[i] != null) {
                             if (inv.tempItem == null) {
                                 if (!(inv.hotBar[i] instanceof Armour)) {
-                                    inv.tempItem = new Item(inv.hotBar[i].image, inv.hotBar[i].name, 1, inv.hotBar[i].description, inv.hotBar[i].attack, inv.hotBar[i].consumable);
+                                    //inv.tempItem = new Item(inv.hotBar[i].image, inv.hotBar[i].name, 1, inv.hotBar[i].description, inv.hotBar[i].attack, inv.hotBar[i].consumable);
+                                    inv.tempItem = new Item(inv.hotBar[i].imageValues, inv.hotBar[i].source, inv.hotBar[i].name, 1, inv.hotBar[i].description, inv.hotBar[i].attack, inv.hotBar[i].consumable);
                                 } else {
                                     Armour temp = (Armour) inv.hotBar[i];
-                                    inv.tempItem = new Armour(temp.image, temp.name, temp.description, temp.hpBuff, temp.defenceBuff, temp.attack);
+                                    //inv.tempItem = new Armour(temp.image, temp.name, temp.description, temp.hpBuff, temp.defenceBuff, temp.attack);
+                                    inv.tempItem = new Armour(temp.imageValues, temp.source, temp.name, temp.description, temp.hpBuff, temp.defenceBuff, temp.attack);
                                 }
                                 inv.hotBar[i].amount--;
                             } else if (inv.tempItem.equals(inv.hotBar[i])) {
@@ -356,7 +411,6 @@ public class GameFrame extends JFrame implements ActionListener, KeyListener, Mo
                     } else {
                         if (Game.spells[0].summonProjectile(Game.player, Game.centerX - e.getX(), Game.centerY - e.getY(), false)) {
                             Game.projectiles.get(Game.projectiles.size() - 1).damage = Game.player.baseDamage;
-
                         }
                     }
                     break;

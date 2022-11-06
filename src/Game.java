@@ -1,16 +1,13 @@
 import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Random;
 
 import static java.lang.Math.*;
 
 public class Game {
-    static Random random = new Random();
+    static Random random = new Random(); //wierd error
     // load sprite sheet:
     final static public BufferedImage old_sprite_sheet;
     final static public BufferedImage weapons_sprite_sheet;
@@ -51,12 +48,19 @@ public class Game {
     }
 
     // list of all spells (skills) that exist
-    static final Spell[] spells = new Spell[]{
+    /*static final Spell[] spells = new Spell[]{
             new Spell(new ImageIcon(old_sprite_sheet.getSubimage(32 * 3, 32, 32, 32)), "punch", 5, 5, 10, 0, 30, 2, Spell.type_t.physical, null),
             new Spell(new ImageIcon(old_sprite_sheet.getSubimage(32, 0, 32, 32)), "Mana Bolt", 10, 5, 50, 8, 10, 2, Spell.type_t.projectile, null),
             new Spell(new ImageIcon("lavapool.png"), "Lava Pool", 10, 5, 200, 0, 100, 5, Spell.type_t.projectile, null),
             new Spell(new ImageIcon(old_sprite_sheet.getSubimage(0, 0, 32, 32)), "Fireball", 30, 20, 50, 5, 30, 3, Spell.type_t.projectile, new Spell(new ImageIcon(old_sprite_sheet.getSubimage(0, 0, 32, 32)), "Explosion", 20, 0, 10, 0, 100, 5, Spell.type_t.projectile, null)),
             new Spell(new ImageIcon(old_sprite_sheet.getSubimage(32, 0, 32, 32)), "Sword swing", 10, 20, 10, 0, 80, 4, Spell.type_t.physical, null),
+    };*/
+    static final Spell[] spells = new Spell[]{
+            new Spell(new int[]{32 * 3, 32, 32, 32}, "old_sprite_sheet", "punch", 5, 5, 10, 0, 30, 2, Spell.type_t.physical, null),
+            new Spell(new int[]{32, 0, 32, 32}, "old_sprite_sheet", "Mana Bolt", 10, 5, 50, 8, 10, 2, Spell.type_t.projectile, null),
+            new Spell(new int[]{0, 0, 0, 0}, "lavapool.png", "Lava Pool", 10, 5, 200, 0, 100, 5, Spell.type_t.projectile, null),
+            new Spell(new int[]{0, 0, 32, 32}, "old_sprite_sheet", "Fireball", 30, 20, 50, 5, 30, 3, Spell.type_t.projectile, new Spell(new int[]{0, 0, 32, 32}, "old_sprite_sheet", "Explosion", 20, 0, 10, 0, 100, 5, Spell.type_t.projectile, null)),
+            new Spell(new int[]{32, 0, 32, 32}, "old_sprite_sheet", "Sword swing", 10, 20, 10, 0, 80, 4, Spell.type_t.physical, null),
     };
     static ArrayList<Enemy> enemies = new ArrayList<>();
     static ArrayList<GameObject> obstacles = new ArrayList<>();//change this once we have obstacle spells
@@ -70,6 +74,109 @@ public class Game {
     static final int COMBO_TIMER_BASE_VALUE = 1000;
     static final int BASE_CRITICAL_CHANCE = 80;
     static int centerX, centerY;
+
+    public static void save(){
+        int i = 1;
+        while(true){
+            File f = new File("C:\\Users\\Fabian\\Desktop\\Oberschule\\4AT\\Informatik\\Java\\adventure_game\\save_" + i + ".ser");
+            if(!f.exists()){
+                break;
+            }
+            ++i;
+        }
+        try{
+            FileOutputStream fileOut = new FileOutputStream("C:\\Users\\Fabian\\Desktop\\Oberschule\\4AT\\Informatik\\Java\\adventure_game\\save_" + i + ".ser");
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+
+            //writing
+            out.writeObject(player);
+            out.writeObject(enemies);
+            out.writeObject(obstacles);
+            out.writeObject(walls);
+            out.writeObject(projectiles);
+            out.writeObject(itemsLayingAround);
+            out.writeObject(centerX);
+            out.writeObject(centerY);
+            //writing
+
+            out.close();
+            fileOut.close();
+            System.out.println("Saved");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void load(int gameNr){
+        System.out.println(gameNr);
+        try{
+            FileInputStream fileIn = new FileInputStream("C:\\Users\\Fabian\\Desktop\\Oberschule\\4AT\\Informatik\\Java\\adventure_game\\save_" + gameNr + ".ser");
+            ObjectInputStream in = new ObjectInputStream(fileIn);
+
+            Player tempPlayer = (Player) in.readObject();
+            player.load(tempPlayer);
+
+            loadHelp((ArrayList<Enemy>) in.readObject(), enemies);
+            loadHelp((ArrayList<GameObject>) in.readObject(), obstacles);
+            loadHelp((ArrayList<Wall>) in.readObject(), walls);
+            loadHelp((ArrayList<Projectile>) in.readObject(), projectiles);
+            loadHelp((ArrayList<Item>) in.readObject(), itemsLayingAround);
+
+            centerX = (int) in.readObject();
+            centerY = (int) in.readObject();
+
+            System.out.println("Loaded");
+            /*
+            ArrayList <Enemy> tempEnemies = (ArrayList<Enemy>) in.readObject();
+            enemies.clear();
+            for(Enemy en : tempEnemies){
+                en.load();
+                enemies.add(en);
+            }
+
+            //a way of saving images needs to be added, preferably in a seperate class obstacle
+            ArrayList <GameObject> tempObstacles = (ArrayList<GameObject>) in.readObject();
+            obstacles.clear();
+            for(GameObject ob : tempObstacles){
+                obstacles.add(ob);
+            }
+
+            //same as with obstacles, saving images needs to be added in wall class
+            ArrayList <Wall> tempWalls = (ArrayList<Wall>) in.readObject();
+            walls.clear();
+            for(Wall en : tempWalls){
+                walls.add(en);
+            }
+
+            ArrayList <Projectile> tempProjectiles = (ArrayList<Projectile>) in.readObject();
+            projectiles.clear();
+            for(Projectile proj : tempProjectiles){
+                proj.load();
+                projectiles.add(proj);
+            }
+
+            ArrayList <Item> tempItemsLayingAround = (ArrayList<Item>) in.readObject();
+            itemsLayingAround.clear();
+            for(Item i : tempItemsLayingAround){
+                i.load();
+                itemsLayingAround.add(i);
+            }
+            */
+
+
+        } catch (IOException | ClassNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    private static <Thing extends LoadHelp> void loadHelp(ArrayList<Thing> temp, ArrayList <Thing> effective){
+        effective.clear();
+        for(Thing t : temp){
+            t.load();
+            effective.add(t);
+        }
+    }
 
     static public boolean collisionCheck(GameObject o1, GameObject o2, boolean should_push /*if you want to check collision with a wall, the wall always comes second*/) {
         if (o2 instanceof Wall) {

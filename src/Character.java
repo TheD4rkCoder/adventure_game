@@ -5,20 +5,22 @@ import javax.swing.*;
 
 import static java.lang.Math.*;
 
-public class Character extends GameObject implements ActionListener {
+public class Character extends GameObject implements ActionListener{
     public String faction;
 
-    protected int stage,intelligence,strength,dexterity,wisdom,endurance;
-    protected double def;
-    protected int stamina;
-    protected int maxStamina;
+    transient protected int stage;
+    protected int intelligence,strength,dexterity,wisdom,endurance;
+    transient protected double def;
+    transient protected int stamina;
+    transient protected int maxStamina;
 
-    protected double baseDamage, spell_effectiveness, mana_recovery_speed/*in Enemy, cooldown between casts*/, melee_dmg_multiplier, movement_speed, combo_dmg_multiplier, crit_dmg_multiplier, hp, maxHP;
+    transient protected double baseDamage, spell_effectiveness, mana_recovery_speed/*in Enemy, cooldown between casts*/, melee_dmg_multiplier, movement_speed, combo_dmg_multiplier, crit_dmg_multiplier, maxHP;
 
-    protected double critrate; //Dexterity
+    protected double hp;
+    transient protected double critrate; //Dexterity
     protected ArrayList<Spell> spells;
-    protected Timer comboTimer;
-    protected int combo;
+    transient protected Timer comboTimer;
+    transient protected int combo;
 
 
     public Character(String faction) {
@@ -135,4 +137,5 @@ public class Character extends GameObject implements ActionListener {
         }
         combo += 1;
     }
+
 }
