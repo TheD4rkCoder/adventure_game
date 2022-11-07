@@ -78,14 +78,14 @@ public class Game {
     public static void save(){
         int i = 1;
         while(true){
-            File f = new File("C:\\Users\\Fabian\\Desktop\\Oberschule\\4AT\\Informatik\\Java\\adventure_game\\save_" + i + ".ser");
+            File f = new File("save_" + i + ".ser");
             if(!f.exists()){
                 break;
             }
             ++i;
         }
         try{
-            FileOutputStream fileOut = new FileOutputStream("C:\\Users\\Fabian\\Desktop\\Oberschule\\4AT\\Informatik\\Java\\adventure_game\\save_" + i + ".ser");
+            FileOutputStream fileOut = new FileOutputStream("save_" + i + ".ser");
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
 
             //writing
@@ -110,7 +110,7 @@ public class Game {
     public static void load(int gameNr){
         System.out.println(gameNr);
         try{
-            FileInputStream fileIn = new FileInputStream("C:\\Users\\Fabian\\Desktop\\Oberschule\\4AT\\Informatik\\Java\\adventure_game\\save_" + gameNr + ".ser");
+            FileInputStream fileIn = new FileInputStream("save_" + gameNr + ".ser");
             ObjectInputStream in = new ObjectInputStream(fileIn);
 
             Player tempPlayer = (Player) in.readObject();
@@ -126,42 +126,6 @@ public class Game {
             centerY = (int) in.readObject();
 
             System.out.println("Loaded");
-            /*
-            ArrayList <Enemy> tempEnemies = (ArrayList<Enemy>) in.readObject();
-            enemies.clear();
-            for(Enemy en : tempEnemies){
-                en.load();
-                enemies.add(en);
-            }
-
-            //a way of saving images needs to be added, preferably in a seperate class obstacle
-            ArrayList <GameObject> tempObstacles = (ArrayList<GameObject>) in.readObject();
-            obstacles.clear();
-            for(GameObject ob : tempObstacles){
-                obstacles.add(ob);
-            }
-
-            //same as with obstacles, saving images needs to be added in wall class
-            ArrayList <Wall> tempWalls = (ArrayList<Wall>) in.readObject();
-            walls.clear();
-            for(Wall en : tempWalls){
-                walls.add(en);
-            }
-
-            ArrayList <Projectile> tempProjectiles = (ArrayList<Projectile>) in.readObject();
-            projectiles.clear();
-            for(Projectile proj : tempProjectiles){
-                proj.load();
-                projectiles.add(proj);
-            }
-
-            ArrayList <Item> tempItemsLayingAround = (ArrayList<Item>) in.readObject();
-            itemsLayingAround.clear();
-            for(Item i : tempItemsLayingAround){
-                i.load();
-                itemsLayingAround.add(i);
-            }
-            */
 
 
         } catch (IOException | ClassNotFoundException e) {
