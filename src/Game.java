@@ -74,18 +74,22 @@ public class Game {
     static final int COMBO_TIMER_BASE_VALUE = 1000;
     static final int BASE_CRITICAL_CHANCE = 80;
     static int centerX, centerY;
+    static String saveFile = "";
 
     public static void save(){
-        int i = 1;
-        while(true){
-            File f = new File("save_" + i + ".ser");
-            if(!f.exists()){
-                break;
+        if(saveFile.equals("")) {
+            int i = 1;
+            while (true) {
+                File f = new File("save_" + i + ".ser");
+                if (!f.exists()) {
+                    break;
+                }
+                ++i;
             }
-            ++i;
+            saveFile = "save_" + i + ".ser";
         }
         try{
-            FileOutputStream fileOut = new FileOutputStream("save_" + i + ".ser");
+            FileOutputStream fileOut = new FileOutputStream(saveFile);
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
 
             //writing
@@ -108,9 +112,9 @@ public class Game {
     }
 
     public static void load(int gameNr){
-        System.out.println(gameNr);
+        saveFile = "save_" + gameNr + ".ser";
         try{
-            FileInputStream fileIn = new FileInputStream("save_" + gameNr + ".ser");
+            FileInputStream fileIn = new FileInputStream(saveFile);
             ObjectInputStream in = new ObjectInputStream(fileIn);
 
             Player tempPlayer = (Player) in.readObject();

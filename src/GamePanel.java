@@ -272,7 +272,7 @@ public class GamePanel extends JPanel implements KeyListener {
         if (e.getKeyCode() == 10) {
             if (pauseMenuOpened && writing) {
                 int i = Integer.parseInt(loadInput.getText());
-                File f = new File("C:\\Users\\Fabian\\Desktop\\Oberschule\\4AT\\Informatik\\Java\\adventure_game\\save_" + i + ".ser");
+                File f = new File("save_" + i + ".ser");
                 if(!f.exists()){
                     System.out.println("Not available");
                     notAvailable = true;
